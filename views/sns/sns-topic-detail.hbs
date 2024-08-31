@@ -1,0 +1,57 @@
+
+<h2>Topic Details</h2>
+
+<h3>{{TopicArn}}</h3>
+
+<form method="post" action="/sns/publish">
+
+    <input name="topicArn" type="text" value="{{TopicArn}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="message" class="form-label">Message</label>
+        <input type="text" class="form-control" id="message" name="message">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Send</button>
+</form>
+
+
+{{#if published}}
+<div class="mt-2 alert alert-success">
+  Message published with id: {{published}}
+</div>
+{{/if}}
+
+<h4 class="mt-2">Attributes:</h4>
+<pre>{{json Attributes 2}}</pre>
+
+<h4>Subscribe</h4>
+{{#unless token}}
+<form method="post" action="/sns/subscribe">
+    <input name="topicArn" type="text" value="{{TopicArn}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="endpoint" class="form-label">Endpoint</label>
+        <input type="text" class="form-control" id="endpoint" name="endpoint" placeholder="{{sampleEndpoint}}">
+    </div>
+
+    <button class="btn btn-outline-success" type="submit">Subscribe</button>
+</form>
+{{/unless}}
+
+{{#if token}}
+<form method="post" action="/sns/confirm-subscription">
+
+    <input name="topicArn" type="text" value="{{TopicArn}}" style="display: none;" />
+    <input name="token" type="text" value="{{token}}" style="display: none;" />
+
+    <button class="btn btn-outline-success" type="submit">Confirm Subscription</button>
+</form>
+{{/if}}
+
+{{#if subscribed}}
+<div class="mt-2 alert alert-success">
+  Topic subscribed Arn: {{subscribed}}
+</div>
+{{/if}}

@@ -1,0 +1,51 @@
+
+<h2>Key Details - {{keyId}}</h2>
+
+<form class="mb-2" method="post" action="/kms/create-alias">
+
+    <input type="text" name="keyId" value="{{keyId}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="alias" class="form-label">Alias</label>
+        <div class="input-group">
+            <span class="input-group-text">alias/</span>
+            <input type="text" class="form-control" id="alias" name="alias" >
+        </div>
+    </div>
+
+    <button type="reset" class="btn btn-outline-secondary">Reset</button>
+    <button type="submit" class="btn btn-outline-success">Create Alias</button>
+</form>
+
+<a role="button" href="/kms/encrypt-decrypt?keyId={{keyId}}" class="btn btn-outline-primary">Encrypt Decrypt</a>
+
+<h4 class="mt-2">MetaData: </h4>
+<pre>{{json KeyMetadata 2}}</pre>
+
+<h4 class="mt-2">Aliases:</h4>
+<table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Alias Arn</th>
+            <th scope="col">Alias Name</th>
+            <th scope="col">Target Key Id</th>
+            <th scope="col">Creation Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Aliases}}
+        <tr>
+            <th>
+                <div class="d-flex">
+                    <a href="/kms/disable?keyId={{KeyId}}" class="btn btn-outline-danger me-1" type="button">Delete</a>
+                </div>
+            </th>
+            <th scope="row">{{AliasArn}}</th>
+            <td>{{AliasName}}</td>
+            <td>{{TargetKeyId}}</td>
+            <td>{{CreationDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

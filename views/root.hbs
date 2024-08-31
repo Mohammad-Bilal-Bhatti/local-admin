@@ -1,0 +1,40 @@
+<div class="mb-4">
+  <h1>👋 Welcome to Localstack Admin.</h1>
+  {{ message }}
+  <div class="mt-2">
+    <h4>Configure Local Stack</h4>
+    <form action="/configure" method="post">
+
+      <div class="mb-3">
+        <label for="endpoint" class="form-label">Endpoint</label>
+        <input type="text" class="form-control" id="endpoint" name="endpoint" value="{{configuration.endpoint}}">
+      </div>
+      <div class="mb-3">
+        <label for="region" class="form-label">Region</label>
+        <input type="text" class="form-control" id="region" name="region" value="{{configuration.region}}">
+      </div>
+
+      <button type="submit" class="btn btn-outline-primary">Update</button>
+
+    </form>
+  </div>
+
+
+  <div class="container">
+    <div class="row gx-2 gy-2">
+    {{#each cards}}
+      <div class="col-sm-3">
+        <div class="card" style="height: 14rem; overflow: hidden">
+          <div class="card-body">
+            <h5 class="card-title">{{title}}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{subtitle}}</h6>
+            <p class="card-text">{{description}}</p>
+            <a href="{{link}}" class="card-link">Explore</a>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+    </div>
+  </div>
+
+</div>

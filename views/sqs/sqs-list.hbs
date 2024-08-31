@@ -1,0 +1,82 @@
+
+
+<h2>Simple Queue Service</h2>
+
+<a href="/sqs/create" type="button" class="btn btn-outline-success">Create Queue</a>
+<a href="/sqs/purge-queue?queue=*" type="button" class="btn btn-outline-warning">Purge All Queues</a>
+<div class="table-responsive">
+  <table class="table table-responsive">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Queue Url</th>
+        <th scope="col">Actions</th>
+        <th scope="col">Approx Messages</th>
+        <th scope="col">Approx Not Visible</th>
+        <th scope="col">Approx Msg Delayed</th>
+        <th scope="col">Created Timestamp</th>
+        <th scope="col">Delay Seconds</th>
+        <th scope="col">Last Modified Timestamp</th>
+        <th scope="col">Maximum Message Size</th>
+        <th scope="col">Message Retention Period</th>
+        <th scope="col">Receive Message Wait Time Seconds</th>
+        <th scope="col">Visibility Timeout</th>
+        <th scope="col">Sqs Managed Sse Enabled</th>
+        <th scope="col">Content Based Deduplication</th>
+        <th scope="col">Deduplication Scope</th>
+        <th scope="col">FifoThroughputLimit</th>
+        <th scope="col">FifoQueue</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#unless queues.length}}
+        <tr>
+          <td class="text-center" colspan="17">⚠️ No Records Found</td>
+        </tr>
+      {{/unless}}
+      {{#each queues}}
+        <tr>
+          <th scope="row" name="queue-url" data="{{name}}">
+            <a href="/sqs/detail?name={{name}}">
+              {{name}}
+            </a>
+          </th>
+          <td> 
+            <div class="d-flex">
+              <a href="/sqs/delete-queue?queue={{name}}" type="button" class="btn btn-outline-danger">Delete</a> 
+              <a href="/sqs/purge-queue?queue={{name}}" type="button" class="btn btn-outline-warning ms-1">Pruge</a> 
+
+              {{#if isDLQ}}
+              <a href="/sqs/start-redrive?queue={{name}}" type="button" class="btn btn-outline-secondary ms-1">Redrive</a>
+              {{/if}}
+
+            </div>
+          </td>
+          <td class="{{#ifNotEq attributes.ApproximateNumberOfMessages '0'}}text-danger{{/ifNotEq}}">{{attributes.ApproximateNumberOfMessages}}</td>
+          <td>{{attributes.ApproximateNumberOfMessagesNotVisible}}</td>
+          <td>{{attributes.ApproximateNumberOfMessagesDelayed}}</td>
+
+          <td>{{epochToDate attributes.CreatedTimestamp}} - {{fromNow attributes.CreatedTimestamp}} </td>
+          <td>{{attributes.DelaySeconds}}</td>
+          <td>{{epochToDate attributes.LastModifiedTimestamp}} - {{fromNow attributes.LastModifiedTimestamp}} </td>
+          <td>{{attributes.MaximumMessageSize}}</td>
+          <td>{{attributes.MessageRetentionPeriod}}</td>
+
+          <td>{{attributes.ReceiveMessageWaitTimeSeconds}}</td>
+          <td>{{attributes.VisibilityTimeout}}</td>
+
+          <td>{{attributes.SqsManagedSseEnabled}}</td>
+          <td>{{attributes.ContentBasedDeduplication}}</td>
+          <td>{{attributes.DeduplicationScope}}</td>
+          <td>{{attributes.FifoThroughputLimit}}</td>
+          <td>{{attributes.FifoQueue}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{#if nextToken}}
+  <div class="d-flex justify-content-center mb-2">
+    <a href="/?nextToken={{nextToken}}" class="btn btn-secondary" type="button">Show More</a>
+  </div>
+  {{/if}}
+
+</div>

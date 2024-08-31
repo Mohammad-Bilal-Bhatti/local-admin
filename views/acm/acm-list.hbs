@@ -1,0 +1,40 @@
+
+<h2>AWS Certificate Manager</h2>
+
+<a href="/acm/create" role="button" class="btn btn-outline-primary">Create</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Domain</th>
+            <th scope="col">Algorithm</th>
+            <th scope="col">Status</th>
+            <th scope="col">InUse</th>
+            <th scope="col">RenewalEligibility</th>
+            <th scope="col">Type</th>
+            <th scope="col">Arn</th>
+            <th scope="col">Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Certificates}}
+        <tr>
+            <th class="d-flex">
+                <a href="/acm/delete?arn={{CertificateArn}}" class="btn btn-outline-danger" type="button">Delete</a>
+                {{!-- <a href="/acm/renew?arn={{CertificateArn}}" class="btn btn-outline-warning ms-1" type="button">Renew</a> --}}
+            </th>
+            <th scope="row">
+                <a href="/acm/details?arn={{CertificateArn}}">{{DomainName}}</a>
+            </th>
+            <td>{{KeyAlgorithm}}</td>
+            <td>{{Status}}</td>
+            <td>{{InUse}}</td>
+            <td>{{RenewalEligibility}}</td>
+            <td>{{Type}}</td>
+            <td>{{CertificateArn}}</td>
+            <td>{{CreatedAt}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

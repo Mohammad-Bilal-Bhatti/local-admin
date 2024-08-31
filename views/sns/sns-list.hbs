@@ -1,0 +1,57 @@
+
+<h2>Simple Notification Service</h2>
+
+<a href="/sns/create" type="button" class="btn btn-outline-success">Create Topic</a>
+
+<h4 class="mt-2">Topics:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Topic Arn</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Topics}}
+        <tr>
+            <th>
+                <a href="/sns/remove?arn={{TopicArn}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/sns/details?arn={{TopicArn}}">{{TopicArn}}</a>
+            </th>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+
+<h4>Subscriptions:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Topic Arn</th>
+            <th scope="col">Subscription Arn</th>
+            <th scope="col">Protocol</th>
+            <th scope="col">Endpoint</th>
+            <th scope="col">Owner</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Subscriptions}}
+        <tr>
+            <th>
+                <a href="/sns/unsubscribe?subscriptionArn={{SubscriptionArn}}" class="btn btn-outline-danger" type="button">Unsubscribe</a>
+            </th>
+            <th scope="row">
+                {{TopicArn}}
+            </th>
+            <td>{{SubscriptionArn}}</td>
+            <td>{{Protocol}}</td>
+            <td>{{Endpoint}}</td>
+            <td>{{Owner}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

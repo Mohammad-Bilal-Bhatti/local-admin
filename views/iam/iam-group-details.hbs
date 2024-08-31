@@ -1,0 +1,39 @@
+
+<h2>Group Details - {{groupName}}</h2>
+
+<h4>Details:</h4>
+<pre>{{json details 2}}</pre>
+
+<h4 class="mt-2">Group Users:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">UserName</th>
+            <th scope="col">UserId</th>
+            <th scope="col">Path</th>
+            <th scope="col">Arn</th>
+            <th scope="col">Create Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Users}}
+        <tr>
+            <th>
+                <form method="post" action="/iam/remove-from-group">
+                    <input type="text" name="username" value="{{UserName}}" style="display: none;" />
+                    <input type="text" name="groupname" value="{{../groupName}}" style="display: none;" />
+                    <button type="submit" class="btn btn-outline-danger">Remove</button>
+                </form>
+            </th>
+            <th scope="row">
+                <a href="/iam/user-details?username={{UserName}}">{{UserName}}</a>
+            </th>
+            <td>{{UserId}}</td>
+            <td>{{Path}}</td>
+            <td>{{Arn}}</td>
+            <td>{{CreateDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

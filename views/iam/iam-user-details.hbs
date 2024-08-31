@@ -1,0 +1,58 @@
+
+<h2>User Details - {{username}}</h2>
+
+<a href="/iam/delete?username={{username}}" role="button" class="btn btn-outline-danger">Delete</a>
+
+<form method="post" action="/iam/create-keys" class="d-inline">
+    <input type="text" value="{{username}}" name="username" style="display: none;" />
+    <button type="submit" class="btn btn-outline-primary">Create Access Keys</button>
+</form>
+
+<h4 class="mt-2">Add Group</h4>
+<form method="post" action="/iam/add-to-group" class="mt-2">
+    <input type="text" value="{{username}}" name="username" style="display: none;" />
+    <div class="mb-3">
+        <select class="form-select" id="groupname" name="groupname" >
+            {{#each Groups}}
+            <option value="{{GroupName}}">{{GroupName}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <button class="btn btn-outline-success" type="submit">Add</button>
+</form>
+
+<h4 class="mt-2">Details:</h4>
+<pre>{{json details 2}}</pre>
+
+{{#if keyId}}
+<div>
+    <h5>Access Keys:</h5>
+    <p>KeyId: {{keyId}}</p>
+    <p>Secret: {{secret}}</p>
+</div>
+{{/if}}
+
+<h4 class="mt-2">Access Keys:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">AccessKeyId</th>
+            <th scope="col">Status</th>
+            <th scope="col">Create Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Keys}}
+        <tr>
+            <th>
+                <a href="/iam/delete-access-key?accessKeyId={{AccessKeyId}}&username={{../username}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <td>{{AccessKeyId}}</td>
+            <td>{{Status}}</td>
+            <td>{{CreateDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

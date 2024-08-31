@@ -1,0 +1,47 @@
+
+<h2>Parameter Detail - {{name}}</h2>
+
+<form method="post" action="/ssm/create">
+
+    <div class="mb-3">
+        <label for="value" class="form-label">Value</label>
+        <input type="text" class="form-control" id="value" name="value">
+    </div>
+
+    <input type="text" class="form-control" id="name" name="name" value="{{name}}" style="display: none;">
+    <input type="text" name="overwrite" value="true" style="display: none;" />
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Update</button>
+</form>
+
+<h4 class="mt-2">Details:</h4>
+<pre>{{json details 2}}</pre>
+
+<h4 class="mt-2">History:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Version</th>
+            <th scope="col">DataType</th>
+            <th scope="col">Value</th>
+            <th scope="col">LastModifiedDate</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each history}}
+        <tr>
+            <th scope="row">
+                {{Name}}
+            </th>
+            <td>{{Type}}</td>
+            <td>{{Version}}</td>
+            <td>{{DataType}}</td>
+            <td>{{Value}}</td>
+            <td>{{LastModifiedDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

@@ -1,0 +1,75 @@
+
+<h2>Key Management Service</h2>
+
+<a href="/kms/create" type="button" class="btn btn-outline-success">Create Key</a>
+
+<h4 class="mt-2">Keys:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Key Id</th>
+            <th scope="col">Key Arn</th>
+            <th scope="col">Creation Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">Enabled</th>
+            <th scope="col">Key Manager</th>
+            <th scope="col">Key State</th>
+            <th scope="col">Key Usage</th>
+            <th scope="col">Multi Region</th>
+            <th scope="col">Origin</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Keys}}
+        <tr>
+            <th>
+                <div class="d-flex">
+                    <a href="/kms/disable?keyId={{KeyId}}" class="btn btn-outline-danger me-1" type="button">Disable</a>
+                    <a href="/kms/enable?keyId={{KeyId}}" class="btn btn-outline-success" type="button">Enable</a>
+                </div>
+            </th>
+            <th scope="row">
+                <a href="/kms/details?keyId={{KeyId}}">{{KeyId}}</a>
+            </th>
+            <td>{{KeyArn}}</td>
+            <td>{{KeyMetadata.CreationDate}}</td>
+            <td>{{KeyMetadata.Description}}</td>
+            <td>{{KeyMetadata.Enabled}}</td>
+            <td>{{KeyMetadata.KeyManager}}</td>
+            <td>{{KeyMetadata.KeyState}}</td>
+            <td>{{KeyMetadata.KeyUsage}}</td>
+            <td>{{KeyMetadata.MultiRegion}}</td>
+            <td>{{KeyMetadata.Origin}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4>Aliases:</h4>
+<table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Alias Arn</th>
+            <th scope="col">Alias Name</th>
+            <th scope="col">Target Key Id</th>
+            <th scope="col">Creation Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Aliases}}
+        <tr>
+            <th>
+                <div class="d-flex">
+                    <a href="/kms/disable?keyId={{KeyId}}" class="btn btn-outline-danger me-1" type="button">Delete</a>
+                </div>
+            </th>
+            <th scope="row">{{AliasArn}}</th>
+            <td>{{AliasName}}</td>
+            <td>{{TargetKeyId}}</td>
+            <td>{{CreationDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

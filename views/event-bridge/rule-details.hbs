@@ -1,0 +1,45 @@
+
+<h2>Rule Details - {{name}}</h2>
+
+<h4>Create Target:</h4>
+<form class="mb-2" method="post" action="/event-bridge/create-target">
+
+    <input type="text" name="rule" value="{{name}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="Id" class="form-label">Id</label>
+        <input type="text" class="form-control" id="Id" name="targets[][Id]">
+    </div>
+    <div class="mb-3">
+        <label for="Arn" class="form-label">Target Arn</label>
+        <input type="text" class="form-control" id="Arn" name="targets[][Arn]">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+
+<h4 class="mb-2">Details:</h4>
+<pre>{{json details 2}}</pre>
+
+<h4>Rule Targets:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Id</th>
+            <th scope="col">Arn</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Targets}}
+        <tr>
+            <th>
+                <a href="/event-bridge/delete-target?id={{Id}}&rule={{../name}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <td>{{Id}}</td>
+            <td>{{Arn}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

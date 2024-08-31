@@ -1,0 +1,87 @@
+<h2>Create SNS Topic</h2>
+
+<form method="post" class="row gx-4 gy-2" name="create-topic">
+
+  <div class="col-12">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" name="name">
+  </div>
+
+
+  <div class="col-12" id="tags-section">
+    <div class="d-flex">
+      <h4 class="mt-2">Tags:</h4>
+      <button onclick="addTagElement()" type="button" class="btn btn-outline-primary ms-2">+</button>
+    </div>
+    <div id="tags-list"></div>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+  </div>
+
+</form>
+
+<script type="text/javascript">
+
+  function removeTagElement(elementId) {
+    const element = document.getElementById(elementId);
+    element.remove();
+  }
+
+  function addTagElement() {
+    const tagList = document.getElementById('tags-list');
+    const index = tagList.children.length;
+
+    function createInputGroup(labelText, name, colSize) {
+      const col = document.createElement('div');
+      col.className = 'col-' + colSize;
+
+      col.innerHTML =
+        '<label class="form-label">' + labelText + '</label>' +
+        '<input type="text" name="' + name + '" class="form-control" />';
+
+      return col;
+    }
+
+    function createButton(title, cb, colSize) {
+      const div = document.createElement('div');
+      div.className = `col-${colSize} d-grid`;
+      const button = document.createElement('button');
+      button.type = "button";
+      button.innerText = title;
+      button.className = 'btn btn-outline-danger mt-4'
+      button.onclick = cb;
+      div.appendChild(button);
+      return div;
+    }
+
+    const containerId = `tag-${index}-item`;
+    const tagContainer = document.createElement('div');
+    tagContainer.className = 'row';
+    tagContainer.id = containerId;
+
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(createInputGroup('Key', 'tags[' + index + '][Key]', 2));
+    fragment.appendChild(createInputGroup('Value', 'tags[' + index + '][Value]', 8));
+    fragment.appendChild(createButton('Remove', function () { removeTagElement(containerId); }, 2));
+
+    tagContainer.appendChild(fragment);
+    tagList.appendChild(tagContainer);
+  }
+
+</script>
+
+
+{{#if success}}
+<div class="mt-2 alert alert-success">
+  {{success}}
+</div>
+{{/if}}
+
+{{#if error}}
+<div class="mt-2 alert alert-danger">
+  {{error}}
+</div>
+{{/if}}

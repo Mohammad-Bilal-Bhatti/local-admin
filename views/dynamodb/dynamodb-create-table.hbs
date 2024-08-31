@@ -1,0 +1,38 @@
+
+<h2>Create Table</h2>
+
+<form class="row gx-4 gy-2" method="post">
+
+    <div class="col-12">
+        <label for="name" class="form-label">Table Name</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="col-6">
+        <label for="hashAttributeName" class="form-label">Hash Attribute Name</label>
+        <input type="text" class="form-control" id="hashAttributeName" name="hashAttributeName">
+    </div>
+
+    <div class="col-6">
+        <label for="hashAttributeType" class="form-label">Hash Attribute Type</label>
+        <select class="form-select" name="hashAttributeType">
+            <option value="S">String</option>
+            <option value="N">Number</option>
+            <option value="B">Binary</option>
+        </select>
+    </div>
+
+    <div class="col-6">
+        <label for="readCapacityUnits" class="form-label">Read Capacity Units</label>
+        <input type="number" class="form-control" id="readCapacityUnits" name="readCapacityUnits" placeholder="3">
+    </div>
+    <div class="col-6">
+        <label for="writeCapacityUnits" class="form-label">Write Capacity Units</label>
+        <input type="number" class="form-control" id="writeCapacityUnits" name="writeCapacityUnits" placeholder="3">
+    </div>
+
+    <div class="col-12 mt-2 mb-2">
+        <button class="btn btn-outline-secondary" type="reset">Reset</button>
+        <button class="btn btn-outline-success" type="submit">Create</button>
+    </div>
+
+</form>

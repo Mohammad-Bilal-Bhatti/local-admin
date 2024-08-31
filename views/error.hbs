@@ -1,0 +1,12 @@
+
+{{#with error}}
+<div class="mt-2 alert alert-danger">
+  <h4 class="alert-heading">{{name}}</h4>
+  <p>{{message}}</p>
+  <hr>
+  <p class="mb-0">Status Code: {{statusCode}}</p>
+  <p class="mb-0">Method: {{method}}</p>
+  <p class="mb-0">Path: {{path}}</p>
+  <p class="mb-0">Timestamp: {{timestamp}}</p>
+</div>
+{{/with}}

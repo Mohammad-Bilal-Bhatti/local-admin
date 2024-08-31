@@ -1,0 +1,66 @@
+
+<h2>Details - {{functionName}}</h2>
+
+<a href="/lambda/remove?name={{functionName}}" role="button" class="btn btn-outline-danger">Delete</a>
+
+<h4 class="mt-2">Invoke</h4>
+<form method="post" action="/lambda/invoke">
+
+    <input type="text" value="{{functionName}}" name="name" style="display: none;" />
+    <div class="mb-3">
+        <label for="payload" class="form-label">Payload</label>
+        <input type="text" class="form-control" id="payload" name="payload">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Invoke</button>
+</form>
+
+<div class="mt-2">
+    <pre>{{json details 2}}</pre>
+</div>
+
+<h4>Create Alias:</h4>
+<form method="post" action="/lambda/alias">
+    <input type="text" value="{{functionName}}" name="functionName" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="mb-3">
+        <label for="functionVersion" class="form-label">Function Version</label>
+        <input type="text" class="form-control" id="functionVersion" name="functionVersion">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+
+<h4 class="mt-2">Aliases:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">FunctionVersion</th>
+            <th scope="col">Description</th>
+            <th scope="col">AliasArn</th>
+            <th scope="col">RevisionId</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Aliases}}
+        <tr>
+            <th>
+                <a href="/lambda/delete-alias?name={{Name}}&functionName={{../functionName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">{{Name}}</th>
+            <td>{{FunctionVersion}}</td>
+            <td>{{Description}}</td>
+            <td>{{AliasArn}}</td>
+            <td>{{RevisionId}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

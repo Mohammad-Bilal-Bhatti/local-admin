@@ -1,0 +1,84 @@
+<h2>Send Message</h2>
+
+<p>Queue: {{queueName}}</p>
+
+<form class="mt-2" method="post">
+
+    <input type="text" name="queueUrl" value="{{queueName}}" style="display:none;" />
+
+    <div class="mb-3">
+        <label for="body" class="form-label">Body</label>
+        <input type="text" class="form-control" id="body" name="body">
+    </div>
+    {{#if isFifoQueue}}
+    <div class="mb-3">
+        <label for="groupId" class="form-label">Group Id</label>
+        <input type="text" class="form-control" id="groupId" name="groupId">
+    </div>
+    
+    <div class="mb-3">
+        <label for="duplicationId" class="form-label">Duplication Id</label>
+        <input type="text" class="form-control" id="duplicationId" name="duplicationId">
+    </div>
+    {{/if}}
+
+    <div class="mb-2">
+        <h4>Message Attributes:</h4>
+        <button type="button" class="btn btn-outline-primary" onclick="addAttributeElement()">Add</button>
+        <div id="message-attribute-list"></div>
+    </div>
+
+
+  <button type="reset" class="btn btn-secondary">Reset</button>
+  <button type="submit" class="btn btn-primary">Send</button>
+</form>
+
+<script type="text/javascript">
+
+  function removeAttributeElement(elementId) {
+    const element = document.getElementById(elementId);
+    element.remove();
+  }
+
+  function addAttributeElement() {
+    const list = document.getElementById('message-attribute-list');
+    const index = list.children.length;
+
+    function createInputGroup(labelText, name, colSize) {
+      const col = document.createElement('div');
+      col.className = 'col-' + colSize;
+
+      col.innerHTML =
+        '<label class="form-label">' + labelText + '</label>' +
+        '<input type="text" name="' + name + '" class="form-control" />';
+
+      return col;
+    }
+
+    function createButton(title, cb, colSize) {
+      const div = document.createElement('div');
+      div.className = `col-${colSize} d-grid`;
+      const button = document.createElement('button');
+      button.type = "button";
+      button.innerText = title;
+      button.className = 'btn btn-outline-danger mt-4'
+      button.onclick = cb;
+      div.appendChild(button);
+      return div;
+    }
+
+    const containerId = `attribute-${index}-item`;
+    const container = document.createElement('div');
+    container.className = 'row';
+    container.id = containerId;
+
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(createInputGroup('Name', 'messageAttributes[' + index + '][name]', 2));
+    fragment.appendChild(createInputGroup('Value', 'messageAttributes[' + index + '][value]', 8));
+    fragment.appendChild(createButton('Remove', function () { removeAttributeElement(containerId); }, 2));
+
+    container.appendChild(fragment);
+    list.appendChild(container);
+  }
+
+</script>

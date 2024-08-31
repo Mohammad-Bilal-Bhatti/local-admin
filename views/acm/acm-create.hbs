@@ -1,0 +1,20 @@
+
+<h2>Create Certificate</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="domain" class="form-label">Domain</label>
+        <input type="text" class="form-control" id="domain" name="domain">
+    </div>
+    <div class="mb-3">
+        <label for="algorithm" class="form-label">Algorithm</label>
+        <select class="form-select" id="algorithm" name="algorithm">
+            {{#each algorithmOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>

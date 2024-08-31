@@ -1,0 +1,42 @@
+
+<h2>Lambda Functions</h2>
+
+<a href="/lambda/create" type="button" class="btn btn-outline-success">Create Function</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">FunctionName</th>
+            <th scope="col">Version</th>
+            <th scope="col">Description</th>
+            <th scope="col">Role</th>
+            <th scope="col">Runtime</th>
+            <th scope="col">PackageType</th>
+            <th scope="col">MemorySize</th>
+            <th scope="col">CodeSize</th>
+            <th scope="col">CodeSha256</th>
+            <th scope="col">LastModified</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Functions}}
+        <tr>
+            <th>
+                <a href="/lambda/remove?name={{FunctionName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/lambda/details?name={{FunctionName}}">{{FunctionName}}</a>
+            </th>
+            <td>{{Version}}</td>
+            <td>{{Description}}</td>
+            <td>{{Role}}</td>
+            <td>{{Runtime}}</td>
+            <td>{{PackageType}}</td>
+            <td>{{MemorySize}}</td>
+            <td>{{CodeSize}}</td>
+            <td>{{CodeSha256}}</td>
+            <td>{{LastModified}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

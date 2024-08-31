@@ -1,0 +1,34 @@
+
+<h2>Dynamo DB</h2>
+
+<a href="/dynamodb/create-table" class="btn btn-outline-primary" role="button">Create Table</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">Creation Date</th>
+            <th scope="col">Item Count</th>
+            <th scope="col">Size</th>
+            <th scope="col">Table Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each tables}}
+        <tr>
+            <th>
+                <a href="/dynamodb/remove?table={{name}}" class="btn btn-outline-danger" type="button">Delete</a>
+                <a href="/dynamodb/purge?table={{name}}" class="btn btn-outline-warning" type="button">Purge</a>
+            </th>
+            <th scope="row">
+                <a href="/dynamodb/details?table={{name}}">{{name}}</a>
+            </th>
+            <td>{{details.CreationDateTime}}</td>
+            <td>{{details.ItemCount}}</td>
+            <td>{{toSize details.TableSizeBytes}}</td>
+            <td>{{details.TableStatus}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

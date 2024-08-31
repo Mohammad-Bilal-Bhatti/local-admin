@@ -1,0 +1,28 @@
+
+<h2>Encrypt - Decrypt</h2>
+
+<form class="mb-2" method="post">
+
+    <input type="text" name="keyId" value="{{keyId}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="plain" class="form-label">Plain Text</label>
+        <textarea class="form-control" id="plain" rows="3" name="plain">{{plain}}</textarea>
+    </div>
+
+    <button type="reset" class="btn btn-outline-secondary">Reset</button>
+    <button type="submit" class="btn btn-outline-success">Encrypt</button>
+</form>
+
+<form class="mb-2" method="post">
+
+    <input type="text" name="keyId" value="{{keyId}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="encrypted" class="form-label">Encrypted Text</label>
+        <textarea class="form-control" id="encrypted" rows="3" name="encrypted">{{encrypted}}</textarea>
+    </div>
+
+    <button type="reset" class="btn btn-outline-secondary">Reset</button>
+    <button type="submit" class="btn btn-outline-success">Decrypt</button>
+</form>

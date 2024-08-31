@@ -1,0 +1,40 @@
+
+<h2>Create Function</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+    <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <input type="text" class="form-control" id="role" name="role">
+    </div>
+    <div class="mb-3">
+        <label for="s3Bucket" class="form-label">Bucket</label>
+        <input type="text" class="form-control" id="s3Bucket" name="s3Bucket">
+    </div>
+    <div class="mb-3">
+        <label for="s3Key" class="form-label">Key</label>
+        <input type="text" class="form-control" id="s3Key" name="s3Key">
+    </div>
+    <div class="mb-3">
+        <label for="handler" class="form-label">Handler</label>
+        <input type="text" class="form-control" id="handler" name="handler">
+    </div>    
+    <div class="mb-3">
+        <label for="runtime" class="form-label">Runtime</label>
+        <select class="form-select" id="runtime" name="runtime">
+            {{#each runtimes}}
+                <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>

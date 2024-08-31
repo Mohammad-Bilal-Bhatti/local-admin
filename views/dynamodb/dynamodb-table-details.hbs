@@ -1,0 +1,32 @@
+
+<h2>Table Details - {{table}}</h2>
+
+<h4>Details:</h4>
+<pre>{{json details 2}}</pre>
+
+<h4>Items:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            {{#each columns}}
+                <th scope="col">{{title}}</th>
+            {{/each}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#each rows}}
+        <tr>
+            <th>
+                <div class="d-flex">
+                    <a href="/dynamodb/delete-item?table={{../table}}&key={{json (olookup this "id") 0}}" class="btn btn-outline-danger me-1" type="button">Delete</a>
+                    <a href="/dynamodb/view-item?table={{../table}}&key={{json (olookup this "id") 0}}" class="btn btn-outline-info" type="button">View</a>
+                </div>
+            </th>
+            {{#each ../columns}}
+                <td>{{olookup ../this this.accessor}}</td>
+            {{/each}}
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

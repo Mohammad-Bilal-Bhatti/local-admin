@@ -1,0 +1,49 @@
+
+<h2>Bucket Details</h2>
+
+<p>Bucket Name: {{name}}</p>
+
+<form method="post" action="/s3/upload" enctype="multipart/form-data" >
+
+    <input type="text" name="bucket" value="{{name}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Upload File</label>
+        <input class="form-control" type="file" id="formFile" name="file">
+    </div>
+
+    <button class="btn btn-outline-success" type="submit">Upload</button>
+
+</form>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Actions</th>
+      <th scope="col">Key</th>
+      <th scope="col">Last Modified</th>
+      <th scope="col">ETag</th>
+      <th scope="col">Size</th>
+      <th scope="col">Storage Class</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each Contents}}
+    <tr>
+      <td>
+        <div class="d-flex">
+          <a href="/s3/object/delete?bucket={{../name}}&key={{Key}}" type="button" class="btn btn-outline-danger me-1">Delete</a>
+          <a href="/s3/object/download?bucket={{../name}}&key={{Key}}" type="button" class="btn btn-outline-success">Download</a>
+        </div>
+      </td>
+      <th scope="row">
+        <a href="/s3/object?bucket={{../name}}&key={{Key}}">{{Key}}</a>
+      </th>
+      <td>{{LastModified}}</td>
+      <td>{{ETag}}</td>
+      <td>{{toSize Size}}</td>
+      <td>{{StorageClass}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

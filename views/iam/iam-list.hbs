@@ -1,0 +1,139 @@
+
+<h2>IAM Users</h2>
+
+<a href="/iam/create-user" role="button" class="btn btn-outline-primary">Create User</a>
+<a href="/iam/create-group" role="button" class="btn btn-outline-primary">Create Group</a>
+<a href="/iam/create-role" role="button" class="btn btn-outline-primary">Create Role</a>
+<a href="/iam/create-policy" role="button" class="btn btn-outline-primary">Create Policy</a>
+
+<h4 class="mt-2">Users:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">UserName</th>
+            <th scope="col">UserId</th>
+            <th scope="col">Path</th>
+            <th scope="col">Arn</th>
+            <th scope="col">Create Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Users}}
+        <tr>
+            <th>
+                <a href="/iam/delete-user?username={{UserName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/iam/user-details?username={{UserName}}">{{UserName}}</a>
+            </th>
+            <td>{{UserId}}</td>
+            <td>{{Path}}</td>
+            <td>{{Arn}}</td>
+            <td>{{CreateDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4 class="mt-2">Groups:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">GroupName</th>
+            <th scope="col">GroupId</th>
+            <th scope="col">Path</th>
+            <th scope="col">Arn</th>
+            <th scope="col">Create Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Groups}}
+        <tr>
+            <th>
+                <a href="/iam/delete-group?groupName={{GroupName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/iam/group-details?groupName={{GroupName}}">{{GroupName}}</a>
+            </th>
+            <td>{{GroupId}}</td>
+            <td>{{Path}}</td>
+            <td>{{Arn}}</td>
+            <td>{{CreateDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4 class="mt-2">Roles:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">RoleName</th>
+            <th scope="col">RoleId</th>
+            <th scope="col">Path</th>
+            <th scope="col">Arn</th>
+            <th scope="col">Description</th>
+            <th scope="col">AssumeRolePolicyDocument</th>
+            <th scope="col">MaxSessionDuration</th>
+            <th scope="col">Create Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Roles}}
+        <tr>
+            <th>
+                <a href="/iam/delete-role?roleName={{RoleName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/iam/role-details?roleName={{RoleName}}">{{RoleName}}</a>
+            </th>
+            <td>{{RoleId}}</td>
+            <td>{{Path}}</td>
+            <td>{{Arn}}</td>
+            <td>{{Description}}</td>
+            <td>{{AssumeRolePolicyDocument}}</td>
+            <td>{{MaxSessionDuration}}</td>
+            <td>{{CreateDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4 class="mt-2">Policies:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">PolicyName</th>
+            <th scope="col">PolicyId</th>
+            <th scope="col">Path</th>
+            <th scope="col">Arn</th>
+            <th scope="col">DefaultVersionId</th>
+            <th scope="col">AttachmentCount</th>
+            <th scope="col">CreateDate</th>
+            <th scope="col">UpdateDate</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Policies}}
+        <tr>
+            <th>
+                <a href="/iam/delete-policy?arn={{Arn}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/iam/policy-details?arn={{Arn}}">{{PolicyName}}</a>
+            </th>
+            <td>{{PolicyId}}</td>
+            <td>{{Path}}</td>
+            <td>{{Arn}}</td>
+            <td>{{DefaultVersionId}}</td>
+            <td>{{AttachmentCount}}</td>
+            <td>{{CreateDate}}</td>
+            <td>{{UpdateDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

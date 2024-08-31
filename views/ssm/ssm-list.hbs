@@ -1,0 +1,33 @@
+<h2>Simple System Manager</h2>
+
+<a href="/ssm/create" type="button" class="btn btn-outline-primary">Create Parameter</a>
+
+<h4 class="mt-2">Parameter List:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Version</th>
+            <th scope="col">DataType</th>
+            <th scope="col">LastModifiedDate</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Parameters}}
+        <tr>
+            <th>
+                <a href="/ssm/remove?name={{Name}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/ssm/details?name={{Name}}">{{Name}}</a>
+            </th>
+            <td>{{Type}}</td>
+            <td>{{Version}}</td>
+            <td>{{DataType}}</td>
+            <td>{{LastModifiedDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
