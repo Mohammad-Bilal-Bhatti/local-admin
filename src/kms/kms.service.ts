@@ -18,6 +18,8 @@ import {
     CreateAliasCommandOutput,
     DeleteAliasCommand,
     DeleteAliasCommandOutput,
+    ScheduleKeyDeletionCommand,
+    ScheduleKeyDeletionCommandOutput,
     EncryptCommand,
     EncryptCommandOutput,
     DecryptCommand,
@@ -98,7 +100,7 @@ export class KmsService {
         return response;
     }
 
-    async decrypt(encrypted: Uint8Array) {
+    async decrypt(encrypted: Uint8Array): Promise<DecryptCommandOutput> {
         const command = new DecryptCommand({
             CiphertextBlob: encrypted,
         });
@@ -133,6 +135,12 @@ export class KmsService {
 
     async deleteAlias(alias: string): Promise<DeleteAliasCommandOutput> {
         const command = new DeleteAliasCommand({ AliasName: alias });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async deleteKey(keyId: string): Promise<ScheduleKeyDeletionCommandOutput> {
+        const command = new ScheduleKeyDeletionCommand({ KeyId: keyId, PendingWindowInDays: 7 });
         const response = await this.client.send(command);
         return response;
     }

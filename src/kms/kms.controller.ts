@@ -108,6 +108,13 @@ export class KmsController {
         return res.redirect(302, `/kms/details?keyId=${input.keyId}`);
     }
 
+    @Get('delete-key')
+    @Redirect('/kms', 302)
+    async deletekey(@Query('keyId') keyId: string) {
+        const result = await this.kmsService.deleteKey(keyId);
+        return null;
+    }
+
     @Get('delete-alias')
     @Redirect('/kms', 302)
     async deleteAlias(@Query('alias') alias: string) {
