@@ -17,6 +17,7 @@ import { LoggingInterceptor } from './shared/interceptors/logging.interceptor';
 import { IamModule } from './iam/iam.module';
 import { AcmModule } from './acm/acm.module';
 import { LambdaModule } from './lambda/lambda.module';
+import { Ec2Module } from './ec2/ec2.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { LambdaModule } from './lambda/lambda.module';
     }),
     AcmModule,
     DynamoDbModule,
+    Ec2Module,
     EventBridgeModule,
     IamModule,
     KmsModule,
