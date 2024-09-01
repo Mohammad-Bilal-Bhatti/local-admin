@@ -1,7 +1,7 @@
 import { Controller, Get, Res, Post, Body, Session } from '@nestjs/common';
 import { Response } from 'express';
 import { SqsService } from './sqs/sqs.service';
-import { ConfigureInput } from './dtos/common.input.dto';
+import { ConfigureInput } from './app.dto';
 import { ConfigService } from '@nestjs/config';
 import { S3Service } from './s3/s3.service';
 import { cards } from './shared/constants';

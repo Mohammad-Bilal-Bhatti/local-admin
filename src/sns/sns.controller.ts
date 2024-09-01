@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post, Query, Req, Res } from "@nestjs/common";
-import { Response, Request } from 'express';
+import { Body, Controller, Get, Post, Query, Redirect, Render, Req, Res } from "@nestjs/common";
+import { Response } from 'express';
 import { SnsService } from "./sns.service";
-import { ConfirmSubscriptionInput, CreateTopicInput, PublishMessageInput, SubscribeTopicInput } from "src/dtos/sns.input.dto";
+import { ConfirmSubscriptionInput, CreateTopicInput, PublishMessageInput, SubscribeTopicInput } from "./sns.input.dto";
 
 @Controller('sns')
 export class SnsController {
@@ -9,21 +9,24 @@ export class SnsController {
     constructor(private readonly snsService: SnsService) {}
 
     @Get()
-    async getList(@Res() res: Response) {
+    @Render('sns-list')
+    async getList() {
         const topics = await this.snsService.getTopicsList();
         const subscriptions = await this.snsService.listSubscriptions();
-        return res.render('sns-list', { Topics: topics.Topics, Subscriptions: subscriptions.Subscriptions });
+        return { Topics: topics.Topics, Subscriptions: subscriptions.Subscriptions };
     }
 
     @Get('create')
-    async getCreateSnsTopic(@Res() res: Response) {
-        return res.render('sns-create-topic', {});
+    @Render('sns-create-topic')
+    async getCreateSnsTopic() {
+        return null;
     }
 
     @Post('create')
-    async createSnsTopic(@Res() res: Response, @Body() input: CreateTopicInput) {  
+    @Redirect('/sns', 302)
+    async createSnsTopic(@Body() input: CreateTopicInput) {  
         const result = await this.snsService.createTopic(input.name, input.tags);
-        return res.render('sns-create-topic', { success: `Topic created with arn: ${result.TopicArn}` });
+        return null
     }
 
     @Post('publish')
@@ -46,12 +49,12 @@ export class SnsController {
     }
 
     @Get('unsubscribe')
+    @Redirect('/sns', 302)
     async unsubscribeTopic(
         @Query('subscriptionArn') subscriptionArn: string,
-        @Res() res: Response,
     ) {
         const result = await this.snsService.unsubscribeTopic(subscriptionArn);
-        return res.redirect(302, '/sns');
+        return null;
     }
 
     @Post('confirm-subscription')
@@ -65,15 +68,16 @@ export class SnsController {
     }
 
     @Get('remove')
+    @Redirect('/sns', 302)
     async removeTopic(
         @Query('arn') arn: string,
-        @Res() res: Response,
     ) {
         const result = await this.snsService.removeTopic(arn);
-        return res.redirect(302, '/sns');
+        return null;
     }
 
     @Get('details')
+    @Render('sns-topic-detail')
     async getTopicDetails(
         @Res() res: Response,
         @Query('arn') arn: string,
@@ -84,7 +88,7 @@ export class SnsController {
 
         const sampleEndpoint = 'https://webhook.site/{{uuid}}';
         const result = await this.snsService.getTopicDetails(arn);
-        return res.render('sns-topic-detail', { TopicArn: arn, Attributes: result.Attributes, token, published, subscribed, sampleEndpoint });
+        return { TopicArn: arn, Attributes: result.Attributes, token, published, subscribed, sampleEndpoint };
     }
 
 }

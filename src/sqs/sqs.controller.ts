@@ -1,7 +1,7 @@
-import { Body, Controller, Get, ParseIntPipe, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Get, ParseIntPipe, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { SqsService } from "./sqs.service";
-import { CreateQueueInput, DeleteMessageInput, SendMessageInput } from "src/dtos/sqs.input.dto";
+import { CreateQueueInput, DeleteMessageInput, SendMessageInput } from "./sqs.input.dto";
 
 @Controller('sqs')
 export class SqsController {
@@ -9,8 +9,8 @@ export class SqsController {
     constructor(private readonly service: SqsService) {}
 
     @Get()
+    @Render('sqs-list')
     async queues(
-      @Res() res: Response,
       @Query('limit', new ParseIntPipe({ optional: true })) limit = 100,
     ) {
       const { data, nextToken } = await this.service.listQueues(limit);
@@ -19,38 +19,39 @@ export class SqsController {
         queue['isDLQ'] = dlqRegex.test(queue.name);
       });
   
-      return res.render('sqs-list', { queues: data, nextToken });
+      return { queues: data, nextToken };
     }
 
     @Get('create')
-    async getCreateQueue(@Res() res: Response) {
-      return res.render('sqs-create-queue', { name: "Hello World" });
+    @Render('sqs-create-queue')
+    async getCreateQueue() {
+      return null;
     }
   
     @Post('create')
+    @Redirect('/sqs', 302)
     async createQueue(
-      @Res() res: Response,
       @Body() input: CreateQueueInput,
     ) {
   
       const result = await this.service.createQueue(input.name, input.fifoQueue);
       const QueueUrl = result.QueueUrl;
-      return res.redirect(302, '/sqs');
+      return null;
     }
   
     @Get('delete-queue')
+    @Redirect('/sqs', 302)
     async deleteQueue(
-      @Res() response: Response,
       @Query('queue') queue: string
     ) {
       const result = await this.service.deleteQueue(queue);
-      return response.redirect(302, '/sqs');
+      return null;
     }
   
     @Get('purge-queue')
+    @Redirect('/sqs', 302)
     async purgeQueue(
       @Query('queue') queue: string,
-      @Res() response: Response,
     ) {
   
       const globAll = /\*/ig;
@@ -69,12 +70,12 @@ export class SqsController {
         const result = await this.service.purgeQueue(queue);
       }
   
-      return response.redirect(302, '/sqs');
+      return null;
     }
   
     @Get('detail')
+    @Render('sqs-queue-detail')
     async queueDetail(
-      @Res() res: Response,
       @Query('name') name: string,
     ) {
       const { $metadata, ...attributes } = await this.service.getQueueAttributes(name);
@@ -84,16 +85,16 @@ export class SqsController {
       const dlqRegex = /dlq/ig;
       const isDLQ = dlqRegex.test(name);
   
-      return res.render('sqs-queue-detail', { name, attributes, messages: result.Messages, isFifoQueue, isDLQ });
+      return { name, attributes, messages: result.Messages, isFifoQueue, isDLQ };
     }
   
     @Get('send-message')
+    @Render('sqs-send-message')
     async getSendMessage(
       @Query('queue') queue: string,
-      @Res() res: Response
     ) {
       const isFifoQueue = queue?.endsWith('.fifo');
-      return res.render('sqs-send-message', { queueName: queue, isFifoQueue });
+      return { queueName: queue, isFifoQueue };
     }
   
     @Post('send-message')
@@ -107,13 +108,13 @@ export class SqsController {
     }
 
     @Get('start-redrive')
+    @Redirect('/sqs', 302)
     async startRedrive(
       @Query('queue') queue: string,
-      @Res() res: Response,
     ) {
   
       const response = await this.service.startRedrive(queue);
-      return res.redirect(302, '/sqs');
+      return null;
     }
   
     @Post('delete-message')

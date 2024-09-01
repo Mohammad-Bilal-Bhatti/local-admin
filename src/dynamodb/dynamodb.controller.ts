@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { DynamoDbService } from "./dynamodb.service";
-import { CreateTableInput } from "src/dtos/dynamodb.dto";
+import { CreateTableInput } from "./dynamodb.dto";
 
 @Controller('dynamodb')
 export class DynamoDbController {
@@ -9,7 +9,8 @@ export class DynamoDbController {
     constructor(private readonly service: DynamoDbService) {}
 
     @Get()
-    async getTables(@Res() res: Response) {
+    @Render('dynamodb-list-tables')
+    async getTables() {
         const result = await this.service.getTableList();
 
         const tables = [];
@@ -18,28 +19,31 @@ export class DynamoDbController {
             tables.push({ name: tableName, details: tableDescription.Table });
         }
 
-        return res.render('dynamodb-list-tables', { tables });
+        return { tables };
     }
 
     @Get('create-table')
+    @Render('dynamodb-create-table')
     async getCreateTable(@Res() res: Response) {
-        return res.render('dynamodb-create-table', {});
+        return null;
     }
 
     @Post('create-table')
-    async createTable(@Res() res: Response, @Body() input: CreateTableInput) {
+    @Redirect('/dynamodb', 302)
+    async createTable(@Body() input: CreateTableInput) {
         const result = await this.service.createTable(
             input.name, 
             input.hashAttributeName, 
             input.hashAttributeType, 
-            parseInt(input.readCapacityUnits, 10),
-            parseInt(input.writeCapacityUnits, 10),
+            parseInt(input.readCapacityUnits, 3),
+            parseInt(input.writeCapacityUnits, 3),
         );
-        return res.redirect(302, '/dynamodb');
+        return null;
     }
 
     @Get('details')
-    async getTableDetails(@Res() res: Response, @Query('table') table: string) {
+    @Render('dynamodb-table-details')
+    async getTableDetails(@Query('table') table: string) {
 
         const response = await this.service.describeTable(table);
         const items = await this.service.scanTable(table);
@@ -53,14 +57,15 @@ export class DynamoDbController {
             return { title: key, accessor: `${key}.${firstsubkey}` };
         });
 
-        return res.render('dynamodb-table-details', { table, details: response.Table, columns, rows, items: items.Items });
+        return { table, details: response.Table, columns, rows, items: items.Items };
     }
 
     @Get('view-item')
-    async viewItem(@Res() res: Response, @Query('table') table: string, @Query('key') key: string) {
+    @Render('dynamodb-item-details')
+    async viewItem(@Query('table') table: string, @Query('key') key: string) {
         const _key = JSON.parse(key.trim());
         const item = await this.service.getItem(table, { id: _key });
-        return res.render('dynamodb-item-details', { table, key, details: item.Item });
+        return { table, key, details: item.Item };
     }
 
     @Get('delete-item')
@@ -71,13 +76,15 @@ export class DynamoDbController {
     }
 
     @Get('remove')
-    async removeTable(@Res() res: Response, @Query('table') table: string) {
+    @Redirect('/dynamodb', 302)
+    async removeTable(@Query('table') table: string) {
         const response = await this.service.removeTable(table);
-        return res.redirect(302, '/dynamodb');
+        return null;
     }
 
     @Get('purge')
-    async purgeTable(@Res() res: Response, @Query('table') table: string) {
+    @Redirect('/dynamodb', 302)
+    async purgeTable(@Query('table') table: string) {
 
         const detail = await this.service.describeTable(table);
 
@@ -90,7 +97,7 @@ export class DynamoDbController {
                 const dresult = await this.service.deleteItem(table, key);
             }    
         }
-        return res.redirect(302, '/dynamodb');
+        return null;
     }
 
 }

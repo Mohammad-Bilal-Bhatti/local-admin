@@ -1,20 +1,21 @@
-import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Redirect, Render } from "@nestjs/common";
 import { AcmService } from "./acm.service";
-import { Response } from 'express';
-import { GenerateCertificateDto, KeyAlgorithm } from "src/dtos/acm.dto";
+import { GenerateCertificateDto, KeyAlgorithm } from "./acm.dto";
 
 @Controller('acm')
 export class AcmController {
     constructor (private readonly service: AcmService) {}
 
     @Get()
-    async listCertificates(@Res() res: Response) {
+    @Render('acm-list')
+    async listCertificates() {
         const list = await this.service.listCertificates();
-        return res.render('acm-list', { Certificates: list.CertificateSummaryList });
+        return { Certificates: list.CertificateSummaryList };
     }
 
     @Get('create')
-    async getCreateCertificate(@Res() res: Response) {
+    @Render('acm-create')
+    async getCreateCertificate() {
         const algorithmOptions: { label: string, value: KeyAlgorithm }[] = [
             { label: 'EC_prime256v1', value: 'EC_prime256v1' },
             { label: 'EC_secp384r1', value: 'EC_secp384r1' },
@@ -25,38 +26,39 @@ export class AcmController {
             { label: 'RSA_4096', value: 'RSA_4096' },
         ];
 
-        return res.render('acm-create', { algorithmOptions });
+        return { algorithmOptions };
     }
 
     @Post('create')
+    @Redirect('/acm', 302)
     async createCertificate(
-        @Res() res: Response,
         @Body() input: GenerateCertificateDto,
     ) {
-        console.log("input: ", input);
-        const result = await this.service.generateCertificate(input.domain, input.algorithm);        
-        return res.redirect(302, '/acm');
+        const result = await this.service.generateCertificate(input.domain, input.algorithm);
+        return null;
     }
 
     @Get('details')
-    async getDetails(@Res() res: Response, @Query('arn') arn: string) {
+    @Render('acm-details')
+    async getDetails(@Query('arn') arn: string) {
         const details = await this.service.getCertificateDetails(arn);
         const certificate = details.Certificate;
         const chain = details.CertificateChain;
-        return res.render('acm-details', { arn, certificate, chain });
+        return { arn, certificate, chain };
     }
 
     @Get('delete')
-    async deleteCertificate(@Res() res: Response, @Query('arn') arn: string) {
+    @Redirect('/acm', 302)
+    async deleteCertificate(@Query('arn') arn: string) {
         const result = await this.service.deleteCertificate(arn);
-        return res.redirect(302, '/acm')
+        return null;
     }
 
     @Get('renew')
-    async renewCertificate(@Res() res: Response, @Query('arn') arn: string) {
+    @Redirect('/acm', 302)
+    async renewCertificate(@Query('arn') arn: string) {
         const result = await this.service.renewCertificate(arn);
-        console.log('result: ', result);
-        return res.redirect(302, '/acm');
+        return null;
     }
 
 }

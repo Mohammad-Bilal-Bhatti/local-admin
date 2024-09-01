@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { EventBridgeService } from "./event-bridge.service";
-import { CreateRuleInput, CreateTargetInput } from "src/dtos/event-bridge.dto";
+import { CreateRuleInput, CreateTargetInput } from "./event-bridge.dto";
 
 @Controller('event-bridge')
 export class EventBridgeController {
@@ -9,20 +9,23 @@ export class EventBridgeController {
     constructor(private readonly service: EventBridgeService) {}
 
     @Get()
-    async getRulesList(@Res() res: Response) {
+    @Render('event-bridge-list')
+    async getRulesList() {
         const rules = await this.service.getRulesList();
-        return res.render('event-bridge-list', { Rules: rules?.Rules });
+        return { Rules: rules?.Rules };
     }
 
     @Get('create-rule')
-    async getCreateEventRule(@Res() res: Response) {
-        return res.render('event-bridge-create-rule', { });
+    @Render('event-bridge-create-rule')
+    async getCreateEventRule() {
+        return null;
     }
 
     @Post('create-rule')
-    async createEventRule(@Res() res: Response, @Body() input: CreateRuleInput) {
+    @Redirect('/event-bridge', 302)
+    async createEventRule(@Body() input: CreateRuleInput) {
         const result = await this.service.createEventRule(input.name, input.description, input.scheduleExpression);
-        return res.redirect(302, '/event-bridge');
+        return null;
     }
 
     @Post('create-target')
@@ -32,17 +35,19 @@ export class EventBridgeController {
     }
 
     @Get('delete-rule')
+    @Redirect('/event-bridge', 302)
     async deleteRule(@Res() res: Response, @Query('name') name: string) {
         const result = await this.service.deleteRule(name);
-        return res.redirect(302, '/event-bridge');
+        return null;
     }
 
     @Get('rule-details')
+    @Render('rule-details')
     async getRuleDetails(@Res() res: Response, @Query('name') name: string) {
         const details = await this.service.describeRule(name);
         delete details.$metadata;
         const targets = await this.service.listTargets(name);
-        return res.render('rule-details', { name, details, Targets: targets.Targets });
+        return { name, details, Targets: targets.Targets };
     }
 
     @Get('delete-target')

@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post, Query, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { response, Response } from "express";
+import { Body, Controller, Get, Post, Query, Redirect, Render, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Response } from "express";
 import { S3Service } from "./s3.service";
-import { CreateBucketInput, UploadObjectInput } from "src/dtos/s3.input.dto";
+import { CreateBucketInput, UploadObjectInput } from "./s3.input.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('s3')
@@ -10,24 +10,26 @@ export class S3Controller {
     constructor(private readonly s3Service: S3Service) {}
 
     @Get()
-    async s3List(@Res() res: Response) {
+    @Render('s3-list')
+    async s3List() {
       const result = await this.s3Service.listBuckets();
       const { Buckets, Owner } = result;
-      return res.render('s3-list', { name: "S3", Buckets, Owner });
+      return { name: "S3", Buckets, Owner };
     }
 
     @Get('create')
-    async getCreateBucket(@Res() res: Response) {
-      return res.render('s3-create-bucket', {});
+    @Render('s3-create-bucket')
+    async getCreateBucket() {
+      return {};
     }
 
     @Post('create')
+    @Redirect('/s3', 302)
     async createBucket(
-      @Res() res: Response,
       @Body() input: CreateBucketInput,
     ) {
       const newBucket = await this.s3Service.createBucket(input.name);
-      return res.redirect(302, '/s3');
+      return { query: 'value' };
     }
 
     @Post('upload')
@@ -56,30 +58,25 @@ export class S3Controller {
     }
 
     @Get('details')
-    async getBucketDetails(
-      @Query('name') name: string,
-      @Res() res: Response
-    ) {
+    @Render('s3-bucket-detail')
+    async getBucketDetails(@Query('name') name: string) {
 
       const result = await this.s3Service.listObjects(name);
-      return res.render('s3-bucket-detail', { name, Contents: result.Contents });
+      return { name, Contents: result.Contents };
     }
 
     @Get('remove')
-    async deleteBucket(
-      @Query('bucket') bucket: string,
-      @Res() res: Response
-    ) {
-
+    @Redirect('/s3', 302)
+    async deleteBucket(@Query('bucket') bucket: string) {
       const result = await this.s3Service.deleteBucket(bucket);
-      return res.redirect(302, '/s3');
+      return null;
     }
 
     @Get('object')
+    @Render('s3-object-detail')
     async getObject(
       @Query('bucket') bucket: string,
       @Query('key') key: string,
-      @Res() res: Response,
     ) {
 
       const response = await this.s3Service.getObject(bucket, key);
@@ -104,8 +101,7 @@ export class S3Controller {
         Metadata,
       };
 
-      return res.render('s3-object-detail', { bucket, key, attributes });
-
+      return { bucket, key, attributes };
     }
 
     @Get('object/download')
@@ -117,6 +113,7 @@ export class S3Controller {
 
       const s3Object = await this.s3Service.getObject(bucket, key);
 
+      /* set response headers */
       res.setHeader('Content-Type', s3Object.ContentType || 'application/octet-stream');
       res.setHeader('Content-Disposition', `attachment; filename="${key}"`);
 

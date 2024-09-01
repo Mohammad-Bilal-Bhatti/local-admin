@@ -23,7 +23,7 @@ import {
 } from '@aws-sdk/client-sns';
 import { ConfigService } from "@nestjs/config";
 import { HttpService } from "@nestjs/axios";
-import { TagInput } from "src/dtos/sns.input.dto";
+import { TagInput } from "src/sns/sns.input.dto";
 
 @Injectable()
 export class SnsService {

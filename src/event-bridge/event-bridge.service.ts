@@ -17,7 +17,7 @@ import {
     RemoveTargetsCommandOutput,
 } from '@aws-sdk/client-eventbridge';
 import { ConfigService } from "@nestjs/config";
-import { TargetInput } from "src/dtos/event-bridge.dto";
+import { TargetInput } from "src/event-bridge/event-bridge.dto";
 
 @Injectable()
 export class EventBridgeService {

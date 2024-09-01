@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { LambdaService } from "./lambda.service";
-import { CreateAliasDto, CreateLambdaDto, InvokeLambdaDto, Runtime } from "src/dtos/lambda.dto";
+import { CreateAliasDto, CreateLambdaDto, InvokeLambdaDto, Runtime } from "./lambda.dto";
 
 @Controller('lambda')
 export class LambdaController {
@@ -9,44 +9,48 @@ export class LambdaController {
     constructor(private readonly service: LambdaService) {}
 
     @Get()
-    async getLambdas(@Res() res: Response) {
+    @Render('lambda-list')
+    async getLambdas() {
         const result = await this.service.listLabmdaFunctions();
-        console.log('data: ', result.Functions);
-        return res.render('lambda-list', { Functions: result.Functions });
+        return { Functions: result.Functions };
     }
 
     @Get('create')
-    async getCreateLambda(@Res() res: Response) {
+    @Render('lambda-create')
+    async getCreateLambda() {
         const runtimes = Object.values(Runtime);
-        return res.render('lambda-create', { runtimes });
+        return { runtimes };
     }
 
     @Post('create')
-    async createLambda(@Res() res: Response, @Body() input: CreateLambdaDto) {
+    @Redirect('/lambda', 302)
+    async createLambda(@Body() input: CreateLambdaDto) {
         const result = await this.service.createLambdaFunction(input.name, input.description, input.role, input.s3Bucket, input.s3Key, input.runtime, input.handler);
-        return res.redirect(302, '/lambda');
+        return null;
     }
 
     @Get('remove')
-    async removeFunction(@Res() res: Response, @Query('name') name: string) {
+    @Redirect('/lambda', 302)
+    async removeFunction(@Query('name') name: string) {
         const result = await this.service.removeFunction(name);
-        return res.redirect(302, '/lambda');
+        return null;
     }
 
     @Get('details')
-    async getLambdaDetails(@Res() res: Response, @Query('name') name: string) {
+    @Render('lambda-details')
+    async getLambdaDetails(@Query('name') name: string) {
         const { $metadata, ...details } = await this.service.getLambdaFunction(name);
         const aliases = await this.service.listAliases(name);
-        console.log('aliases: ', aliases);
-        return res.render('lambda-details', { functionName: name, details, Aliases: aliases.Aliases });
+        return { functionName: name, details, Aliases: aliases.Aliases };
     }
 
     @Post('invoke')
-    async invokeLambda(@Res() res: Response, @Body() input: InvokeLambdaDto) {
+    @Render('lambda-invoke')
+    async invokeLambda(@Body() input: InvokeLambdaDto) {
         const result = await this.service.invokeLambdaFunction(input.name, input.payload);
         const { ExecutedVersion, FunctionError, LogResult, Payload, StatusCode } = result;
         const payload = new TextDecoder().decode(Payload);
-        return res.render('lambda-invoke', { ExecutedVersion, FunctionError, LogResult, StatusCode, payload  });
+        return { ExecutedVersion, FunctionError, LogResult, StatusCode, payload };
     }
 
     @Post('alias')

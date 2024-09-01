@@ -20,9 +20,9 @@ import {
     GetQueueAttributesCommandOutput,
     MessageAttributeValue,
 } from "@aws-sdk/client-sqs";
-import { ConfigureInput } from "src/dtos/common.input.dto";
+import { ConfigureInput } from "../app.dto";
 import { ConfigService } from "@nestjs/config";
-import { MessageAttribute } from "src/dtos/sqs.input.dto";
+import { MessageAttribute } from "src/sqs/sqs.input.dto";
 
 
 @Injectable()

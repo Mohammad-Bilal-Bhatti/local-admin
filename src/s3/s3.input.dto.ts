@@ -6,9 +6,3 @@ export class CreateBucketInput {
 export class UploadObjectInput {
     bucket: string;
 }
-
-export class EncryptDecryptInput {
-    keyId: string;
-    plain?: string;
-    encrypted?: string;
-}

@@ -1,55 +1,62 @@
-import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { IamService } from "./iam.service";
 import { Response } from 'express';
-import { AddToGroup, CreateAccessKeys, CreateGroupInput, CreatePolicyDto, CreateRoleDto, CreateUserInput, RemoveFromGroup } from "src/dtos/iam.dto";
+import { AddToGroup, CreateAccessKeys, CreateGroupInput, CreatePolicyDto, CreateRoleDto, CreateUserInput, RemoveFromGroup } from "./iam.dto";
 
 @Controller('iam')
 export class IamController {
     constructor(private readonly service: IamService) {}
 
     @Get()
-    async getList(@Res() res: Response) {
+    @Render('iam-list')
+    async getList() {
         const users = await this.service.listUsers();
         const groups = await this.service.listGroups();
         const roles = await this.service.listRoles();
         const policies = await this.service.listPolicy();
-        return res.render('iam-list', { Users: users.Users, Groups: groups.Groups, Roles: roles.Roles, Policies: policies.Policies });
+        return { Users: users.Users, Groups: groups.Groups, Roles: roles.Roles, Policies: policies.Policies };
     }
 
     @Get('create-user')
-    async getCreateUser(@Res() res: Response) {
-        return res.render('iam-create-user', {});
+    @Render('iam-create-user')
+    async getCreateUser() {
+        return null;
     }
 
     @Post('create-user')
-    async createUser(@Res() res: Response, @Body() input: CreateUserInput) {
+    @Redirect('/iam', 302)
+    async createUser(@Body() input: CreateUserInput) {
         const response = await this.service.createUser(input.username);
-        return res.redirect(302, '/iam');
+        return null;
     }
 
     @Get('create-group')
-    async getCreateGroup(@Res() res: Response) {
-        return res.render('iam-create-group', {});
+    @Render('iam-create-group')
+    async getCreateGroup() {
+        return null;
     }
 
     @Post('create-group')
-    async createGroup(@Res() res: Response, @Body() input: CreateGroupInput) {
+    @Redirect('/iam', 302)
+    async createGroup(@Body() input: CreateGroupInput) {
         const response = await this.service.createGroup(input.name);
-        return res.redirect(302, '/iam');
+        return null;
     }
 
     @Get('user-details')
-    async userDetails(@Res() res: Response, @Query('username') username: string, @Query('keyId') keyId: string, @Query('secret') secret: string) {
+    @Render('iam-user-details')
+    async userDetails(@Query('username') username: string, @Query('keyId') keyId: string, @Query('secret') secret: string) {
         const result = await this.service.getUser(username);
         const keys = await this.service.listAccessKeys(username);
         const groups = await this.service.listGroups();
-        return res.render('iam-user-details', { username, details: result.User, Keys: keys.AccessKeyMetadata, keyId, secret, Groups: groups.Groups });
+        return { username, details: result.User, Keys: keys.AccessKeyMetadata, keyId, secret, Groups: groups.Groups };
     }
 
     @Get('delete-user')
-    async deleteUser(@Res() res: Response, @Query('username') username: string) {
+    @Redirect('/iam', 302)
+    async deleteUser(@Query('username') username: string) {
         const result = await this.service.deleteUser(username);
-        return res.redirect(302, '/iam');
+        return null;
     }
 
     @Get('delete-access-key')
@@ -67,15 +74,17 @@ export class IamController {
     }
 
     @Get('delete-group')
-    async deleteGroup(@Res() res: Response, @Query('groupName') groupName: string) {
+    @Redirect('/iam', 302)
+    async deleteGroup(@Query('groupName') groupName: string) {
         const result = await this.service.deleteGroup(groupName);
-        return res.redirect(302, '/iam');
+        return null;
     }
 
     @Get('group-details')
-    async getGroupDetails(@Res() res: Response, @Query('groupName') groupName: string) {
+    @Render('iam-group-details')
+    async getGroupDetails(@Query('groupName') groupName: string) {
         const group = await this.service.getGroup(groupName);
-        return res.render('iam-group-details', { groupName, details: group.Group, Users: group.Users });
+        return { groupName, details: group.Group, Users: group.Users };
     }
 
     @Post('add-to-group')
@@ -91,49 +100,57 @@ export class IamController {
     }
 
     @Get('create-role')
-    async getCreateRole(@Res() res: Response) {
-        return res.render('iam-create-role', {});
+    @Render('iam-create-role')
+    async getCreateRole() {
+        return null;
     }
 
     @Post('create-role')
-    async createRole(@Res() res: Response, @Body() input: CreateRoleDto) {
+    @Redirect('/iam', 302)
+    async createRole(@Body() input: CreateRoleDto) {
         const result = await this.service.createRole(input.name, input.description, input.policyDocument);
-        return res.redirect(302, '/iam');
+        return null;
     }
 
     @Get('role-details')
-    async getRoleDetails(@Res() res: Response, @Query('roleName') roleName: string) {
+    @Render('iam-role-details')
+    async getRoleDetails(@Query('roleName') roleName: string) {
         const result = await this.service.getRole(roleName); 
-        return res.render('iam-role-details', { roleName, Role: result.Role });
+        return { roleName, Role: result.Role };
     }
 
     @Get('delete-role')
-    async deleteRole(@Res() res: Response, @Query('roleName') roleName: string) {
-        const result = await this.service.deleteRole(roleName); 
-        return res.redirect(302, '/iam');
+    @Redirect('/iam', 302)
+    async deleteRole(@Query('roleName') roleName: string) {
+        const result = await this.service.deleteRole(roleName);
+        return null;
     }
 
     @Get('create-policy')
-    async getCreatePolicy(@Res() res: Response) {
-        return res.render('iam-create-policy', {});
+    @Render('iam-create-policy')
+    async getCreatePolicy() {
+        return null;
     }
 
     @Post('create-policy')
-    async createPolicy(@Res() res: Response, @Body() input: CreatePolicyDto) {
+    @Redirect('/iam', 302)
+    async createPolicy(@Body() input: CreatePolicyDto) {
         const result = await this.service.createPolicy(input.name, input.description, input.policyDocument);
-        return res.redirect(302, '/iam');
+        return null;
     }
 
     @Get('delete-policy')
-    async deletePolicy(@Res() res: Response, @Query('arn') arn: string) {
+    @Redirect('/iam', 302)
+    async deletePolicy(@Query('arn') arn: string) {
         const result = await this.service.deletePolicy(arn);
-        return res.redirect(302, '/iam');
+        return null;
     }
 
     @Get('policy-details')
-    async getPolicyDetails(@Res() res: Response, @Query('arn') arn: string) {
+    @Render('iam-policy-details')
+    async getPolicyDetails(@Query('arn') arn: string) {
         const result = await this.service.getPolicy(arn);
-        return res.render('iam-policy-details', { arn, Policy: result.Policy });
+        return { arn, Policy: result.Policy };
     }
 
 }

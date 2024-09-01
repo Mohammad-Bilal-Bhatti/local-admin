@@ -17,7 +17,7 @@ import {
     DeleteBucketCommandOutput,
     ListBucketsCommandOutput,
 } from "@aws-sdk/client-s3";
-import { ConfigureInput } from "src/dtos/common.input.dto";
+import { ConfigureInput } from "../app.dto";
 
 
 @Injectable()

@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { KmsService } from "./kms.service";
-import { CreateAliasInput, CreateKeyInput } from "src/dtos/kms.input.dto";
-import { EncryptDecryptInput } from "src/dtos/s3.input.dto";
+import { CreateAliasInput, CreateKeyInput, EncryptDecryptInput } from "./kms.input.dto";
 
 @Controller('kms')
 export class KmsController {
@@ -10,7 +9,8 @@ export class KmsController {
     constructor(private readonly kmsService: KmsService) {}
 
     @Get()
-    async getList(@Res() res: Response) {
+    @Render('kms-list')
+    async getList() {
         const result = await this.kmsService.listKeys();
         const aliases = await this.kmsService.getAliases();
 
@@ -21,38 +21,39 @@ export class KmsController {
             key['KeyMetadata'] = description.KeyMetadata;
         }
 
-        return res.render('kms-list', { Keys: result.Keys, Aliases: aliases.Aliases });
+        return { Keys: result.Keys, Aliases: aliases.Aliases };
     }
 
     @Get('disable')
+    @Redirect('/kms', 302)
     async disableKey(
         @Query('keyId') keyId: string,
-        @Res() res: Response,
     ) {
         const result = await this.kmsService.disableKey(keyId);
-        return res.redirect(302, '/kms');
+        return null;
     }
 
     @Get('enable')
+    @Redirect('/kms', 302)
     async enableKey(
         @Query('keyId') keyId: string,
-        @Res() res: Response,
     ) {
         const result = await this.kmsService.enableKey(keyId);
-        return res.redirect(302, '/kms');
+        return null;
     }
 
     @Get('encrypt-decrypt')
+    @Render('kms-encrypt-decrypt')
     async getEncryptDecrypt(
-        @Res() res: Response,
         @Query('keyId') keyId: string,
     ) {
 
-        return res.render('kms-encrypt-decrypt', { keyId });
+        return { keyId };
     }
 
     @Post('encrypt-decrypt')
-    async encryptDecrypt(@Res() res: Response, @Body() input: EncryptDecryptInput) {
+    @Render('kms-encrypt-decrypt')
+    async encryptDecrypt(@Body() input: EncryptDecryptInput) {
         const { keyId, plain, encrypted } = input;
 
         if (plain) {
@@ -60,7 +61,7 @@ export class KmsController {
             const encodedData = encoder.encode(plain);
             const result = await this.kmsService.encrypt(keyId, encodedData);
             const encryptedData = this.kmsService.unit8ArrayToBase64(result.CiphertextBlob);
-            return res.render('kms-encrypt-decrypt', { keyId, encrypted: encryptedData });
+            return { keyId, encrypted: encryptedData };
         }
 
         if (encrypted) {
@@ -68,32 +69,33 @@ export class KmsController {
             const data = this.kmsService.base64ToUint8Array(encrypted);            
             const result = await this.kmsService.decrypt(data);
             const plainData = decoder.decode(result.Plaintext);
-            return res.render('kms-encrypt-decrypt', { keyId, plain: plainData });
+            return { keyId, plain: plainData };
         }
     }
 
     @Get('details')
+    @Render('kms-key-detail')
     async getKeyDetails(
         @Query('keyId') keyId: string,
-        @Res() res: Response
     ) {
         const response = await this.kmsService.describeKey(keyId);
         const aliases = await this.kmsService.getAliases(keyId);
-        return res.render('kms-key-detail', { keyId, KeyMetadata: response.KeyMetadata, Aliases: aliases.Aliases });
+        return { keyId, KeyMetadata: response.KeyMetadata, Aliases: aliases.Aliases };
     }
 
     @Get('create')
-    async getCreateKey(@Res() res: Response) {
-        return res.render('kms-create-key', {});
+    @Render('kms-create-key')
+    async getCreateKey() {
+        return null;
     }
 
     @Post('create')
+    @Redirect('/kms', 302)
     async createKey(
-        @Res() res: Response,
         @Body() input: CreateKeyInput,
     ) {
         const response = await this.kmsService.createKey(input.description);
-        return res.redirect(302, '/kms');
+        return null;
     }
 
     @Post('create-alias')
