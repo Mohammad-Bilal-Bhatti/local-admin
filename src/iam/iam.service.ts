@@ -52,9 +52,6 @@ export class IamService {
             endpoint: this.config.get<string>('localstack.endpoint'),
             region: this.config.get<string>('localstack.region'),
         });
-
-        console.log('endpoint: ', this.config.get<string>('localstack.endpoint'));
-        console.log('region: ', this.config.get<string>('localstack.region'));
     }
 
     async createUser(username: string): Promise<CreateUserCommandOutput> {

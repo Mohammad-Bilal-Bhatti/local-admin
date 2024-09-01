@@ -4,18 +4,22 @@ import {
     ArgumentsHost,
     HttpException,
     HttpStatus,
+    Logger,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+    private readonly logger: Logger;
     private readonly ignoreList: string[] = ['ERR_HTTP_HEADERS_SENT'];
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) { }
+    constructor(private readonly httpAdapterHost: HttpAdapterHost) {
+        this.logger = new Logger(AllExceptionsFilter.name);
+    }
 
     catch(exception: Error, host: ArgumentsHost): void {
         if (this.ignoreList.includes(exception['code'])) return;
 
-        console.error(`[${AllExceptionsFilter.name}] catght an exception: `, exception);
+        this.logger.error(`[${AllExceptionsFilter.name}] catght an exception: `, exception);
         // In certain situations `httpAdapter` might not be available in the
         // constructor method, thus we should resolve it here.
         const { httpAdapter } = this.httpAdapterHost;

@@ -1,11 +1,16 @@
-import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
+import { Body, Controller, Get, Logger, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { IamService } from "./iam.service";
 import { Response } from 'express';
 import { AddToGroup, CreateAccessKeys, CreateGroupInput, CreatePolicyDto, CreateRoleDto, CreateUserInput, RemoveFromGroup } from "./iam.dto";
 
 @Controller('iam')
 export class IamController {
-    constructor(private readonly service: IamService) {}
+    private readonly logger: Logger;
+    constructor(
+        private readonly service: IamService,
+    ) {
+        this.logger = new Logger(IamController.name);
+    }
 
     @Get()
     @Render('iam-list')

@@ -16,6 +16,8 @@ import {
     ListAliasesCommandOutput,
     CreateAliasCommand,
     CreateAliasCommandOutput,
+    DeleteAliasCommand,
+    DeleteAliasCommandOutput,
     EncryptCommand,
     EncryptCommandOutput,
     DecryptCommand,
@@ -127,6 +129,12 @@ export class KmsService {
         }
 
         return uint8Array;
+    }
+
+    async deleteAlias(alias: string): Promise<DeleteAliasCommandOutput> {
+        const command = new DeleteAliasCommand({ AliasName: alias });
+        const response = await this.client.send(command);
+        return response;
     }
 
 }

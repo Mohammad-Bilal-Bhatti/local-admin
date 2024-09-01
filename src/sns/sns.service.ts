@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
 import {
     ListTopicsCommand,
@@ -29,6 +29,7 @@ import { TagInput } from "src/sns/sns.input.dto";
 export class SnsService {
 
     private client: SNSClient;
+    private logger: Logger;
     constructor(
         private readonly configService: ConfigService,
         private readonly httpService: HttpService,
@@ -37,6 +38,7 @@ export class SnsService {
             endpoint: configService.get<string>('localstack.endpoint'),
             region: configService.get<string>('localstack.region'),
         });
+        this.logger = new Logger(SnsService.name);
     }
 
     async getTopicsList(): Promise<ListTopicsCommandOutput> {
@@ -125,7 +127,7 @@ export class SnsService {
             return response.data.subscription_token;
 
         } catch (error){
-            console.error('Error occured with looking up subscription token:', error);
+            this.logger.error('Error occured with looking up subscription token:', error);
             return null
         }
     }
