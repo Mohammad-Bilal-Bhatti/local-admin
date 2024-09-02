@@ -21,8 +21,16 @@ MIT - No Warrenty - Distribute Copies free of charge.
 
 ## Development
 
+Create environment file
+`$ cp env.sample .env`
+
+Install dependencies
 `$ npm install`
+
+Start localstack container
 `$ docker compose up -d`
+
+Start development server
 `$ npm run start:dev`
 
 
