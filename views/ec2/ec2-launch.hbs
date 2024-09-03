@@ -1,0 +1,33 @@
+
+<h2>Launch Instance</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="imageId" class="form-label">Image Id</label>
+        <input type="text" class="form-control" id="imageId" name="imageId">
+    </div>
+    <div class="mb-3">
+        <label for="instanceType" class="form-label">Instance Type</label>
+        <select class="form-select" id="instanceType" name="instanceType">
+            {{#each instanceTypes}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="keyName" class="form-label">Key Name</label>
+        <input type="text" class="form-control" id="keyName" name="keyName">
+    </div>
+    <div class="mb-3">
+        <label for="securityGroups" class="form-label">Security Groups</label>
+        <input type="text" class="form-control" id="securityGroups" name="securityGroups">
+    </div>
+    <div class="mb-3">
+        <label for="userData" class="form-label">User Data</label>
+        <input type="text" class="form-control" id="userData" name="userData">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>

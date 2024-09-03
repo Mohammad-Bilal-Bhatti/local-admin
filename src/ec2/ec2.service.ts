@@ -17,6 +17,10 @@ import {
     DescribeInstancesCommandOutput,
     CreateKeyPairCommand,
     CreateKeyPairCommandOutput,
+    DescribeKeyPairsCommand,
+    DescribeKeyPairsCommandOutput,
+    DeleteKeyPairCommand,
+    DeleteKeyPairCommandOutput,
 } from "@aws-sdk/client-ec2";
 
 @Injectable()
@@ -41,7 +45,13 @@ export class Ec2Service {
         return response;
     }
 
-    async runInstance(imageId: string, instanceType: _InstanceType, keyName: string, securityGroups: string[], userData: string): Promise<RunInstancesCommandOutput> {
+    async runInstance(
+        imageId: string, 
+        instanceType: _InstanceType, 
+        keyName: string, 
+        securityGroups: string[], 
+        userData: string
+    ): Promise<RunInstancesCommandOutput> {
         const command = new RunInstancesCommand({
             ImageId: imageId,
             MaxCount: 1,
@@ -78,4 +88,26 @@ export class Ec2Service {
         const response = await this.client.send(command);
         return response;
     }
+
+    async listKeys(): Promise<DescribeKeyPairsCommandOutput> {
+        const command = new DescribeKeyPairsCommand({ });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async removeKey(name: string): Promise<DeleteKeyPairCommandOutput> {
+        const command = new DeleteKeyPairCommand({ KeyName: name });
+        const response = await this.client.send(command);
+        return response;
+    }
+   
+
+    async getInstanceDetails(instanceId: string) {
+        const command = new DescribeInstancesCommand({ InstanceIds: [instanceId] });
+        const response = await this.client.send(command);
+        const { Reservations: [ { Instances: [ instance ] } ] } = response;
+        return instance;
+    }
+    
+
 }

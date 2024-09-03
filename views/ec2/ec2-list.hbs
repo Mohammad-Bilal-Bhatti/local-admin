@@ -1,27 +1,146 @@
 
 <h2>Elastic Cloud Compute</h2>
 
-<a href="/ec2/create" role="button" class="btn btn-outline-primary">Create EC2</a>
+<a href="/ec2/launch" role="button" class="btn btn-outline-primary">Launch EC2</a>
 <a href="/ec2/create-keys" role="button" class="btn btn-outline-primary">Create Keys</a>
 
-<h4>Images</h4>
+<h4 class="mt-2">Key Paris</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">KeyName</th>
+            <th scope="col">KeyPairId</th>
+            <th scope="col">KeyFingerprint</th>
+            <th scope="col">CreateTime</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each KeyPairs}}
+        <tr>
+            <th>
+                <a href="/ec2/remove-key?name={{KeyName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/s3/key-details?name={{KeyName}}">{{KeyName}}</a>
+            </th>
+            <td>{{KeyPairId}}</td>
+            <td>{{KeyFingerprint}}</td>
+            <td>{{CreateTime}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4 class="mt-2">Instances</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">InstanceId</th>
+            <th scope="col">InstanceType</th>
+            <th scope="col">State</th>
+            <th scope="col">StateReason</th>
+            <th scope="col">Placement - AZ</th>
+            <th scope="col">Placement - Tanancy</th>
+            <th scope="col">KernelId</th>
+            <th scope="col">KeyName</th>
+            <th scope="col">LaunchTime</th>
+            <th scope="col">PrivateDnsName</th>
+            <th scope="col">PrivateIpAddress</th>
+            <th scope="col">PublicDnsName</th>
+            <th scope="col">PublicIpAddress</th>
+            <th scope="col">SubnetId</th>
+            <th scope="col">VpcId</th>
+            <th scope="col">Architecture</th>
+            <th scope="col">ClientToken</th>
+            <th scope="col">EbsOptimized</th>
+            <th scope="col">Hypervisor</th>
+            <th scope="col">RootDeviceName</th>
+            <th scope="col">RootDeviceType</th>
+            <th scope="col">VirtualizationType</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Instances}}
+        <tr>
+            <th>
+                <a href="/ec2/start-instance?instanceId={{InstanceId}}" class="btn btn-outline-primary" type="button">Start</a>
+                <a href="/ec2/stop-instance?instanceId={{InstanceId}}" class="btn btn-outline-warning" type="button">Stop</a>
+                <a href="/ec2/terminate-instance?instanceId={{InstanceId}}" class="btn btn-outline-danger" type="button">Terminate</a>
+            </th>
+            <th scope="row">
+                <a href="/ec2/instance-details?instanceId={{InstanceId}}">{{InstanceId}}</a>
+            </th>
+            <td>{{InstanceType}}</td>
+            <td>{{State.Name}}</td>
+            <td>{{StateReason.Message}}</td>
+            <td>{{Placement.AvailabilityZone}}</td>
+            <td>{{Placement.Tenancy}}</td>
+            <td>{{KernelId}}</td>
+            <td>{{KeyName}}</td>
+            <td>{{LaunchTime}}</td>
+            <td>{{PrivateDnsName}}</td>
+            <td>{{PrivateIpAddress}}</td>
+            <td>{{PublicDnsName}}</td>
+            <td>{{PublicIpAddress}}</td>
+            <td>{{SubnetId}}</td>
+            <td>{{VpcId}}</td>
+            <td>{{Architecture}}</td>
+            <td>{{ClientToken}}</td>
+            <td>{{EbsOptimized}}</td>
+            <td>{{Hypervisor}}</td>
+            <td>{{RootDeviceName}}</td>
+            <td>{{RootDeviceType}}</td>
+            <td>{{VirtualizationType}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4 class="mt-2">Images</h4>
 <table class="table">
     <thead>
         <tr>
             <th scope="col">Actions</th>
             <th scope="col">Name</th>
-            <th scope="col">Creation Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">Architecture</th>
+            <th scope="col">Hypervisor</th>
+            <th scope="col">State</th>
+            <th scope="col">ImageId</th>
+            <th scope="col">ImageLocation</th>
+            <th scope="col">Public</th>
+            <th scope="col">KernelId</th>
+            <th scope="col">RamdiskId</th>
+            <th scope="col">ImageOwnerAlias</th>
+            <th scope="col">RootDeviceName</th>
+            <th scope="col">VirtualizationType</th>
+            <th scope="col">CreationDate</th>
+
         </tr>
     </thead>
     <tbody>
         {{#each Images}}
         <tr>
             <th>
-                <a href="/s3/remove?bucket={{Name}}" class="btn btn-outline-danger" type="button">Delete</a>
+                <a href="/ec2/remove-image?imageId={{ImageId}}" class="btn btn-outline-danger" type="button">Delete</a>
             </th>
             <th scope="row">
-                <a href="/s3/details?name={{Name}}">{{Name}}</a>
+                <a href="/ec2/image-details?imageId={{ImageId}}">{{Name}}</a>
             </th>
+            <td>{{Description}}</td>
+            <td>{{Architecture}}</td>
+            <td>{{Hypervisor}}</td>
+            <td>{{State}}</td>
+            <td>{{ImageId}}</td>
+            <td>{{ImageLocation}}</td>
+            <td>{{Public}}</td>
+            <td>{{KernelId}}</td>
+            <td>{{RamdiskId}}</td>
+            <td>{{ImageOwnerAlias}}</td>
+            <td>{{RootDeviceName}}</td>
+            <td>{{VirtualizationType}}</td>
             <td>{{CreationDate}}</td>
         </tr>
         {{/each}}

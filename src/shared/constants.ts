@@ -77,6 +77,12 @@ export const cards: CardItem[] = [
         subtitle: "AWS Lambda Function",
         description: "AWS Lambda is a Serverless Function as a Service platform that lets you run code in your preferred programming language on the AWS ecosystem",
         link: "/lambda"
+    },
+    {
+        title: 'EC2',
+        subtitle: 'Elastic Compute Cloud',
+        description: 'Elastic Compute Cloud is a core service within Amazon Web Services that provides scalable and flexible virtual computing resources',
+        link: '/ec2'
     }
 ];
 
@@ -93,4 +99,5 @@ export const menuItems: MenuItem[] = [
     { title: 'Event Bridge', link: '/event-bridge' },
     { title: 'ACM', link: '/acm' },
     { title: 'Lambda', link: '/lambda' },
+    { title: 'EC2', link: '/ec2' }
 ];
