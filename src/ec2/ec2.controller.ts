@@ -8,11 +8,12 @@ export class Ec2Controller {
 
     @Get()
     @Render('ec2-list')
-    async getList() {
+    async getList(@Query('tab') tab = 'key-pairs') {
         const { Images } = await this.service.listImages();
-        const { Reservations: [ { Instances } ] } = await this.service.listInstances();
+        const { Reservations } = await this.service.listInstances();
+        const { Instances } = Reservations[0] || {};
         const { KeyPairs } = await this.service.listKeys();
-        return { Images, Instances, KeyPairs };
+        return { Images, Instances, KeyPairs, tab };
     }
 
     @Get('launch')

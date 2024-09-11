@@ -4,7 +4,20 @@
 <a href="/ec2/launch" role="button" class="btn btn-outline-primary">Launch EC2</a>
 <a href="/ec2/create-keys" role="button" class="btn btn-outline-primary">Create Keys</a>
 
-<h4 class="mt-2">Key Paris</h4>
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'key-pairs'}}active{{/ifEq}}" href="?tab=key-pairs">Key Pairs</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'instances'}}active{{/ifEq}}" href="?tab=instances">Instances</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'images'}}active{{/ifEq}}" href="?tab=images">Images</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'key-pairs'}}
+<h4 class="mt-2">Key Pairs</h4>
 <table class="table">
     <thead>
         <tr>
@@ -31,7 +44,9 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
 
+{{#ifEq tab 'instances'}}
 <h4 class="mt-2">Instances</h4>
 <table class="table">
     <thead>
@@ -97,7 +112,9 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
 
+{{#ifEq tab 'images'}}
 <h4 class="mt-2">Images</h4>
 <table class="table">
     <thead>
@@ -146,3 +163,4 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
