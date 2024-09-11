@@ -14,12 +14,32 @@ export class IamController {
 
     @Get()
     @Render('iam-list')
-    async getList() {
-        const users = await this.service.listUsers();
-        const groups = await this.service.listGroups();
-        const roles = await this.service.listRoles();
-        const policies = await this.service.listPolicy();
-        return { Users: users.Users, Groups: groups.Groups, Roles: roles.Roles, Policies: policies.Policies };
+    async getList(@Query('tab') tab = 'users') {
+        const data = { tab };
+        switch (tab) {
+            case 'policies': {
+                const { Policies } = await this.service.listPolicy();
+                Object.assign(data, { Policies });
+                break;
+            }
+            case 'roles': {
+                const { Roles } = await this.service.listRoles();
+                Object.assign(data, { Roles });
+                break;
+            }
+            case 'groups': {
+                const { Groups } = await this.service.listGroups();
+                Object.assign(data, { Groups });
+                break;
+            }
+            default:
+            case 'users': {
+                const { Users } = await this.service.listUsers();
+                Object.assign(data, { Users });
+                break;
+            }
+        }
+        return data;
     }
 
     @Get('create-user')

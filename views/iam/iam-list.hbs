@@ -6,6 +6,23 @@
 <a href="/iam/create-role" role="button" class="btn btn-outline-primary">Create Role</a>
 <a href="/iam/create-policy" role="button" class="btn btn-outline-primary">Create Policy</a>
 
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'users'}}active{{/ifEq}}" href="?tab=users">Users</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'groups'}}active{{/ifEq}}" href="?tab=groups">Groups</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'roles'}}active{{/ifEq}}" href="?tab=roles">Roles</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'policies'}}active{{/ifEq}}" href="?tab=policies">Policies</a>
+  </li>
+</ul>
+
+
+{{#ifEq tab 'users'}}
 <h4 class="mt-2">Users:</h4>
 <table class="table">
     <thead>
@@ -35,7 +52,10 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
 
+
+{{#ifEq tab 'groups'}}
 <h4 class="mt-2">Groups:</h4>
 <table class="table">
     <thead>
@@ -65,7 +85,9 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
 
+{{#ifEq tab 'roles'}}
 <h4 class="mt-2">Roles:</h4>
 <table class="table">
     <thead>
@@ -101,7 +123,9 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
 
+{{#ifEq tab 'policies'}}
 <h4 class="mt-2">Policies:</h4>
 <table class="table">
     <thead>
@@ -137,3 +161,4 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
