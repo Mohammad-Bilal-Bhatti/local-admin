@@ -3,6 +3,16 @@
 
 <a href="/sns/create" type="button" class="btn btn-outline-success">Create Topic</a>
 
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'topics'}}active{{/ifEq}}" href="?tab=topics">Topics</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'subscriptions'}}active{{/ifEq}}" href="?tab=subscriptions">Subscriptions</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'topics'}}
 <h4 class="mt-2">Topics:</h4>
 <table class="table">
     <thead>
@@ -24,9 +34,11 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
 
 
-<h4>Subscriptions:</h4>
+{{#ifEq tab 'subscriptions'}}
+<h4 class="mt-2">Subscriptions:</h4>
 <table class="table">
     <thead>
         <tr>
@@ -55,3 +67,4 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}

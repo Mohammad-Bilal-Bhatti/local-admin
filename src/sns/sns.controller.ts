@@ -10,10 +10,22 @@ export class SnsController {
 
     @Get()
     @Render('sns-list')
-    async getList() {
-        const topics = await this.snsService.getTopicsList();
-        const subscriptions = await this.snsService.listSubscriptions();
-        return { Topics: topics.Topics, Subscriptions: subscriptions.Subscriptions };
+    async getList(@Query('tab') tab = 'topics') {
+        const data = { tab };
+        switch (tab) {
+            case 'subscriptions': {
+                const { Subscriptions } = await this.snsService.listSubscriptions();
+                Object.assign(data, { Subscriptions });
+                break;
+            }
+            default:
+            case 'topics': {
+                const { Topics } = await this.snsService.getTopicsList();
+                Object.assign(data, { Topics });
+                break;
+            }
+        }
+        return data;
     }
 
     @Get('create')
