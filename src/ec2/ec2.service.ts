@@ -21,6 +21,8 @@ import {
     DescribeKeyPairsCommandOutput,
     DeleteKeyPairCommand,
     DeleteKeyPairCommandOutput,
+    DescribeSecurityGroupsCommand,
+    DescribeSecurityGroupsCommandOutput,
 } from "@aws-sdk/client-ec2";
 
 @Injectable()
@@ -49,7 +51,7 @@ export class Ec2Service {
         imageId: string, 
         instanceType: _InstanceType, 
         keyName: string, 
-        securityGroups: string[], 
+        securityGroups: string, 
         userData: string
     ): Promise<RunInstancesCommandOutput> {
         const command = new RunInstancesCommand({
@@ -58,7 +60,7 @@ export class Ec2Service {
             MinCount: 1,
             InstanceType: instanceType,
             KeyName: keyName,
-            SecurityGroupIds: securityGroups,
+            SecurityGroupIds: [securityGroups],
             UserData: userData,
         });
         const response = await this.client.send(command);
@@ -108,6 +110,11 @@ export class Ec2Service {
         const { Reservations: [ { Instances: [ instance ] } ] } = response;
         return instance;
     }
-    
+
+    async listSecurityGroups(): Promise<DescribeSecurityGroupsCommandOutput> {
+        const command = new DescribeSecurityGroupsCommand({});
+        const response = this.client.send(command);
+        return response;
+    }
 
 }

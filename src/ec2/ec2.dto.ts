@@ -4,7 +4,7 @@ export class LaunchInstanceDto {
     imageId: string;
     instanceType: _InstanceType;
     keyName: string;
-    securityGroups: string[];
+    securityGroups: string;
     userData: string;
 }
 

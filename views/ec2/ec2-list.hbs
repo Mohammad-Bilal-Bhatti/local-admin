@@ -14,6 +14,9 @@
   <li class="nav-item">
     <a class="nav-link {{#ifEq tab 'images'}}active{{/ifEq}}" href="?tab=images">Images</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'sg'}}active{{/ifEq}}" href="?tab=sg">Security Groups</a>
+  </li>
 </ul>
 
 {{#ifEq tab 'key-pairs'}}
@@ -164,3 +167,36 @@
     </tbody>
 </table>
 {{/ifEq}}
+
+{{#ifEq tab 'sg'}}
+<h4 class="mt-2">Security Groups</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">GroupName</th>
+            <th scope="col">OwnerId</th>
+            <th scope="col">GroupId</th>
+            <th scope="col">VpcId</th>
+            <th scope="col">IpPermissionsEgress</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each SecurityGroups}}
+        <tr>
+            <th>
+                <a href="/ec2/remove-sg?name={{GroupName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/s3/sg-details?name={{GroupName}}">{{GroupName}}</a>
+            </th>
+            <td>{{OwnerId}}</td>
+            <td>{{GroupId}}</td>
+            <td>{{VpcId}}</td>
+            <td><pre>{{json IpPermissionsEgress 2}}</pre></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
