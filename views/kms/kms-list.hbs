@@ -3,6 +3,16 @@
 
 <a href="/kms/create" type="button" class="btn btn-outline-success">Create Key</a>
 
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'keys'}}active{{/ifEq}}" href="?tab=keys">Keys</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'aliases'}}active{{/ifEq}}" href="?tab=aliases">Aliases</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'keys'}}
 <h4 class="mt-2">Keys:</h4>
 <table class="table">
     <thead>
@@ -46,8 +56,10 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
 
-<h4>Aliases:</h4>
+{{#ifEq tab 'aliases'}}
+<h4 class="mt-2">Aliases:</h4>
 <table class="table">
         <thead>
         <tr>
@@ -74,3 +86,4 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}

@@ -10,18 +10,30 @@ export class KmsController {
 
     @Get()
     @Render('kms-list')
-    async getList() {
-        const result = await this.kmsService.listKeys();
-        const aliases = await this.kmsService.getAliases();
+    async getList(@Query('tab') tab = 'keys') {
 
-        for (const key of result.Keys) {
-            const description = await this.kmsService.describeKey(key.KeyId);
+        const data = { tab };
+        switch (tab) {
+            case 'aliases': {
+                const { Keys } = await this.kmsService.listKeys();
+                for (const key of Keys) {
+                    const description = await this.kmsService.describeKey(key.KeyId);
+        
+                    /* append key meta data to key item */
+                    key['KeyMetadata'] = description.KeyMetadata;
+                }
 
-            /* append key meta data to key item */
-            key['KeyMetadata'] = description.KeyMetadata;
+                Object.assign(data, { Keys });
+                break;
+            }
+            default:
+            case 'keys': {
+                const { Aliases } = await this.kmsService.getAliases();
+                Object.assign(data, { Aliases });
+                break;
+            }
         }
-
-        return { Keys: result.Keys, Aliases: aliases.Aliases };
+        return data;
     }
 
     @Get('disable')
