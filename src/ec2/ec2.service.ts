@@ -23,6 +23,12 @@ import {
     DeleteKeyPairCommandOutput,
     DescribeSecurityGroupsCommand,
     DescribeSecurityGroupsCommandOutput,
+    CreateSecurityGroupCommand,
+    CreateSecurityGroupCommandOutput,
+    AuthorizeSecurityGroupIngressCommand,
+    AuthorizeSecurityGroupIngressCommandOutput,
+    AuthorizeSecurityGroupEgressCommand,
+    AuthorizeSecurityGroupEgressCommandOutput,
 } from "@aws-sdk/client-ec2";
 
 @Injectable()
@@ -113,7 +119,43 @@ export class Ec2Service {
 
     async listSecurityGroups(): Promise<DescribeSecurityGroupsCommandOutput> {
         const command = new DescribeSecurityGroupsCommand({});
-        const response = this.client.send(command);
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async getSecurityGroup(groupId: string) {
+        const command = new DescribeSecurityGroupsCommand({ GroupIds: [ groupId ] });
+        const response = await this.client.send(command);
+        return response.SecurityGroups[0];
+    }
+
+    async createSecurityGroup(name: string, description: string): Promise<CreateSecurityGroupCommandOutput> {
+        const command = new CreateSecurityGroupCommand({ GroupName: name, Description: description });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async addIngressRule(groupId: string, cidrIp: string, fromPort: number, toPort: number, ipProtocol: string): Promise<AuthorizeSecurityGroupIngressCommandOutput> {
+        const command = new AuthorizeSecurityGroupIngressCommand({
+            GroupId: groupId,
+            CidrIp: cidrIp,
+            FromPort: fromPort,
+            ToPort: toPort,
+            IpProtocol: ipProtocol,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async addEgressRule(groupId: string, cidrIp: string, fromPort: number, toPort: number, ipProtocol: string): Promise<AuthorizeSecurityGroupEgressCommandOutput> {
+        const command = new AuthorizeSecurityGroupEgressCommand({
+            GroupId: groupId,
+            CidrIp: cidrIp,
+            FromPort: fromPort,
+            ToPort: toPort,
+            IpProtocol: ipProtocol,
+        });
+        const response = await this.client.send(command);
         return response;
     }
 

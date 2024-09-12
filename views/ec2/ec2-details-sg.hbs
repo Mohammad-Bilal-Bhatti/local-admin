@@ -1,0 +1,115 @@
+
+<h2>Security Group Details - {{groupId}}</h2>
+
+<h4>Details</h4>
+<pre>{{json details 2}}</pre>
+
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'ingress'}}active{{/ifEq}}" href="?groupId={{groupId}}&tab=ingress">Ingress</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'egress'}}active{{/ifEq}}" href="?groupId={{groupId}}&tab=egress">Egress</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'ingress'}}
+<h4 class="mt-2">Create Ingress Rule</h2>
+<form method="post" action="/ec2/add-ingress">
+    <input type="text" name="groupId" value="{{groupId}}" style="display: none;">
+
+    <div class="mb-3">
+        <label for="cidrIp" class="form-label">CIDR IP</label>
+        <input type="text" class="form-control" id="cidrIp" name="cidrIp">
+    </div>
+    <div class="mb-3">
+        <label for="fromPort" class="form-label">From Port</label>
+        <input type="text" class="form-control" id="fromPort" name="fromPort">
+    </div>
+    <div class="mb-3">
+        <label for="toPort" class="form-label">To Port</label>
+        <input type="text" class="form-control" id="toPort" name="toPort">
+    </div>
+    <div class="mb-3">
+        <label for="ipProtocol" class="form-label">Ip Protocol</label>
+        <input type="text" class="form-control" id="ipProtocol" name="ipProtocol">
+    </div>
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+<h4 class="mt-2">Ingress Rules:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">FromPort</th>
+            <th scope="col">ToPort</th>
+            <th scope="col">IpProtocol</th>
+            <th scope="col">CidrIp</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each IpPermissions}}
+        <tr>
+            <td>{{FromPort}}</td>
+            <td>{{ToPort}}</td>
+            <td>{{IpProtocol}}</td>
+            <td>{{IpRanges.0.CidrIp}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+{{#ifEq tab 'egress'}}
+<h4 class="mt-2">Create Egress Rule</h2>
+<form method="post" action="/ec2/add-egress">
+    <input type="text" name="groupId" value="{{groupId}}" style="display: none;">
+
+    <div class="mb-3">
+        <label for="cidrIp" class="form-label">CIDR IP</label>
+        <input type="text" class="form-control" id="cidrIp" name="cidrIp">
+    </div>
+    <div class="mb-3">
+        <label for="fromPort" class="form-label">From Port</label>
+        <input type="text" class="form-control" id="fromPort" name="fromPort">
+    </div>
+    <div class="mb-3">
+        <label for="toPort" class="form-label">To Port</label>
+        <input type="text" class="form-control" id="toPort" name="toPort">
+    </div>
+    <div class="mb-3">
+        <label for="ipProtocol" class="form-label">Ip Protocol</label>
+        <input type="text" class="form-control" id="ipProtocol" name="ipProtocol">
+    </div>
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+
+<h4 class="mt-2">Egress Rules</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">FromPort</th>
+            <th scope="col">ToPort</th>
+            <th scope="col">IpProtocol</th>
+            <th scope="col">CidrIp</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each IpPermissionsEgress}}
+        <tr>
+            <td>{{FromPort}}</td>
+            <td>{{ToPort}}</td>
+            <td>{{IpProtocol}}</td>
+            <td>{{IpRanges.0.CidrIp}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render } from "@nestjs/common";
 import { Ec2Service } from "./ec2.service";
-import { LaunchInstanceDto, CreateKeysDto, _InstanceType } from "./ec2.dto";
+import { LaunchInstanceDto, CreateKeysDto, _InstanceType, CreateSecuirtyGroupDto, AddIngressRuleDto, AddEgressRuleDto } from "./ec2.dto";
 
 @Controller('ec2')
 export class Ec2Controller {
@@ -30,7 +30,7 @@ export class Ec2Controller {
             }
 
             default:
-            case 'key-paris': {
+            case 'keys': {
                 const { KeyPairs } = await this.service.listKeys();
                 Object.assign(data, { KeyPairs });
                 break;
@@ -107,6 +107,45 @@ export class Ec2Controller {
     async getInstanceDetails(@Query('instanceId') instanceId: string) {
         const instance = await this.service.getInstanceDetails(instanceId);
         return { instance };
+    }
+
+    @Get('details-sg')
+    @Render('ec2-details-sg')
+    async getSgDetails(
+        @Query('groupId') groupId: string,
+        @Query('tab') tab = 'ingress',
+    ) {
+
+        const securityGroup = await this.service.getSecurityGroup(groupId);
+        const { IpPermissions, IpPermissionsEgress, ...rest } =  securityGroup;
+        return { groupId, tab, IpPermissions, IpPermissionsEgress, details: rest };
+    }
+
+    @Get('create-sg')
+    @Render('ec2-create-sg')
+    async getCreateSecurityGroup() {
+        return {};
+    }
+
+    @Post('create-sg')
+    @Redirect('/ec2', 302)
+    async createSecurityGroup(@Body() input: CreateSecuirtyGroupDto) {
+        const response = await this.service.createSecurityGroup(input.name, input.description);
+        return null;
+    }
+
+    @Post('add-ingress')
+    @Redirect('/ec2', 302)
+    async addIngressRule(@Body() input: AddIngressRuleDto) {
+        const response = await this.service.addIngressRule(input.groupId, input.cidrIp, input.fromPort, input.toPort, input.ipProtocol);
+        return null;
+    }
+
+    @Post('add-egress')
+    @Redirect('/ec2', 302)
+    async addEgressRule(@Body() input: AddEgressRuleDto) {
+        const response = await this.service.addEgressRule(input.groupId, input.cidrIp, input.fromPort, input.toPort, input.ipProtocol);
+        return null;
     }
 
 }
