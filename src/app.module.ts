@@ -18,6 +18,7 @@ import { IamModule } from './iam/iam.module';
 import { AcmModule } from './acm/acm.module';
 import { LambdaModule } from './lambda/lambda.module';
 import { Ec2Module } from './ec2/ec2.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { Ec2Module } from './ec2/ec2.module';
     DynamoDbModule,
     Ec2Module,
     EventBridgeModule,
+    GatewayModule,
     IamModule,
     KmsModule,
     LambdaModule,

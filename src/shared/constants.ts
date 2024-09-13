@@ -83,6 +83,12 @@ export const cards: CardItem[] = [
         subtitle: 'Elastic Compute Cloud',
         description: 'Elastic Compute Cloud is a core service within Amazon Web Services that provides scalable and flexible virtual computing resources',
         link: '/ec2'
+    },
+    {
+        title: "AWS API GW",
+        subtitle: "API Gateway",
+        description: "API Gateway is a managed service that enables developers to create, deploy, and manage APIs (Application Programming Interfaces)",
+        link: "/gateway"
     }
 ];
 
@@ -99,5 +105,6 @@ export const menuItems: MenuItem[] = [
     { title: 'Event Bridge', link: '/event-bridge' },
     { title: 'ACM', link: '/acm' },
     { title: 'Lambda', link: '/lambda' },
-    { title: 'EC2', link: '/ec2' }
+    { title: 'EC2', link: '/ec2' },
+    { title: 'GW', link: '/gateway' }
 ];

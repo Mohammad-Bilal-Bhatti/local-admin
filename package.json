@@ -23,6 +23,7 @@
     "@angular-devkit/core": "^18.2.1",
     "@angular-devkit/schematics": "^18.2.1",
     "@aws-sdk/client-acm": "^3.637.0",
+    "@aws-sdk/client-api-gateway": "^3.650.0",
     "@aws-sdk/client-dynamodb": "^3.631.0",
     "@aws-sdk/client-ec2": "^3.641.0",
     "@aws-sdk/client-eventbridge": "^3.633.0",
