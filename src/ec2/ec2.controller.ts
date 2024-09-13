@@ -8,7 +8,7 @@ export class Ec2Controller {
 
     @Get()
     @Render('ec2-list')
-    async getList(@Query('tab') tab = 'key-pairs') {
+    async getList(@Query('tab') tab = 'keys') {
 
         const data = { tab };
         switch(tab) {

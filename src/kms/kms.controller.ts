@@ -15,23 +15,23 @@ export class KmsController {
         const data = { tab };
         switch (tab) {
             case 'aliases': {
-                const { Keys } = await this.kmsService.listKeys();
-                for (const key of Keys) {
-                    const description = await this.kmsService.describeKey(key.KeyId);
-        
-                    /* append key meta data to key item */
-                    key['KeyMetadata'] = description.KeyMetadata;
-                }
-
-                Object.assign(data, { Keys });
-                break;
-            }
-            default:
-            case 'keys': {
                 const { Aliases } = await this.kmsService.getAliases();
                 Object.assign(data, { Aliases });
                 break;
             }
+            default:
+                case 'keys': {
+                    const { Keys } = await this.kmsService.listKeys();
+                    for (const key of Keys) {
+                        const description = await this.kmsService.describeKey(key.KeyId);
+            
+                        /* append key meta data to key item */
+                        key['KeyMetadata'] = description.KeyMetadata;
+                    }
+    
+                    Object.assign(data, { Keys });
+                    break;
+                }
         }
         return data;
     }
