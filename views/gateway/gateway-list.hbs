@@ -1,4 +1,36 @@
 
 <h2>Api Gateway Service</h2>
 
-<p>Page Under construction...</p>
+<a href="/gateway/create-api" role="button" class="btn btn-outline-primary">Create Api</a>
+
+<h4 class="mt-2">Rest Apis:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">rootResourceId</th>
+            <th scope="col">disableExecuteApiEndpoint</th>
+            <th scope="col">createdDate</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each items}}
+        <tr>
+            <th>
+                <a href="/gateway/delete?id={{id}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/gateway/details?id={{id}}">{{id}}</a>
+            </th>
+            <td>{{name}}</td>
+            <td>{{description}}</td>
+            <td>{{rootResourceId}}</td>
+            <td>{{disableExecuteApiEndpoint}}</td>
+            <td>{{createdDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

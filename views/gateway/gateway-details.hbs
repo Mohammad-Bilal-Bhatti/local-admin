@@ -1,0 +1,74 @@
+
+<h2>Rest Api Details - {{id}}</h2>
+
+<pre>{{json details 2}}</pre>
+
+<h4>Resource List:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">parentId</th>
+            <th scope="col">pathPart</th>
+            <th scope="col">path</th>
+            <th scope="col">Methods</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {{#each resources}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{parentId}}</td>
+            <td>{{pathPart}}</td>
+            <td>{{path}}</td>
+            <td><pre>{{json resourceMethods 2}}</pre></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4 class="mt-2">Create Resource:</h4>
+<form method="post" action="/gateway/resource">
+
+    <input type="text" name="restApiId" value="{{id}}" style="display:none;"/>
+
+    <div class="mb-3">
+        <label for="parentId" class="form-label">Parent Id</label>
+        <input type="text" class="form-control" id="parentId" name="parentId">
+    </div>
+    
+    <div class="mb-3">
+        <label for="pathPart" class="form-label">Path</label>
+        <input type="text" class="form-control" id="pathPart" name="pathPart">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+
+
+<h4 class="mt-2">Create Method:</h4>
+<form method="post" action="/gateway/method">
+
+    <input type="text" name="restApiId" value="{{id}}" style="display:none;"/>
+
+    <div class="mb-3">
+        <label for="resourceId" class="form-label">resourceId</label>
+        <input type="text" class="form-control" id="resourceId" name="resourceId">
+    </div>
+    
+    <div class="mb-3">
+        <label for="httpMethod" class="form-label">Http Method</label>
+        <input type="text" class="form-control" id="httpMethod" name="httpMethod">
+    </div>
+
+    <div class="mb-3">
+        <label for="authorizationType" class="form-label">Authorization Type</label>
+        <input type="text" class="form-control" id="authorizationType" name="authorizationType">
+    </div>
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
