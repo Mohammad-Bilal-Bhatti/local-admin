@@ -12,8 +12,9 @@ export class SqsController {
     @Render('sqs-list')
     async queues(
       @Query('limit', new ParseIntPipe({ optional: true })) limit = 100,
+      @Query('search') search: string,
     ) {
-      const { data, nextToken } = await this.service.listQueues(limit);
+      const { data, nextToken } = await this.service.listQueues(search, limit);
       data.map(queue => {
         const dlqRegex = /dlq/ig;
         queue['isDLQ'] = dlqRegex.test(queue.name);
@@ -58,7 +59,7 @@ export class SqsController {
       const isglobAll = globAll.test(queue);
       if (isglobAll) {
         /* find all queues and purge them */
-        const { data, nextToken } = await this.service.listQueues(100);
+        const { data, nextToken } = await this.service.listQueues(null, 100);
         if (Array.isArray(data)) {
           for (const queue of data) {
             this.service.purgeQueue(queue.name);

@@ -43,9 +43,10 @@ export class SqsService {
         });
     }
 
-    async listQueues(maxItems: number): Promise<{ data: { name: string, attributes: Partial<Record<QueueAttributeName, string>> }[], nextToken: string }> {
+    async listQueues(namePrefix: string, maxItems: number): Promise<{ data: { name: string, attributes: Partial<Record<QueueAttributeName, string>> }[], nextToken: string }> {
         let nextToken: string = null;
         const command = new ListQueuesCommand({
+            QueueNamePrefix: namePrefix,
             MaxResults: maxItems,
         });
 
