@@ -13,15 +13,24 @@ import {
     RenewCertificateCommand,
     RenewCertificateCommandOutput,
 } from "@aws-sdk/client-acm";
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 @Injectable()
-export class AcmService {
+export class AcmService implements ConfigurableService {
     
-    private readonly client: ACMClient;
+    private client: ACMClient;
     constructor(private readonly configService: ConfigService) {
         this.client = new ACMClient({
             endpoint: configService.get<string>('localstack.endpoint'),
             region: configService.get<string>('localstack.region'),
+        });
+    }
+
+    configure(configuration: ConfigureInput): void {
+        this.client = new ACMClient({
+            endpoint: configuration.endpoint,
+            region: configuration.region
         });
     }
 

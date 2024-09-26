@@ -1,10 +1,10 @@
-import { Injectable, Scope } from "@nestjs/common";
-import { 
-    SQSClient, 
-    ListQueuesCommand, 
-    PurgeQueueCommand, 
-    GetQueueAttributesCommand, 
-    ListDeadLetterSourceQueuesCommand, 
+import { Injectable } from "@nestjs/common";
+import {
+    SQSClient,
+    ListQueuesCommand,
+    PurgeQueueCommand,
+    GetQueueAttributesCommand,
+    ListDeadLetterSourceQueuesCommand,
     ReceiveMessageCommand,
     DeleteMessageCommand,
     CreateQueueCommand,
@@ -23,18 +23,20 @@ import {
 import { ConfigureInput } from "../app.dto";
 import { ConfigService } from "@nestjs/config";
 import { MessageAttribute } from "src/sqs/sqs.input.dto";
+import { ConfigurableService } from "src/shared/configurable.interface";
 
 
 @Injectable()
-export class SqsService {
+export class SqsService implements ConfigurableService {
 
-    constructor(private readonly config: ConfigService) {}
+    private client: SQSClient;
 
-    /* load sqs client with default credentials on startup */
-    private client = new SQSClient({
-        endpoint: this.config.get<string>('localstack.endpoint'),
-        region: this.config.get<string>('localstack.region'),
-    });
+    constructor(private readonly config: ConfigService) {
+        this.client = new SQSClient({
+            endpoint: this.config.get<string>('localstack.endpoint'),
+            region: this.config.get<string>('localstack.region'),
+        });
+    }
 
     configure(configuration: ConfigureInput) {
         this.client = new SQSClient({
@@ -59,7 +61,7 @@ export class SqsService {
             for (const queue of queues) {
                 const result = await this.getQueueAttributes(queue);
                 data.push({ name: queue, attributes: result.Attributes });
-            }    
+            }
         }
 
         return { data: data, nextToken };
@@ -83,11 +85,11 @@ export class SqsService {
 
         /* pull message out of DQL and re-enqueue to source queue */
         const result = await this.listMessages(dlq, 10);
-        if (!Array.isArray(result.Messages)) return;            
+        if (!Array.isArray(result.Messages)) return;
         for (const message of result.Messages) {
             await this.sendMessage(sourceQueue, message.Body, message.Attributes.MessageGroupId, message.Attributes.MessageDeduplicationId);
             await this.deleteSqsMessage(dlq, message.ReceiptHandle);
-        }    
+        }
 
         return;
     }
@@ -161,7 +163,7 @@ export class SqsService {
             QueueUrl: QueueUrl,
             MessageBody: MessageBody,
             MessageGroupId: isFifoQueue ? MessageGroupId : null,
-            MessageDeduplicationId: isFifoQueue ?  MessageDeduplicationId : null,
+            MessageDeduplicationId: isFifoQueue ? MessageDeduplicationId : null,
             MessageAttributes: MessageAttributes,
         });
 

@@ -42,15 +42,24 @@ import {
     GetPolicyCommand,
     GetPolicyCommandOutput,
 } from "@aws-sdk/client-iam";
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 @Injectable()
-export class IamService {
+export class IamService implements ConfigurableService {
 
-    private readonly client: IAMClient;
+    private client: IAMClient;
     constructor(private readonly config: ConfigService) {
         this.client = new IAMClient({
             endpoint: this.config.get<string>('localstack.endpoint'),
             region: this.config.get<string>('localstack.region'),
+        });
+    }
+
+    configure(configuration: ConfigureInput): void {
+        this.client = new IAMClient({
+            endpoint: configuration.endpoint,
+            region: configuration.region
         });
     }
 

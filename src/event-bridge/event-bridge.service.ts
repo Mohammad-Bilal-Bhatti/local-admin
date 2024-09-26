@@ -18,9 +18,11 @@ import {
 } from '@aws-sdk/client-eventbridge';
 import { ConfigService } from "@nestjs/config";
 import { TargetInput } from "src/event-bridge/event-bridge.dto";
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 @Injectable()
-export class EventBridgeService {
+export class EventBridgeService implements ConfigurableService {
 
     private client: EventBridgeClient;
     constructor(private readonly configService: ConfigService) {
@@ -28,6 +30,13 @@ export class EventBridgeService {
             endpoint: configService.get<string>('localstack.endpoint'),
             region: configService.get<string>('localstack.region'),
         })
+    }
+
+    configure(configuration: ConfigureInput): void {
+        this.client = new EventBridgeClient({
+            endpoint: configuration.endpoint,
+            region: configuration.region
+        });
     }
 
     async getRulesList(): Promise<ListRulesCommandOutput> {

@@ -14,15 +14,24 @@ import {
 
 } from '@aws-sdk/client-ssm';
 import { ConfigService } from "@nestjs/config";
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 @Injectable()
-export class SsmService {
+export class SsmService implements ConfigurableService {
 
     private client: SSMClient;
     constructor(private readonly configService: ConfigService) {
         this.client = new SSMClient({
             endpoint: configService.get<string>('localstack.endpoint'),
             region: configService.get<string>('localstack.region'),
+        });
+    }
+
+    configure(configuration: ConfigureInput): void {
+        this.client = new SSMClient({
+            endpoint: configuration.endpoint,
+            region: configuration.region
         });
     }
 

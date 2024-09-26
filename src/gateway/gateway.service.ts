@@ -22,14 +22,23 @@ import {
     GetRestApiCommandOutput,
 } from '@aws-sdk/client-api-gateway';
 import { IntegrationType } from './gateway.dto';
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 @Injectable()
-export class GatewayService {
-    private readonly client: APIGatewayClient;
+export class GatewayService implements ConfigurableService {
+    private client: APIGatewayClient;
     constructor(private readonly configService: ConfigService) {
         this.client = new APIGatewayClient({
             endpoint: this.configService.get<string>('localstack.endpoint'),
             region: this.configService.get<string>('localstack.region'),
+        });
+    }
+    
+    configure(configuration: ConfigureInput): void {
+        this.client = new APIGatewayClient({
+            endpoint: configuration.endpoint,
+            region: configuration.region
         });
     }
 

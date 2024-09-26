@@ -30,14 +30,23 @@ import {
     AuthorizeSecurityGroupEgressCommand,
     AuthorizeSecurityGroupEgressCommandOutput,
 } from "@aws-sdk/client-ec2";
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 @Injectable()
-export class Ec2Service {
-    private readonly client: EC2Client;
+export class Ec2Service implements ConfigurableService {
+    private client: EC2Client;
     constructor(private readonly configService: ConfigService) {
         this.client = new EC2Client({
             endpoint: configService.get<string>('localstack.endpoint'),
             region: configService.get<string>('localstack.region')
+        });
+    }
+
+    configure(configuration: ConfigureInput): void {
+        this.client = new EC2Client({
+            endpoint: configuration.endpoint,
+            region: configuration.region
         });
     }
 

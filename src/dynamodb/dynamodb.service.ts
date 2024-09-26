@@ -14,19 +14,27 @@ import {
     GetItemCommand,
     GetItemCommandOutput,
     CreateTableCommand,
-    CreateTableCommandInput,
     CreateTableCommandOutput,
 } from '@aws-sdk/client-dynamodb';
 import { ConfigService } from "@nestjs/config";
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 @Injectable()
-export class DynamoDbService {
+export class DynamoDbService implements ConfigurableService {
 
     private client: DynamoDBClient;
     constructor(private readonly configService: ConfigService) {
         this.client = new DynamoDBClient({
             endpoint: configService.get<string>('localstack.endpoint'),
             region: configService.get<string>('localstack.region'),
+        });
+    }
+
+    configure(configuration: ConfigureInput): void {
+        this.client = new DynamoDBClient({
+            endpoint: configuration.endpoint,
+            region: configuration.region
         });
     }
 

@@ -12,16 +12,25 @@ import {
     DeleteSecretCommandOutput,
 } from '@aws-sdk/client-secrets-manager';
 import { ConfigService } from "@nestjs/config";
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 @Injectable()
-export class SecretsManagerService {
+export class SecretsManagerService implements ConfigurableService {
 
     private client: SecretsManagerClient;
     constructor(private readonly configService: ConfigService) {
         this.client = new SecretsManagerClient({
             endpoint: configService.get<string>('localstack.endpoint'),
             region: configService.get<string>('localstack.region'),
-        })
+        });
+    }
+
+    configure(configuration: ConfigureInput): void {
+        this.client = new SecretsManagerClient({
+            endpoint: configuration.endpoint,
+            region: configuration.region
+        });
     }
 
     async getSecretsList(limit: number, token: string): Promise<ListSecretsCommandOutput> {

@@ -24,9 +24,11 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { HttpService } from "@nestjs/axios";
 import { TagInput } from "src/sns/sns.input.dto";
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 @Injectable()
-export class SnsService {
+export class SnsService implements ConfigurableService {
 
     private client: SNSClient;
     private logger: Logger;
@@ -39,6 +41,13 @@ export class SnsService {
             region: configService.get<string>('localstack.region'),
         });
         this.logger = new Logger(SnsService.name);
+    }
+
+    configure(configuration: ConfigureInput): void {
+        this.client = new SNSClient({
+            endpoint: configuration.endpoint,
+            region: configuration.region
+        });
     }
 
     async getTopicsList(): Promise<ListTopicsCommandOutput> {

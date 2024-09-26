@@ -18,10 +18,11 @@ import {
     ListBucketsCommandOutput,
 } from "@aws-sdk/client-s3";
 import { ConfigureInput } from "../app.dto";
+import { ConfigurableService } from "src/shared/configurable.interface";
 
 
 @Injectable()
-export class S3Service {
+export class S3Service implements ConfigurableService {
 
     private client: S3Client;
 

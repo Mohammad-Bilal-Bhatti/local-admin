@@ -21,15 +21,24 @@ import {
     Runtime,
 } from "@aws-sdk/client-lambda";
 import { ConfigService } from "@nestjs/config";
+import { ConfigurableService } from "src/shared/configurable.interface";
+import { ConfigureInput } from "src/app.dto";
 
 
 @Injectable()
-export class LambdaService {
-    private readonly client: LambdaClient;
+export class LambdaService implements ConfigurableService {
+    private client: LambdaClient;
     constructor(private readonly configService: ConfigService) {
         this.client = new LambdaClient({
             endpoint: configService.get<string>('localstack.endpoint'),
             region: configService.get<string>('localstack.region'),
+        });
+    }
+
+    configure(configuration: ConfigureInput): void {
+        this.client = new LambdaClient({
+            endpoint: configuration.endpoint,
+            region: configuration.region
         });
     }
 
