@@ -1,6 +1,8 @@
+import { KeyUsageType } from '@aws-sdk/client-kms';
 
 export class CreateKeyInput {
     description: string;
+    keyUsage: KeyUsageType;
 }
 
 export class CreateAliasInput {
@@ -8,8 +10,10 @@ export class CreateAliasInput {
     alias: string;
 }
 
-export class EncryptDecryptInput {
+export class EncryptDecryptSignInput {
     keyId: string;
-    plain?: string;
-    encrypted?: string;
+    operation: string;
+    input: string;
 }
+
+export { SigningAlgorithmSpec, KeyUsageType  } from '@aws-sdk/client-kms';

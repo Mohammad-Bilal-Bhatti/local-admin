@@ -24,6 +24,12 @@ import {
     EncryptCommandOutput,
     DecryptCommand,
     DecryptCommandOutput,
+    SignCommand,
+    SignCommandOutput,
+    SigningAlgorithmSpec,
+    KeyUsageType,
+    VerifyCommand,
+    VerifyCommandOutput,
 } from "@aws-sdk/client-kms";
 
 @Injectable()
@@ -68,9 +74,10 @@ export class KmsService {
         return response;
     }
 
-    async createKey(description: string): Promise<CreateKeyCommandOutput> {
+    async createKey(description: string, keyUsage: KeyUsageType): Promise<CreateKeyCommandOutput> {
         const command = new CreateKeyCommand({
-            Description: description,                
+            Description: description,
+            KeyUsage: keyUsage,
         });
         const response = await this.client.send(command);
         return response;
@@ -141,6 +148,18 @@ export class KmsService {
 
     async deleteKey(keyId: string): Promise<ScheduleKeyDeletionCommandOutput> {
         const command = new ScheduleKeyDeletionCommand({ KeyId: keyId, PendingWindowInDays: 7 });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async sign(keyId: string, message: Uint8Array, algorithm: SigningAlgorithmSpec): Promise<SignCommandOutput> {
+        const command = new SignCommand({ KeyId: keyId, Message: message, SigningAlgorithm: algorithm });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async verify(keyId: string, message: Uint8Array, signature: Uint8Array, algorithm: SigningAlgorithmSpec) {
+        const command = new VerifyCommand({ KeyId: keyId, Message: message, Signature: signature, SigningAlgorithm: algorithm });
         const response = await this.client.send(command);
         return response;
     }

@@ -1,28 +1,37 @@
-
 <h2>Encrypt - Decrypt</h2>
 
 <form class="mb-2" method="post">
-
     <input type="text" name="keyId" value="{{keyId}}" style="display: none;" />
 
     <div class="mb-3">
-        <label for="plain" class="form-label">Plain Text</label>
-        <textarea class="form-control" id="plain" rows="3" name="plain">{{plain}}</textarea>
+        <label for="input" class="form-label">Input Text</label>
+        <textarea class="form-control" id="input" rows="3" name="input"></textarea>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="operation" id="encrypt" value="encrypt" checked>
+        <label class="form-check-label" for="encrypt">
+            Encrypt
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="operation" id="decrypt" value="decrypt" >
+        <label class="form-check-label" for="decrypt">
+            Decrypt
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="operation" id="sign" value="sign" >
+        <label class="form-check-label" for="sign">
+            Sign 
+        </label>
     </div>
 
     <button type="reset" class="btn btn-outline-secondary">Reset</button>
-    <button type="submit" class="btn btn-outline-success">Encrypt</button>
+    <button type="submit" class="btn btn-outline-success">Submit</button>
 </form>
 
-<form class="mb-2" method="post">
-
-    <input type="text" name="keyId" value="{{keyId}}" style="display: none;" />
-
-    <div class="mb-3">
-        <label for="encrypted" class="form-label">Encrypted Text</label>
-        <textarea class="form-control" id="encrypted" rows="3" name="encrypted">{{encrypted}}</textarea>
-    </div>
-
-    <button type="reset" class="btn btn-outline-secondary">Reset</button>
-    <button type="submit" class="btn btn-outline-success">Decrypt</button>
-</form>
+<div class="mb-3">
+    <label class="form-label">Output:</label>
+    <textarea class="form-control" rows="3">{{output}}</textarea>
+</div>

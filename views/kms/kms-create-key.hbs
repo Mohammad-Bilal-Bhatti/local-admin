@@ -4,6 +4,15 @@
 <form method="post">
 
     <div class="mb-3">
+        <label for="keyUsage" class="form-label">Key Usage Type</label>
+        <select class="form-select" id="keyUsage" name="keyUsage">
+            {{#each keyUsageOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <input type="text" class="form-control" id="description" name="description">
     </div>

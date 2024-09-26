@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { KmsService } from "./kms.service";
-import { CreateAliasInput, CreateKeyInput, EncryptDecryptInput } from "./kms.input.dto";
+import { CreateAliasInput, CreateKeyInput, EncryptDecryptSignInput, KeyUsageType } from "./kms.input.dto";
 
 @Controller('kms')
 export class KmsController {
@@ -65,24 +65,39 @@ export class KmsController {
 
     @Post('encrypt-decrypt')
     @Render('kms-encrypt-decrypt')
-    async encryptDecrypt(@Body() input: EncryptDecryptInput) {
-        const { keyId, plain, encrypted } = input;
+    async encryptDecrypt(@Body() input: EncryptDecryptSignInput) {
+        const { keyId, input: __input, operation } = input;
+        const result = { keyId };
 
-        if (plain) {
-            const encoder = new TextEncoder();
-            const encodedData = encoder.encode(plain);
-            const result = await this.kmsService.encrypt(keyId, encodedData);
-            const encryptedData = this.kmsService.unit8ArrayToBase64(result.CiphertextBlob);
-            return { keyId, encrypted: encryptedData };
+        switch(operation) {
+            case 'sign': {
+                const encoder = new TextEncoder();
+                const message = encoder.encode(__input);
+                const { Signature } = await this.kmsService.sign(keyId, message, 'RSASSA_PSS_SHA_256');
+                const signData = this.kmsService.unit8ArrayToBase64(Signature);
+                Object.assign(result, { output: signData });
+                break;
+            }
+            case 'decrypt': {
+                const decoder = new TextDecoder();
+                const data = this.kmsService.base64ToUint8Array(__input);            
+                const { Plaintext } = await this.kmsService.decrypt(data);
+                const plainData = decoder.decode(Plaintext);
+                Object.assign(result, { output: plainData });
+                break;
+            }
+            default:
+            case 'encrypt': {
+                const encoder = new TextEncoder();
+                const encodedData = encoder.encode(__input);
+                const { CiphertextBlob } = await this.kmsService.encrypt(keyId, encodedData);
+                const encryptedData = this.kmsService.unit8ArrayToBase64(CiphertextBlob);
+                Object.assign(result, { output: encryptedData });
+                break;
+            }
         }
 
-        if (encrypted) {
-            const decoder = new TextDecoder();
-            const data = this.kmsService.base64ToUint8Array(encrypted);            
-            const result = await this.kmsService.decrypt(data);
-            const plainData = decoder.decode(result.Plaintext);
-            return { keyId, plain: plainData };
-        }
+        return result;
     }
 
     @Get('details')
@@ -98,7 +113,8 @@ export class KmsController {
     @Get('create')
     @Render('kms-create-key')
     async getCreateKey() {
-        return null;
+        const keyUsageOptions = Object.keys(KeyUsageType).map(key => ({ label: key, value: KeyUsageType[key] }));
+        return { keyUsageOptions };
     }
 
     @Post('create')
@@ -106,7 +122,7 @@ export class KmsController {
     async createKey(
         @Body() input: CreateKeyInput,
     ) {
-        const response = await this.kmsService.createKey(input.description);
+        const response = await this.kmsService.createKey(input.description, input.keyUsage);
         return null;
     }
 
