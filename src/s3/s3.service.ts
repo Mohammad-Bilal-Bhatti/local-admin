@@ -47,9 +47,10 @@ export class S3Service {
         return response;
     }
 
-    async listObjects(bucket: string): Promise<ListObjectsV2CommandOutput> {
+    async listObjects(bucket: string, prefix: string): Promise<ListObjectsV2CommandOutput> {
         const command = new ListObjectsV2Command({
-            Bucket: bucket,                
+            Bucket: bucket,
+            Prefix: prefix,
         });
 
         const result = await this.client.send(command);

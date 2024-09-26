@@ -59,9 +59,12 @@ export class S3Controller {
 
     @Get('details')
     @Render('s3-bucket-detail')
-    async getBucketDetails(@Query('name') name: string) {
+    async getBucketDetails(
+      @Query('name') name: string,
+      @Query('search') search: string,
+    ) {
 
-      const result = await this.s3Service.listObjects(name);
+      const result = await this.s3Service.listObjects(name, search);
       return { name, Contents: result.Contents };
     }
 
