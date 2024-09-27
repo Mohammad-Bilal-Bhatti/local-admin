@@ -36,6 +36,7 @@ async function bootstrap() {
     join(__dirname, '..', 'views', 'lambda'),
     join(__dirname, '..', 'views', 'ec2'),
     join(__dirname, '..', 'views', 'gateway'),
+    join(__dirname, '..', 'views', 'cw'),
   ]);
 
   app.engine(

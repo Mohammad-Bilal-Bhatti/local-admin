@@ -16,6 +16,7 @@ import { LambdaService } from './lambda/lambda.service';
 import { SecretsManagerService } from './secrets-manager/secrets-manager.service';
 import { SnsService } from './sns/sns.service';
 import { SsmService } from './ssm/ssm.service';
+import { CWService } from './cw/cw.service';
 
 @Controller()
 export class AppController {
@@ -23,6 +24,7 @@ export class AppController {
   constructor(
     private readonly config: ConfigService,
     private readonly acmService: AcmService,
+    private readonly cwService: CWService,
     private readonly dynamoDbService: DynamoDbService,
     private readonly ec2Service: Ec2Service,
     private readonly eventBridgeService: EventBridgeService,
@@ -64,6 +66,7 @@ export class AppController {
 
     /* save the configuration with in the service file */
     this.acmService.configure(input);
+    this.cwService.configure(input);
     this.dynamoDbService.configure(input);
     this.ec2Service.configure(input);
     this.eventBridgeService.configure(input);

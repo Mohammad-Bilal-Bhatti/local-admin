@@ -19,6 +19,7 @@ import { AcmModule } from './acm/acm.module';
 import { LambdaModule } from './lambda/lambda.module';
 import { Ec2Module } from './ec2/ec2.module';
 import { GatewayModule } from './gateway/gateway.module';
+import { CwModule } from './cw/cw.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { GatewayModule } from './gateway/gateway.module';
       load: [configuration],
     }),
     AcmModule,
+    CwModule,
     DynamoDbModule,
     Ec2Module,
     EventBridgeModule,
