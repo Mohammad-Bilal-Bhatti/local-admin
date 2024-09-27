@@ -1,4 +1,29 @@
-
 <h2>Cloud Watch</h2>
 
-<p>This page is under construction.</p>
+<a href="/cw/create-metric" role="button" class="btn btn-outline-primary">Create Metric</a>
+<a href="/cw/create-alarm" role="button" class="btn btn-outline-primary">Create Alarm</a>
+<a href="/cw/create-log-group" role="button" class="btn btn-outline-primary">Create Log Group</a>
+
+<ul class="mt-2 nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'metrics'}}active{{/ifEq}}" href="?tab=metrics">Mertics</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'alarms'}}active{{/ifEq}}" href="?tab=alarms">Alarms</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'groups'}}active{{/ifEq}}" href="?tab=groups">Log Groups</a>
+    </li>
+</ul>
+
+{{#ifEq tab 'metrics'}}
+<h4 class="mt-2">Mertics</h4>
+{{/ifEq}}
+
+{{#ifEq tab 'alarms'}}
+<h4 class="mt-2">Alarms</h4>
+{{/ifEq}}
+
+{{#ifEq tab 'groups'}}
+<h4 class="mt-2">Log Groups</h4>
+{{/ifEq}}
