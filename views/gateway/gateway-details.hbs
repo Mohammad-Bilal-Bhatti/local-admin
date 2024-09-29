@@ -1,9 +1,93 @@
-
 <h2>Rest Api Details - {{id}}</h2>
 
 <pre>{{json details 2}}</pre>
 
-<h4>Resource List:</h4>
+<ul class="mt-2 nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'create'}}active{{/ifEq}}" href="?tab=create&id={{id}}">Create</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'resources'}}active{{/ifEq}}" href="?tab=resources&id={{id}}">Resources</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'deployments'}}active{{/ifEq}}" href="?tab=deployments&id={{id}}">Deployments</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'stages'}}active{{/ifEq}}" href="?tab=stages&id={{id}}">Stages</a>
+    </li>
+</ul>
+
+{{#ifEq tab 'create'}}
+<h4 class="mt-2">Create Method:</h4>
+<form method="post" action="/gateway/method">
+
+    <input type="text" name="restApiId" value="{{id}}" style="display:none;" />
+
+    <div class="mb-3">
+        <label for="resourceId" class="form-label">resourceId</label>
+        <input type="text" class="form-control" id="resourceId" name="resourceId">
+    </div>
+
+    <div class="mb-3">
+        <label for="httpMethod" class="form-label">Http Method</label>
+        <input type="text" class="form-control" id="httpMethod" name="httpMethod">
+    </div>
+
+    <div class="mb-3">
+        <label for="authorizationType" class="form-label">Authorization Type</label>
+        <input type="text" class="form-control" id="authorizationType" name="authorizationType">
+    </div>
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+
+<h4 class="mt-2">Create Ingegration</h4>
+<form method="post" action="/gateway/integration">
+    <input type="text" name="restApiId" value="{{id}}" style="display:none;" />
+
+    <div class="mb-3">
+        <label for="resourceId" class="form-label">resourceId</label>
+        <input type="text" class="form-control" id="resourceId" name="resourceId">
+    </div>
+
+    <div class="mb-3">
+        <label for="httpMethod" class="form-label">Http Method</label>
+        <input type="text" class="form-control" id="httpMethod" name="httpMethod">
+    </div>
+
+    <div class="mb-3">
+        <label for="integrationType" class="form-label">Integration Type</label>
+        <select class="form-select" id="integrationType" name="integrationType">
+            {{#each integrationOptions}}
+            <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="integrationHttpMethod" class="form-label">Integration Http Method</label>
+        <input type="text" class="form-control" id="integrationHttpMethod" name="integrationHttpMethod">
+    </div>
+
+    <div class="mb-3">
+        <label for="uri" class="form-label">Uri</label>
+        <input type="text" class="form-control" id="uri" name="uri">
+    </div>
+
+    <div class="mb-3">
+        <label for="passthroughBehavior" class="form-label">Pass Through Behavior</label>
+        <input type="text" class="form-control" id="passthroughBehavior" name="passthroughBehavior">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+{{/ifEq}}
+
+{{#ifEq tab 'resources'}}
+<h4>Resources:</h4>
 <table class="table">
     <thead>
         <tr>
@@ -22,7 +106,9 @@
             <td>{{parentId}}</td>
             <td>{{pathPart}}</td>
             <td>{{path}}</td>
-            <td><pre>{{json resourceMethods 2}}</pre></td>
+            <td>
+                <pre>{{json resourceMethods 2}}</pre>
+            </td>
         </tr>
         {{/each}}
     </tbody>
@@ -31,13 +117,13 @@
 <h4 class="mt-2">Create Resource:</h4>
 <form method="post" action="/gateway/resource">
 
-    <input type="text" name="restApiId" value="{{id}}" style="display:none;"/>
+    <input type="text" name="restApiId" value="{{id}}" style="display:none;" />
 
     <div class="mb-3">
         <label for="parentId" class="form-label">Parent Id</label>
         <input type="text" class="form-control" id="parentId" name="parentId">
     </div>
-    
+
     <div class="mb-3">
         <label for="pathPart" class="form-label">Path</label>
         <input type="text" class="form-control" id="pathPart" name="pathPart">
@@ -46,29 +132,92 @@
     <button class="btn btn-outline-secondary" type="reset">Reset</button>
     <button class="btn btn-outline-success" type="submit">Create</button>
 </form>
+{{/ifEq}}
 
+{{#ifEq tab 'deployments'}}
+<h4>Deployments:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Description</th>
+            <th scope="col">Created Date</th>
 
-<h4 class="mt-2">Create Method:</h4>
-<form method="post" action="/gateway/method">
+        </tr>
+    </thead>
+    <tbody>
+        {{#each deployments}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{description}}</td>
+            <td>{{createdDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<h4 class="mt-2">Create Deployment:</h4>
+<form method="post" action="/gateway/deployment">
 
-    <input type="text" name="restApiId" value="{{id}}" style="display:none;"/>
+    <input type="text" name="restApiId" value="{{id}}" style="display:none;" />
 
     <div class="mb-3">
-        <label for="resourceId" class="form-label">resourceId</label>
-        <input type="text" class="form-control" id="resourceId" name="resourceId">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
     </div>
-    
-    <div class="mb-3">
-        <label for="httpMethod" class="form-label">Http Method</label>
-        <input type="text" class="form-control" id="httpMethod" name="httpMethod">
-    </div>
-
-    <div class="mb-3">
-        <label for="authorizationType" class="form-label">Authorization Type</label>
-        <input type="text" class="form-control" id="authorizationType" name="authorizationType">
-    </div>
-
 
     <button class="btn btn-outline-secondary" type="reset">Reset</button>
     <button class="btn btn-outline-success" type="submit">Create</button>
 </form>
+{{/ifEq}}
+
+{{#ifEq tab 'stages'}}
+<h4>Stages:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">stageName</th>
+            <th scope="col">deploymentId</th>
+            <th scope="col">description</th>
+            <th scope="col">cacheClusterEnabled</th>
+            <th scope="col">cacheClusterStatus</th>
+            <th scope="col">tracingEnabled</th>
+            <th scope="col">methodSettings</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {{#each stages}}
+        <tr>
+            <td>{{stageName}}</td>
+            <td>{{deploymentId}}</td>
+            <td>{{description}}</td>
+            <td>{{cacheClusterEnabled}}</td>
+            <td>{{cacheClusterStatus}}</td>
+            <td>{{tracingEnabled}}</td>
+            <td>{{json methodSettings 2}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<h4 class="mt-2">Create Stage</h4>
+<form method="post" action="/gateway/stage">
+
+    <input type="text" name="restApiId" value="{{id}}" style="display:none;" />
+
+    <div class="mb-3">
+        <label for="deploymentId" class="form-label">Deployment Id</label>
+        <input type="text" class="form-control" id="deploymentId" name="deploymentId">
+    </div>
+    <div class="mb-3">
+        <label for="stageName" class="form-label">Stage Name</label>
+        <input type="text" class="form-control" id="stageName" name="stageName">
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+{{/ifEq}}

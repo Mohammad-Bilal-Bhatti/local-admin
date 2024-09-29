@@ -12,6 +12,8 @@ import {
     PutMethodCommandOutput,
     PutIntegrationCommand,
     PutIntegrationCommandOutput,
+    GetDeploymentsCommand,
+    GetDeploymentsCommandOutput,
     CreateDeploymentCommand,
     CreateDeploymentCommandOutput,
     GetRestApisCommand,
@@ -20,6 +22,10 @@ import {
     DeleteRestApiCommandOutput,
     GetRestApiCommand,
     GetRestApiCommandOutput,
+    CreateStageCommand,
+    CreateStageCommandOutput,
+    GetStagesCommand,
+    GetStagesCommandOutput,
 } from '@aws-sdk/client-api-gateway';
 import { IntegrationType } from './gateway.dto';
 import { ConfigurableService } from "src/shared/configurable.interface";
@@ -103,11 +109,36 @@ export class GatewayService implements ConfigurableService {
         return response;
     }
 
-    async createDeployment(restApiId: string, stageName: string): Promise<CreateDeploymentCommandOutput> {
-        const command = new CreateDeploymentCommand({ restApiId, stageName });
+    async createDeployment(restApiId: string, description: string): Promise<CreateDeploymentCommandOutput> {
+        const command = new CreateDeploymentCommand({
+            restApiId: restApiId,
+            description: description,
+        });
         const response = await this.client.send(command);
         return response;
     }
 
-    
+    async createStage(stageName: string, description: string, deploymentId: string, restapiId: string): Promise<CreateStageCommandOutput> {
+        const command = new CreateStageCommand({ 
+            stageName: stageName,
+            description: description,
+            restApiId: restapiId,
+            deploymentId: deploymentId,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async getStages(restApiId: string): Promise<GetStagesCommandOutput> {
+        const command = new GetStagesCommand({ restApiId: restApiId });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async listDeployments(restApiId: string): Promise<GetDeploymentsCommandOutput> {
+        const command = new GetDeploymentsCommand({ restApiId });
+        const response = await this.client.send(command);
+        return response;
+    }
+
 }
