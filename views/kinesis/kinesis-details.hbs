@@ -2,3 +2,22 @@
 <h4>Stream Details</h4>
 
 <pre>{{json StreamDescription 2}}</pre>
+
+<h4>Put Record</h4>
+<form method="post" action="put-record">
+
+    <input type="text" name="streamName" value="{{streamName}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="partitionKey" class="form-label">Partition Key</label>
+        <input type="text" class="form-control" id="partitionKey" name="partitionKey">
+    </div>
+
+    <div class="mb-3">
+        <label for="data" class="form-label">Data</label>
+        <input type="text" class="form-control" id="data" name="data">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>

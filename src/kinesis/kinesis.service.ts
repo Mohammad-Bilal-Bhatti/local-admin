@@ -58,11 +58,14 @@ export class KinesisService implements ConfigurableService {
         return response;
     }
 
-    async putRecord(streamName: string, partitionKey: string, data: Uint8Array): Promise<PutRecordCommandOutput> {
+    async putRecord(streamName: string, partitionKey: string, data: string): Promise<PutRecordCommandOutput> {
+        const encoder = new TextEncoder();
+        const __data = encoder.encode(data);
+
         const command = new PutRecordCommand({ 
             StreamName: streamName,
             PartitionKey: partitionKey,
-            Data: data, 
+            Data: __data, 
         });
         const response = await this.client.send(command);
         return response;

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render } from "@nestjs/common";
 import { KinesisService } from "./kinesis.service";
-import { CreateShardDto } from "./kinesis.dto";
+import { CreateShardDto, PutRecordDto } from "./kinesis.dto";
 
 @Controller('kinesis')
 export class KinesisController {
@@ -30,13 +30,20 @@ export class KinesisController {
     @Render('kinesis-details')
     async getStreamDetails(@Query('streamName') streamName: string) {
         const { StreamDescription } = await this.service.describeStream(streamName);
-        return { StreamDescription };
+        return { streamName, StreamDescription };
     }
 
     @Get('delete')
     @Redirect('/kinesis', 302)
     async deleteStream(@Query('streamName') streamName: string) {
         const result = await this.service.deleteStream(streamName);
+        return null;
+    }
+
+    @Post('put-record')
+    @Redirect('/kinesis', 302)
+    async putRecord(@Body() input: PutRecordDto) {
+        const result = await this.service.putRecord(input.streamName, input.partitionKey, input.data);
         return null;
     }
 
