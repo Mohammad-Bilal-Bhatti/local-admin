@@ -13,25 +13,17 @@ export class CwController {
         switch(tab) {
             case 'loggroup': {
                 const { logGroups } = await this.service.listLogGroups();
-                console.log(logGroups);
                 Object.assign(result, { logGroups });
                 break;
             }
             case 'alarms': {
-                const { MetricAlarms, CompositeAlarms } = await this.service.listAlarms();
-
-                console.log(MetricAlarms);
-                console.log(CompositeAlarms);
-                
+                const { MetricAlarms, CompositeAlarms } = await this.service.listAlarms();                
                 Object.assign(result, { MetricAlarms, CompositeAlarms });
-
                 break;
             }
             default:
             case 'metrics': {
                 const { Metrics } = await this.service.listMetrics();
-                console.log(Metrics);
-
                 Object.assign(result, { Metrics });
                 break;
             }

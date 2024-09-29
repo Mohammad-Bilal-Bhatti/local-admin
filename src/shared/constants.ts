@@ -95,6 +95,12 @@ export const cards: CardItem[] = [
         subtitle: 'Cloud Watch',
         description: 'CloudWatch is a comprehensive monitoring and observability service that Amazon Web Services (AWS) provides',
         link: '/cw'
+    },
+    {
+        title: 'Kinesis',
+        subtitle: 'Kinesis',
+        description: 'Kinesis is a platform provided by Amazon Web Services (AWS) that enables your application to ingest, buffer, and process data in real-time',
+        link: '/kinesis'
     }
 ];
 
@@ -114,4 +120,5 @@ export const menuItems: MenuItem[] = [
     { title: 'EC2', link: '/ec2' },
     { title: 'GW', link: '/gateway' },
     { title: 'CW', link: '/cw' },
+    { title: 'Kinesis', link: '/kinesis' },
 ];
