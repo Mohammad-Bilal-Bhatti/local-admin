@@ -17,6 +17,7 @@ import { SecretsManagerService } from './secrets-manager/secrets-manager.service
 import { SnsService } from './sns/sns.service';
 import { SsmService } from './ssm/ssm.service';
 import { CWService } from './cw/cw.service';
+import { KinesisService } from './kinesis/kinesis.service';
 
 @Controller()
 export class AppController {
@@ -30,6 +31,7 @@ export class AppController {
     private readonly eventBridgeService: EventBridgeService,
     private readonly gatewayService: GatewayService,
     private readonly iamService: IamService,
+    private readonly kinesisService: KinesisService,
     private readonly kmsService: KmsService,
     private readonly lambdaService: LambdaService,
     private readonly s3Service: S3Service,
@@ -79,6 +81,7 @@ export class AppController {
     this.snsService.configure(input);
     this.sqsService.configure(input);
     this.ssmService.configure(input);
+    this.kinesisService.configure(input);
 
     return res.redirect(302, '/');
   }

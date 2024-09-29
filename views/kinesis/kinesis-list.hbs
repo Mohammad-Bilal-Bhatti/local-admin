@@ -1,4 +1,25 @@
 
 <h4>Kinesis</h4>
 
-<p>This page is under construction.</p>
+<a href="/kinesis/create-stream" role="button" class="btn btn-outline-primary">Create Stream</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each StreamNames}}
+        <tr>
+            <th>
+                <a href="/kinesis/delete?streamName={{this}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/kinesis/details?streamName={{this}}">{{this}}</a>
+            </th>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
