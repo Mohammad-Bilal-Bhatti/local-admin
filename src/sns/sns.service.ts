@@ -20,6 +20,8 @@ import {
     UnsubscribeCommandOutput,
     ConfirmSubscriptionCommand,
     ConfirmSubscriptionCommandOutput,
+    CreatePlatformEndpointCommand,
+    CreatePlatformEndpointCommandOutput,
 } from '@aws-sdk/client-sns';
 import { ConfigService } from "@nestjs/config";
 import { HttpService } from "@nestjs/axios";
