@@ -22,6 +22,8 @@ import {
     ConfirmSubscriptionCommandOutput,
     CreatePlatformEndpointCommand,
     CreatePlatformEndpointCommandOutput,
+    CreatePlatformApplicationCommand,
+    CreatePlatformApplicationCommandOutput,
 } from '@aws-sdk/client-sns';
 import { ConfigService } from "@nestjs/config";
 import { HttpService } from "@nestjs/axios";
@@ -141,6 +143,27 @@ export class SnsService implements ConfigurableService {
             this.logger.error('Error occured with looking up subscription token:', error);
             return null
         }
+    }
+
+    async createPlatformApplication(name: string, platform: string): Promise<CreatePlatformApplicationCommandOutput> {
+        const command = new CreatePlatformApplicationCommand({
+            Name: name,
+            Platform: platform,
+            Attributes: {
+
+            }
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async createPlatformEndpoint(platformApplicationArn: string, token: string): Promise<CreatePlatformEndpointCommandOutput> {
+        const command = new CreatePlatformEndpointCommand({
+            PlatformApplicationArn: platformApplicationArn,
+            Token: token,
+        });
+        const response = await this.client.send(command);
+        return response;
     }
 
 }
