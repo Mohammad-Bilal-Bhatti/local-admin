@@ -42,7 +42,7 @@ export class S3Controller {
 
       const timestamp = Date.now();
       const bucket = input.bucket;
-      const key = `${timestamp}-${file.originalname}`;
+      const key = input.key ?? `${timestamp}-${file.originalname}`;
       const contentLength = file.size;
       const contentType = file.mimetype;
       const body = file.buffer;

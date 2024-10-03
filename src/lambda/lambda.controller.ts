@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { LambdaService } from "./lambda.service";
-import { CreateAliasDto, CreateLambdaDto, InvokeLambdaDto, Runtime } from "./lambda.dto";
+import { CreateAliasDto, CreateLambdaDto, InvokeLambdaDto, Runtime, UpdateFunctionCodeDto } from "./lambda.dto";
 
 @Controller('lambda')
 export class LambdaController {
@@ -63,6 +63,12 @@ export class LambdaController {
     async deleteAlias(@Res() res: Response, @Query('name') name: string, @Query('functionName') functionName: string) {
         const result = await this.service.deleteAlias(name, functionName);
         return res.redirect(302, `/lambda/details?name=${functionName}`);
+    }
+
+    @Post('update-function-code')
+    async updateFunctionCode(@Res() res: Response, @Body() input: UpdateFunctionCodeDto) {
+        const result = await this.service.updateFunctionCode(input.functionName, input.s3Bucket, input.s3Key);
+        return res.redirect(302, `/lambda/details?name=${input.functionName}`);
     }
 
 }

@@ -22,4 +22,11 @@ export class CreateAliasDto {
     functionVersion: string;
 }
 
+export class UpdateFunctionCodeDto {
+    functionName: string;
+    s3Bucket: string;
+    s3Key: string;
+}
+
+
 export { Runtime } from "@aws-sdk/client-lambda";

@@ -16,11 +16,28 @@
     <button class="btn btn-outline-success" type="submit">Invoke</button>
 </form>
 
+<h4 class="mt-2">Update Function Code:</h4>
+<form method="post" action="/lambda/update-function-code">
+    <input type="text" value="{{functionName}}" name="functionName" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="s3Bucket" class="form-label">Bucket</label>
+        <input type="text" class="form-control" id="s3Bucket" name="s3Bucket">
+    </div>
+    <div class="mb-3">
+        <label for="s3Key" class="form-label">Key</label>
+        <input type="text" class="form-control" id="s3Key" name="s3Key">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Update</button>
+</form>
+
 <div class="mt-2">
     <pre>{{json details 2}}</pre>
 </div>
 
-<h4>Create Alias:</h4>
+<h4 class="mt-2">Create Alias:</h4>
 <form method="post" action="/lambda/alias">
     <input type="text" value="{{functionName}}" name="functionName" style="display: none;" />
 

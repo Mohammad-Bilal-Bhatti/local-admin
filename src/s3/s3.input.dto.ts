@@ -5,4 +5,5 @@ export class CreateBucketInput {
 
 export class UploadObjectInput {
     bucket: string;
+    key?: string; /* optional key attribute */ 
 }

@@ -99,8 +99,14 @@ export class LambdaService implements ConfigurableService {
         return response;
     }
 
-    async updateFunctionCode() {
-        // const command = new UpdateFunctionCodeCommand({   });
+    async updateFunctionCode(functionName: string, bucket: string, key: string): Promise<UpdateFunctionCodeCommandOutput> {
+        const command = new UpdateFunctionCodeCommand({
+            FunctionName: functionName,
+            S3Bucket: bucket,
+            S3Key: key,
+        });
+        const response = await this.client.send(command);
+        return response;
     }
 
 }

@@ -13,3 +13,15 @@
 <pre>{{json attributes 2}}</pre>
 
 
+<h4>Update Object:</h4>
+<form method="post" action="/s3/upload" enctype="multipart/form-data" >
+    <input type="text" name="bucket" value="{{bucket}}" style="display: none;" />
+    <input type="text" name="key" value="{{key}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Upload File</label>
+        <input class="form-control" type="file" id="formFile" name="file">
+    </div>
+
+    <button class="btn btn-outline-success" type="submit">Update</button>
+</form>
