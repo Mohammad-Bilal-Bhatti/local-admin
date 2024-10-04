@@ -5,17 +5,14 @@
 <a href="/s3/presigned-get?bucket={{bucket}}&key={{key}}" class="btn btn-outline-primary">Generate Presigned Get</a>
 <a href="/s3/presigned-put?bucket={{bucket}}&key={{key}}" class="btn btn-outline-primary">Generate Presigned Put</a>
 
-<h4 class="mt-2">Bucket:</h4>
-<p>{{bucket}}</p>
-
-<h4>Key:</h4>
-<p>{{key}}</p>
+<h4 class="mt-2">S3 Pointer</h4>
+<p>{{bucket}}/{{key}}</p>
 
 <h4>Attributes</h4>
 <pre>{{json attributes 2}}</pre>
 
 
-<h4>Update Object:</h4>
+<h4>Update Object</h4>
 <form method="post" action="/s3/upload" enctype="multipart/form-data" >
     <input type="text" name="bucket" value="{{bucket}}" style="display: none;" />
     <input type="text" name="key" value="{{key}}" style="display: none;" />

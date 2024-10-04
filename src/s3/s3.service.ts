@@ -16,6 +16,12 @@ import {
     DeleteBucketCommand,
     DeleteBucketCommandOutput,
     ListBucketsCommandOutput,
+    PutBucketWebsiteCommand,
+    PutBucketWebsiteCommandOutput,
+    PutBucketPolicyCommand,
+    PutBucketPolicyCommandOutput,
+    GetBucketPolicyCommand,
+    GetBucketPolicyCommandOutput,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ConfigureInput } from "../app.dto";
@@ -125,6 +131,45 @@ export class S3Service implements ConfigurableService {
         const command = new PutObjectCommand({ Bucket: bucket, Key: key });
         const url = await getSignedUrl(this.client, command, { expiresIn: expiresIn });
         return url;
+    }
+
+    async putBucketWebsite(bucket: string, root: string, error: string): Promise<PutBucketWebsiteCommandOutput> {
+        const command = new PutBucketWebsiteCommand({ 
+            Bucket: bucket, 
+            WebsiteConfiguration: {
+                IndexDocument: {
+                    Suffix: root
+                },
+                ErrorDocument: {
+                    Key: error
+                }
+            }
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async putBucketPolicy(bucket: string, policy: string): Promise<PutBucketPolicyCommandOutput> {
+        const command = new PutBucketPolicyCommand({
+            Bucket: bucket,
+            Policy: policy,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async getBucketPolicy(bucket: string): Promise<string> {
+        try {
+            const command = new GetBucketPolicyCommand({
+                Bucket: bucket,            
+            });    
+            const { Policy } = await this.client.send(command);
+
+            return Policy;
+    
+        } catch (err) {
+            return "{}";
+        }
     }
 
 }

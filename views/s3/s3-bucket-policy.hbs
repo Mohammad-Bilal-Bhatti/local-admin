@@ -1,0 +1,15 @@
+
+<h4>Bucket Policy - {{bucket}}</h4>
+
+<form method="post">
+    <input type="text" name="bucket" value="{{bucket}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="policy" class="form-label">Bucket Policy</label>
+        <textarea class="form-control" id="policy" rows="24" name="policy">{{Policy}}</textarea>
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Update</button>
+</form>
+

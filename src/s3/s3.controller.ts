@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { Response } from "express";
 import { S3Service } from "./s3.service";
-import { CreateBucketInput, UploadObjectInput } from "./s3.input.dto";
+import { CreateBucketInput, CreateWebsiteDto, PutBucketPolicyDto, UploadObjectInput } from "./s3.input.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('s3')
@@ -40,9 +40,8 @@ export class S3Controller {
       @Res() res: Response
     ) {
 
-      const timestamp = Date.now();
       const bucket = input.bucket;
-      const key = input.key ?? `${timestamp}-${file.originalname}`;
+      const key = input.key ?? file.originalname;
       const contentLength = file.size;
       const contentType = file.mimetype;
       const body = file.buffer;
@@ -165,6 +164,31 @@ export class S3Controller {
     ) {
       const url = await this.s3Service.getPresignedPut(bucket, key);
       return { bucket, key, url };
+    }
+
+    @Get('bucket-policy')
+    @Render('s3-bucket-policy')
+    async getBucketPolicy(@Query('bucket') bucket: string) {
+      const policy = await this.s3Service.getBucketPolicy(bucket);
+      return { bucket, Policy: policy };
+    }
+
+    @Post('bucket-policy')
+    async putBucketPolicy(@Res() res: Response, @Body() input: PutBucketPolicyDto) {
+      const result = await this.s3Service.putBucketPolicy(input.bucket, input.policy);
+      return res.redirect(302, `/s3/details?name=${input.bucket}`);
+    }
+
+    @Get('create-website')
+    @Render('s3-create-website')
+    async getCreateWebsite(@Query('bucket') bucket: string) {
+      return { bucket };
+    }
+
+    @Post('create-website')
+    async createWebsite(@Res() res: Response, @Body() input: CreateWebsiteDto) {
+      const result = await this.s3Service.putBucketWebsite(input.bucket, input.index, input.error);
+      return res.redirect(302, `/s3/details?name=${input.bucket}`);
     }
 
 }

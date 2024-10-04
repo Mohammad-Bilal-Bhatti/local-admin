@@ -1,7 +1,11 @@
 
-<h2>Bucket Details</h2>
+<h2>Bucket Details - {{name}}</h2>
 
-<p>Bucket Name: {{name}}</p>
+<a href="/s3/bucket-policy?bucket={{name}}" role="button" class="btn btn-outline-primary" >Edit Bucket Policy</a>
+<a href="/s3/create-website?bucket={{name}}" role="button" class="btn btn-outline-primary" >Create Website</a>
+
+<a href="http://{{name}}.s3-website.localhost.localstack.cloud:4566" target="_blank" role="button" class="btn btn-outline-primary">Goto Website</a>
+
 
 <div class="search-box mt-2">
   <form method="get">
