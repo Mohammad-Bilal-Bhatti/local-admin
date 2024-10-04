@@ -146,4 +146,25 @@ export class S3Controller {
       return res.redirect(302, `/s3/details?name=${bucket}`);
     }
 
+    @Get('presigned-get')
+    @Render('s3-presigned')
+    async getPresignedGet(
+      @Query('bucket') bucket: string,
+      @Query('key') key: string,
+    ) {
+
+      const url = await this.s3Service.getPresignedGet(bucket, key);
+      return { bucket, key, url };
+    }
+
+    @Get('presigned-put')
+    @Render('s3-presigned')
+    async getPresignedPut(
+      @Query('bucket') bucket: string,
+      @Query('key') key: string,
+    ) {
+      const url = await this.s3Service.getPresignedPut(bucket, key);
+      return { bucket, key, url };
+    }
+
 }
