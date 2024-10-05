@@ -1,0 +1,22 @@
+<h4>Bucket Versioning</h4>
+
+<form method="post">
+
+  <input type="text" name="bucket" value="{{bucket}}" style="display: none;" />
+
+  <div class="form-check">
+    <input {{#if versioningEnabled}}checked{{/if}} class="form-check-input" type="checkbox" id="enableVersioning" name="enableVersioning" value="true" />
+    <label class="form-check-label" for="enableVersioning">
+      Enable Versioning
+    </label>
+  </div>
+  <div class="form-check">
+    <input {{#if mfaDeleteEnabled}}checked{{/if}} class="form-check-input" type="checkbox" id="enableMfaDelete" name="enableMfaDelete" value="true" />
+    <label class="form-check-label" for="enableMfaDelete">
+      Enable MFA Delete
+    </label>
+  </div>
+
+  <button class="btn btn-outline-secondary" type="reset">Reset</button>
+  <button class="btn btn-outline-success" type="submit">Update</button>
+</form>

@@ -22,6 +22,12 @@ import {
     PutBucketPolicyCommandOutput,
     GetBucketPolicyCommand,
     GetBucketPolicyCommandOutput,
+    GetBucketVersioningCommand,
+    GetBucketVersioningCommandOutput,
+    PutBucketVersioningCommand,
+    PutBucketVersioningCommandOutput,
+    ListObjectVersionsCommand,
+    ListObjectVersionsCommandOutput,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ConfigureInput } from "../app.dto";
@@ -102,10 +108,11 @@ export class S3Service implements ConfigurableService {
         return response;
     }
     
-    async deleteObject(bucket: string, key: string): Promise<DeleteObjectCommandOutput> {
+    async deleteObject(bucket: string, key: string, versionId?: string): Promise<DeleteObjectCommandOutput> {
         const command = new DeleteObjectCommand({
             Bucket: bucket,
             Key: key,
+            VersionId: versionId
         });
 
         const response = await this.client.send(command);
@@ -158,18 +165,51 @@ export class S3Service implements ConfigurableService {
         return response;
     }
 
-    async getBucketPolicy(bucket: string): Promise<string> {
+    async getBucketPolicy(bucket: string): Promise<GetBucketPolicyCommandOutput> {
         try {
             const command = new GetBucketPolicyCommand({
                 Bucket: bucket,            
             });    
-            const { Policy } = await this.client.send(command);
+            const response = await this.client.send(command);
 
-            return Policy;
+            return response;
     
         } catch (err) {
-            return "{}";
+            return { Policy: "{}", $metadata: {} };
         }
+    }
+
+    async getBucketVersioning(bucket: string): Promise<GetBucketVersioningCommandOutput> {
+        try {
+            const command = new GetBucketVersioningCommand({
+                Bucket: bucket,
+            });
+            const response = await this.client.send(command);
+            return response;
+        } catch (err) {
+            return { $metadata: {}, MFADelete: 'Disabled', Status: 'Suspended' };
+        }
+    }
+
+    async putBucketVersioning(bucket: string, enableVersioning: boolean, enableMfaDelete: boolean): Promise<PutBucketVersioningCommandOutput> {
+        const command = new PutBucketVersioningCommand({
+            Bucket: bucket,
+            VersioningConfiguration: {
+                Status: enableVersioning ? 'Enabled' : 'Suspended',
+                MFADelete: enableMfaDelete ? 'Enabled' : 'Disabled',
+            },
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async listObjectVersions(bucket: string, key: string): Promise<ListObjectVersionsCommandOutput> {
+        const command = new ListObjectVersionsCommand({
+            Bucket: bucket,
+            Prefix: key,
+        });
+        const response = await this.client.send(command);
+        return response;
     }
 
 }

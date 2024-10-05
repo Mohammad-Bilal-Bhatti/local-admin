@@ -24,3 +24,39 @@
 
     <button class="btn btn-outline-success" type="submit">Update</button>
 </form>
+
+<h4>Version:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Key</th>
+            <th scope="col">Version Id</th>
+            <th scope="col">Size</th>
+            <th scope="col">Is Latest</th>
+            <th scope="col">ETag</th>
+            <th scope="col">Storage Class</th>
+            <th scope="col">Last Modified</th>
+            <th scope="col">Owner</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Versions}}
+        <tr>
+            <th>
+                <a href="/s3/object/delete?bucket={{../bucket}}&key={{Key}}&versionId={{VersionId}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                {{Key}}
+            </th>
+            <td>{{VersionId}}</td>
+            <td>{{Size}}</td>
+            <td>{{IsLatest}}</td>
+            <td>{{ETag}}</td>
+            <td>{{StorageClass}}</td>
+            <td>{{LastModified}}</td>
+            <td>{{json Owner 2}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

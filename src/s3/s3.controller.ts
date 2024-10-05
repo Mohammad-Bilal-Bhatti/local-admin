@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { Response } from "express";
 import { S3Service } from "./s3.service";
-import { CreateBucketInput, CreateWebsiteDto, PutBucketPolicyDto, UploadObjectInput } from "./s3.input.dto";
+import { CreateBucketInput, CreateWebsiteDto, PutBucketPolicyDto, PutBucketVersioningDto, UploadObjectInput } from "./s3.input.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('s3')
@@ -82,6 +82,7 @@ export class S3Controller {
     ) {
 
       const response = await this.s3Service.getObject(bucket, key);
+      const { Versions } = await this.s3Service.listObjectVersions(bucket, key);
 
       const { 
         AcceptRanges,
@@ -103,7 +104,7 @@ export class S3Controller {
         Metadata,
       };
 
-      return { bucket, key, attributes };
+      return { bucket, key, attributes, Versions };
     }
 
     @Get('object/download')
@@ -138,10 +139,11 @@ export class S3Controller {
     async deleteObject(
       @Query('bucket') bucket: string,
       @Query('key') key: string,
+      @Query('versionId') versionId: string,
       @Res() res: Response,
     ) {
 
-      const result = await this.s3Service.deleteObject(bucket, key);
+      const result = await this.s3Service.deleteObject(bucket, key, versionId);
       return res.redirect(302, `/s3/details?name=${bucket}`);
     }
 
@@ -169,8 +171,8 @@ export class S3Controller {
     @Get('bucket-policy')
     @Render('s3-bucket-policy')
     async getBucketPolicy(@Query('bucket') bucket: string) {
-      const policy = await this.s3Service.getBucketPolicy(bucket);
-      return { bucket, Policy: policy };
+      const { Policy } = await this.s3Service.getBucketPolicy(bucket);
+      return { bucket, Policy: Policy };
     }
 
     @Post('bucket-policy')
@@ -188,6 +190,23 @@ export class S3Controller {
     @Post('create-website')
     async createWebsite(@Res() res: Response, @Body() input: CreateWebsiteDto) {
       const result = await this.s3Service.putBucketWebsite(input.bucket, input.index, input.error);
+      return res.redirect(302, `/s3/details?name=${input.bucket}`);
+    }
+
+    @Get('bucket-versioning')
+    @Render('s3-bucket-versioning')
+    async getBucketVersioning(@Query('bucket') bucket: string) {
+      const { Status, MFADelete } = await this.s3Service.getBucketVersioning(bucket);
+
+      const versioningEnabled = Status === 'Enabled'; 
+      const mfaDeleteEnabled = MFADelete === 'Enabled';
+
+      return { bucket, versioningEnabled, mfaDeleteEnabled }
+    }
+
+    @Post('bucket-versioning')
+    async putBucketVersioning(@Res() res: Response, @Body() input: PutBucketVersioningDto) {
+      const result = await this.s3Service.putBucketVersioning(input.bucket, input.enableVersioning === 'true', input.enableMfaDelete === 'true');
       return res.redirect(302, `/s3/details?name=${input.bucket}`);
     }
 

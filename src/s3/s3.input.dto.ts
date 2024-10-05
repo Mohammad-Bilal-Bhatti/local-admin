@@ -18,3 +18,9 @@ export class CreateWebsiteDto {
     error: string;
     index: string;
 }
+
+export class PutBucketVersioningDto {
+    bucket: string;
+    enableVersioning: string;
+    enableMfaDelete: string;
+}
