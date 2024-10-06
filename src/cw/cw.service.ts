@@ -27,6 +27,10 @@ import {
     DeleteLogGroupCommandOutput,
     DeleteLogStreamCommand,
     DeleteLogStreamCommandOutput,
+    GetLogEventsCommand,
+    GetLogEventsCommandOutput,
+    PutLogEventsCommand,
+    PutLogEventsCommandOutput,
     LogGroupClass,
 } from "@aws-sdk/client-cloudwatch-logs";
 
@@ -134,8 +138,29 @@ export class CWService implements ConfigurableService {
         return result;
     }
 
-    async deleteLogStream(groupName: string, logStream: string) {
+    async deleteLogStream(groupName: string, logStream: string): Promise<DeleteLogStreamCommandOutput> {
         const command = new DeleteLogStreamCommand({ logGroupName: groupName, logStreamName: logStream });
+        const result = await this.logClient.send(command);
+        return result;
+    }
+
+    async getLogEvents(groupName: string, logStream: string): Promise<GetLogEventsCommandOutput> {
+        const command = new GetLogEventsCommand({
+            logGroupName: groupName,
+            logStreamName: logStream,
+        });
+        const result = await this.logClient.send(command);
+        return result;
+    }
+
+    async putLogEvent(groupName: string, logStream: string, message: string): Promise<PutLogEventsCommandOutput> {
+        const command = new PutLogEventsCommand({
+            logGroupName: groupName,
+            logStreamName: logStream,
+            logEvents: [
+                { message: message, timestamp: Date.now() },
+            ]
+        });
         const result = await this.logClient.send(command);
         return result;
     }

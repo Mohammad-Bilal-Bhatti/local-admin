@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Query, Redirect, Render } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { CWService } from "./cw.service";
 import { CreateLogGroupDto, CreateLogStreamDto, LogGroupClass } from "./cw.dto";
+import { Response } from 'express';
 
 @Controller('cw')
 export class CwController {
@@ -40,8 +41,8 @@ export class CwController {
 
     @Get('create-log-stream')
     @Render('cw-create-log-stream')
-    async getCreateLogStream() {
-        return null;
+    async getCreateLogStream(@Query('groupName') groupName: string) {
+        return { groupName };
     }
 
     @Get('log-group-details')
@@ -72,10 +73,9 @@ export class CwController {
     }
 
     @Post('create-log-stream')
-    @Redirect('/cw', 302)
-    async createLogStream(@Body() input: CreateLogStreamDto) {
+    async createLogStream(@Res() res: Response, @Body() input: CreateLogStreamDto) {
         const result = await this.service.createLogStream(input.groupName, input.streamName);
-        return result;
+        return res.redirect(302, `/cw/log-group-details?groupName=${input.groupName}`);
     }
 
     @Get('delete-log-group')
@@ -88,11 +88,23 @@ export class CwController {
     @Get('delete-log-stream')
     @Redirect('/cw', 302)
     async deleteLogStreamGroup(
+        @Res() res: Response,
         @Query('groupName') groupName: string,
         @Query('streamName') streamName: string,
     ) {
         const result = await this.service.deleteLogStream(groupName, streamName);
-        return result;
+        return res.redirect(302, `/cw/log-group-details?groupName=${groupName}`);
+    }
+
+    @Get('stream-events')
+    @Render('cw-stream-events')
+    async getStreamEvents(
+        @Query('groupName') groupName: string,
+        @Query('streamName') streamName: string,
+    ) {
+
+        const { events } = await this.service.getLogEvents(groupName, streamName);
+        return { events, groupName, streamName };
     }
 
 }
