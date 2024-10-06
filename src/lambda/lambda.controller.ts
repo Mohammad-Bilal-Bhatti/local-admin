@@ -11,8 +11,8 @@ export class LambdaController {
     @Get()
     @Render('lambda-list')
     async getLambdas() {
-        const result = await this.service.listLabmdaFunctions();
-        return { Functions: result.Functions };
+        const { Functions } = await this.service.listLabmdaFunctions();
+        return { Functions };
     }
 
     @Get('create')
@@ -38,10 +38,28 @@ export class LambdaController {
 
     @Get('details')
     @Render('lambda-details')
-    async getLambdaDetails(@Query('name') name: string) {
+    async getLambdaDetails(@Query('name') name: string, @Query('tab') tab = 'details') {
         const { $metadata, ...details } = await this.service.getLambdaFunction(name);
-        const aliases = await this.service.listAliases(name);
-        return { functionName: name, details, Aliases: aliases.Aliases };
+        const result = { tab, functionName: name, details };
+        switch(tab) {
+            case 'update': {
+                break;
+            }
+            case 'invoke': {
+                break;
+            }
+            case 'aliases': {
+                const aliases = await this.service.listAliases(name);
+                Object.assign(result, { Aliases: aliases.Aliases });
+                break;
+            }
+            default:
+            case 'details': {
+                break;
+            }
+        }
+
+        return result;
     }
 
     @Post('invoke')
@@ -69,6 +87,13 @@ export class LambdaController {
     async updateFunctionCode(@Res() res: Response, @Body() input: UpdateFunctionCodeDto) {
         const result = await this.service.updateFunctionCode(input.functionName, input.s3Bucket, input.s3Key);
         return res.redirect(302, `/lambda/details?name=${input.functionName}`);
+    }
+
+    @Get('publish')
+    @Redirect('/lambda', 302)
+    async getPublishFunction(@Query('name') functionName: string) {
+        const result = await this.service.publishVersion(functionName);
+        return result;
     }
 
 }

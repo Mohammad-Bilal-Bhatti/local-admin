@@ -21,8 +21,9 @@
     <tbody>
         {{#each Functions}}
         <tr>
-            <th>
-                <a href="/lambda/remove?name={{FunctionName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            <th class="d-flex">
+                <a href="/lambda/remove?name={{FunctionName}}" class="btn btn-outline-danger me-1" role="button">Delete</a>
+                <a href="/lambda/publish?name={{FunctionName}}" class="btn btn-outline-success" role="button">Publish</a>
             </th>
             <th scope="row">
                 <a href="/lambda/details?name={{FunctionName}}">{{FunctionName}}</a>

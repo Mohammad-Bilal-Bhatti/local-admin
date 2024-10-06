@@ -18,6 +18,8 @@ import {
     ListAliasesCommandOutput,
     UpdateFunctionCodeCommand,
     UpdateFunctionCodeCommandOutput,
+    PublishVersionCommand,
+    PublishVersionCommandOutput,
     Runtime,
 } from "@aws-sdk/client-lambda";
 import { ConfigService } from "@nestjs/config";
@@ -104,6 +106,14 @@ export class LambdaService implements ConfigurableService {
             FunctionName: functionName,
             S3Bucket: bucket,
             S3Key: key,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async publishVersion(functionName: string): Promise<PublishVersionCommandOutput> {
+        const command = new PublishVersionCommand({
+            FunctionName: functionName,
         });
         const response = await this.client.send(command);
         return response;

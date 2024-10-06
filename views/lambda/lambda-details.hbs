@@ -1,8 +1,28 @@
+<h2>Details - {{functionName}} - <span
+        class="badge bg-{{#ifEq details.Configuration.State 'Active'}}success{{else}}danger{{/ifEq}}">{{details.Configuration.State}}</span>
+</h2>
 
-<h2>Details - {{functionName}}</h2>
 
 <a href="/lambda/remove?name={{functionName}}" role="button" class="btn btn-outline-danger">Delete</a>
+<a href="/lambda/publish?name={{functionName}}" class="btn btn-outline-success" role="button">Publish</a>
 
+
+<ul class="mt-2 nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?tab=details&name={{functionName}}">Details</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'invoke'}}active{{/ifEq}}" href="?tab=invoke&name={{functionName}}">Invoke</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'update'}}active{{/ifEq}}" href="?tab=update&name={{functionName}}">Update</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'aliases'}}active{{/ifEq}}" href="?tab=aliases&name={{functionName}}">Aliases</a>
+    </li>
+</ul>
+
+{{#ifEq tab 'invoke'}}
 <h4 class="mt-2">Invoke</h4>
 <form method="post" action="/lambda/invoke">
 
@@ -15,7 +35,9 @@
     <button class="btn btn-outline-secondary" type="reset">Reset</button>
     <button class="btn btn-outline-success" type="submit">Invoke</button>
 </form>
+{{/ifEq}}
 
+{{#ifEq tab 'update'}}
 <h4 class="mt-2">Update Function Code:</h4>
 <form method="post" action="/lambda/update-function-code">
     <input type="text" value="{{functionName}}" name="functionName" style="display: none;" />
@@ -32,11 +54,9 @@
     <button class="btn btn-outline-secondary" type="reset">Reset</button>
     <button class="btn btn-outline-success" type="submit">Update</button>
 </form>
+{{/ifEq}}
 
-<div class="mt-2">
-    <pre>{{json details 2}}</pre>
-</div>
-
+{{#ifEq tab 'aliases'}}
 <h4 class="mt-2">Create Alias:</h4>
 <form method="post" action="/lambda/alias">
     <input type="text" value="{{functionName}}" name="functionName" style="display: none;" />
@@ -70,7 +90,8 @@
         {{#each Aliases}}
         <tr>
             <th>
-                <a href="/lambda/delete-alias?name={{Name}}&functionName={{../functionName}}" class="btn btn-outline-danger" type="button">Delete</a>
+                <a href="/lambda/delete-alias?name={{Name}}&functionName={{../functionName}}"
+                    class="btn btn-outline-danger" type="button">Delete</a>
             </th>
             <th scope="row">{{Name}}</th>
             <td>{{FunctionVersion}}</td>
@@ -81,3 +102,11 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
+
+{{#ifEq tab 'details'}}
+<h4>Details:</h4>
+<div class="mt-2">
+    <pre>{{json details 2}}</pre>
+</div>
+{{/ifEq}}
