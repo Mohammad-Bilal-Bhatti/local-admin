@@ -3,16 +3,17 @@
 <a href="/cw/create-metric" role="button" class="btn btn-outline-primary">Create Metric</a>
 <a href="/cw/create-alarm" role="button" class="btn btn-outline-primary">Create Alarm</a>
 <a href="/cw/create-log-group" role="button" class="btn btn-outline-primary">Create Log Group</a>
+<a href="/cw/create-log-stream" role="button" class="btn btn-outline-primary">Create Log Stream</a>
 
 <ul class="mt-2 nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'groups'}}active{{/ifEq}}" href="?tab=groups">Log Groups</a>
+    </li>
     <li class="nav-item">
         <a class="nav-link {{#ifEq tab 'metrics'}}active{{/ifEq}}" href="?tab=metrics">Mertics</a>
     </li>
     <li class="nav-item">
         <a class="nav-link {{#ifEq tab 'alarms'}}active{{/ifEq}}" href="?tab=alarms">Alarms</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {{#ifEq tab 'groups'}}active{{/ifEq}}" href="?tab=groups">Log Groups</a>
     </li>
 </ul>
 
@@ -26,4 +27,32 @@
 
 {{#ifEq tab 'groups'}}
 <h4 class="mt-2">Log Groups</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Log Group Name</th>
+            <th scope="col">ARN</th>
+            <th scope="col">Metric Filter Count</th>
+            <th scope="col">Stored Bytes</th>
+            <th scope="col">Creation Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each logGroups}}
+        <tr>
+            <th>
+                <a href="/cw/delete-log-group?groupName={{logGroupName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <td>
+                <a href="/cw/log-group-details?groupName={{logGroupName}}">{{logGroupName}}</a>
+            </td>
+            <td>{{arn}}</td>
+            <td>{{metricFilterCount}}</td>
+            <td>{{storedBytes}}</td>
+            <td>{{creationTime}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
 {{/ifEq}}

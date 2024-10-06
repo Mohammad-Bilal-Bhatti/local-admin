@@ -38,7 +38,7 @@ export class GatewayController {
     @Render('gateway-details')
     async gatewayDetails(
         @Query('id') restApiId: string,
-        @Query('tab') tab = 'create',
+        @Query('tab') tab = 'resources',
     ) {
 
         const { $metadata, ...details } = await this.service.getRestApi(restApiId);
@@ -56,15 +56,11 @@ export class GatewayController {
                 Object.assign(result, { deployments });
                 break;
             }
-            case 'resources': {
-                const { items: resources } = await this.service.getResources(restApiId);
-                Object.assign(result, { resources });
-                break;
-            }
             default:
-            case 'create': {
+            case 'resources': {
                 const integrationOptions = Object.keys(IntegrationType).map(key => ({ value: key, label: IntegrationType[key] }));
-                Object.assign(result, { integrationOptions });
+                const { items: resources } = await this.service.getResources(restApiId);
+                Object.assign(result, { resources, integrationOptions });
                 break;
             }
         }

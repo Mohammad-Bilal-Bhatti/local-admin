@@ -17,8 +17,16 @@ import {
     CloudWatchLogsClient,
     CreateLogGroupCommand,
     CreateLogGroupCommandOutput,
+    CreateLogStreamCommand,
+    CreateLogStreamCommandOutput,
     DescribeLogGroupsCommand,
     DescribeLogGroupsCommandOutput,
+    DescribeLogStreamsCommand,
+    DescribeLogStreamsCommandOutput,
+    DeleteLogGroupCommand,
+    DeleteLogGroupCommandOutput,
+    DeleteLogStreamCommand,
+    DeleteLogStreamCommandOutput,
     LogGroupClass,
 } from "@aws-sdk/client-cloudwatch-logs";
 
@@ -30,11 +38,11 @@ export class CWService implements ConfigurableService {
     constructor(private readonly configService: ConfigService) {
         this.client = new CloudWatchClient({
             endpoint: configService.get<string>('localstack.endpoint'),
-            region: configService.get<string>('localstack.endpoint'),
+            region: configService.get<string>('localstack.region'),
         });
         this.logClient = new CloudWatchLogsClient({
             endpoint: configService.get<string>('localstack.endpoint'),
-            region: configService.get<string>('localstack.endpoint'),
+            region: configService.get<string>('localstack.region'),
         });
     }
 
@@ -101,6 +109,33 @@ export class CWService implements ConfigurableService {
 
     async listLogGroups(): Promise<DescribeLogGroupsCommandOutput> {
         const command = new DescribeLogGroupsCommand({ });
+        const result = await this.logClient.send(command);
+        return result;
+    }
+
+    async createLogStream(groupName: string, streamName: string): Promise<CreateLogStreamCommandOutput> {
+        const command = new CreateLogStreamCommand({
+            logGroupName: groupName,
+            logStreamName: streamName,
+        });
+        const result = await this.logClient.send(command);
+        return result;
+    }
+
+    async listLogStreams(groupName: string): Promise<DescribeLogStreamsCommandOutput> {
+        const command = new DescribeLogStreamsCommand({ logGroupName: groupName });
+        const result = await this.logClient.send(command);
+        return result;
+    }
+
+    async deleteLogGroup(groupName: string): Promise<DeleteLogGroupCommandOutput> {
+        const command = new DeleteLogGroupCommand({ logGroupName: groupName });
+        const result = await this.logClient.send(command);
+        return result;
+    }
+
+    async deleteLogStream(groupName: string, logStream: string) {
+        const command = new DeleteLogStreamCommand({ logGroupName: groupName, logStreamName: logStream });
         const result = await this.logClient.send(command);
         return result;
     }

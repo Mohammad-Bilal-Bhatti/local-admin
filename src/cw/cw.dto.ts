@@ -6,4 +6,10 @@ export class CreateLogGroupDto {
     logGroupClass?: LogGroupClass;
 }
 
+export class CreateLogStreamDto {
+    groupName: string;
+    streamName: string;
+}
+
+
 export { LogGroupClass } from '@aws-sdk/client-cloudwatch-logs';

@@ -1,11 +1,12 @@
-<h2>Rest Api Details - {{id}}</h2>
+<h2>Rest Api Details - {{details.name}}</h2>
 
 <pre>{{json details 2}}</pre>
 
+<h5>Invoke URLs</h5>
+<p>http://localhost:4566/restapis/<strong class="text-primary">{{id}}</strong>/<strong class="text-success">[STAGE]</strong>/_user_request_/<strong class="text-danger">[PATH]</strong></p>
+<p>http://<strong class="text-primary">{{id}}</strong>.execute-api.localhost.localstack.cloud:4566/<strong class="text-success">[STAGE]</strong>/<strong class="text-danger">[PATH]</strong></p>
+
 <ul class="mt-2 nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link {{#ifEq tab 'create'}}active{{/ifEq}}" href="?tab=create&id={{id}}">Create</a>
-    </li>
     <li class="nav-item">
         <a class="nav-link {{#ifEq tab 'resources'}}active{{/ifEq}}" href="?tab=resources&id={{id}}">Resources</a>
     </li>
@@ -17,7 +18,53 @@
     </li>
 </ul>
 
-{{#ifEq tab 'create'}}
+{{#ifEq tab 'resources'}}
+<h4>Resources:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">parentId</th>
+            <th scope="col">pathPart</th>
+            <th scope="col">path</th>
+            <th scope="col">Methods</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {{#each resources}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{parentId}}</td>
+            <td>{{pathPart}}</td>
+            <td>{{path}}</td>
+            <td>
+                <pre>{{json resourceMethods 2}}</pre>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4 class="mt-2">Create Resource:</h4>
+<form method="post" action="/gateway/resource">
+
+    <input type="text" name="restApiId" value="{{id}}" style="display:none;" />
+
+    <div class="mb-3">
+        <label for="parentId" class="form-label">Parent Id</label>
+        <input type="text" class="form-control" id="parentId" name="parentId">
+    </div>
+
+    <div class="mb-3">
+        <label for="pathPart" class="form-label">Path</label>
+        <input type="text" class="form-control" id="pathPart" name="pathPart">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+
 <h4 class="mt-2">Create Method:</h4>
 <form method="post" action="/gateway/method">
 
@@ -79,54 +126,6 @@
     <div class="mb-3">
         <label for="passthroughBehavior" class="form-label">Pass Through Behavior</label>
         <input type="text" class="form-control" id="passthroughBehavior" name="passthroughBehavior">
-    </div>
-
-    <button class="btn btn-outline-secondary" type="reset">Reset</button>
-    <button class="btn btn-outline-success" type="submit">Create</button>
-</form>
-{{/ifEq}}
-
-{{#ifEq tab 'resources'}}
-<h4>Resources:</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">parentId</th>
-            <th scope="col">pathPart</th>
-            <th scope="col">path</th>
-            <th scope="col">Methods</th>
-
-        </tr>
-    </thead>
-    <tbody>
-        {{#each resources}}
-        <tr>
-            <td>{{id}}</td>
-            <td>{{parentId}}</td>
-            <td>{{pathPart}}</td>
-            <td>{{path}}</td>
-            <td>
-                <pre>{{json resourceMethods 2}}</pre>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
-
-<h4 class="mt-2">Create Resource:</h4>
-<form method="post" action="/gateway/resource">
-
-    <input type="text" name="restApiId" value="{{id}}" style="display:none;" />
-
-    <div class="mb-3">
-        <label for="parentId" class="form-label">Parent Id</label>
-        <input type="text" class="form-control" id="parentId" name="parentId">
-    </div>
-
-    <div class="mb-3">
-        <label for="pathPart" class="form-label">Path</label>
-        <input type="text" class="form-control" id="pathPart" name="pathPart">
     </div>
 
     <button class="btn btn-outline-secondary" type="reset">Reset</button>

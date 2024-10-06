@@ -1,0 +1,29 @@
+
+<h3>Log Group Details - {{groupName}}</h3>
+
+<h5>Streams:</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">ARN</th>
+            <th scope="col">Log Stream Name</th>
+            <th scope="col">Creation Time</th>
+            <th scope="col">Stored Bytes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each logStreams}}
+        <tr>
+            <th>
+                <a href="/cw/delete-log-stream?groupName={{../groupName}}&streamName={{logStreamName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <td>{{arn}}</td>
+            <td>{{logStreamName}}</td>
+            <td>{{creationTime}}</td>
+            <td>{{storedBytes}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>  
+
