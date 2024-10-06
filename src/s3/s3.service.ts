@@ -28,6 +28,11 @@ import {
     PutBucketVersioningCommandOutput,
     ListObjectVersionsCommand,
     ListObjectVersionsCommandOutput,
+    GetBucketCorsCommand,
+    GetBucketCorsCommandOutput,
+    PutBucketCorsCommand,
+    PutBucketCorsCommandOutput,
+    CORSRule,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ConfigureInput } from "../app.dto";
@@ -207,6 +212,41 @@ export class S3Service implements ConfigurableService {
         const command = new ListObjectVersionsCommand({
             Bucket: bucket,
             Prefix: key,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async getBucketCors(bucket: string): Promise<GetBucketCorsCommandOutput> {
+        try {
+            const command = new GetBucketCorsCommand({
+                Bucket: bucket,
+            });
+            const response = await this.client.send(command);
+            return response;
+        } catch (error) {
+            const rules: CORSRule[] = [];
+            return { $metadata: {}, CORSRules: rules };
+        }
+    }
+
+    async putBucketCors(bucket: string): Promise<PutBucketCorsCommandOutput> {
+        const command = new PutBucketCorsCommand({
+            Bucket: bucket,
+            CORSConfiguration: {
+                CORSRules: [
+                    {
+                        AllowedHeaders: ["*"],
+                        AllowedMethods: ["GET", "POST", "PUT", "HEAD", "DELETE"],
+                        AllowedOrigins: [
+                            "http://localhost:3000",
+                            "https://app.localstack.cloud",
+                            "http://app.localstack.cloud"                    
+                        ],
+                        ExposeHeaders: ["ETag"],
+                    }
+                ]
+            }
         });
         const response = await this.client.send(command);
         return response;

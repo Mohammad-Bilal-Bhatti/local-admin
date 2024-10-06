@@ -24,3 +24,7 @@ export class PutBucketVersioningDto {
     enableVersioning: string;
     enableMfaDelete: string;
 }
+
+export class PutBucketCorsPolicyDto {
+    bucket: string;
+}

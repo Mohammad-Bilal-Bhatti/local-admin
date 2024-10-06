@@ -3,6 +3,7 @@
 
 <a href="/s3/bucket-policy?bucket={{name}}" role="button" class="btn btn-outline-primary" >Bucket Policy</a>
 <a href="/s3/bucket-versioning?bucket={{name}}" role="button" class="btn btn-outline-primary" >Bucket Versioning</a>
+<a href="/s3/bucket-cors?bucket={{name}}" role="button" class="btn btn-outline-primary" >Bucket Cors</a>
 <a href="/s3/create-website?bucket={{name}}" role="button" class="btn btn-outline-success" >Create Website</a>
 
 <a href="http://{{name}}.s3-website.localhost.localstack.cloud:4566" target="_blank" role="button" class="btn btn-outline-secondary">Goto Website</a>
@@ -22,6 +23,11 @@
 
 <form method="post" action="/s3/upload" enctype="multipart/form-data" >
     <input type="text" name="bucket" value="{{name}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="key" class="form-label">Key (optional)</label>
+        <input type="text" class="form-control" id="key" name="key">
+    </div>
 
     <div class="mb-3">
         <label for="formFile" class="form-label">Upload File</label>

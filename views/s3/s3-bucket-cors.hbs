@@ -1,0 +1,13 @@
+
+<h4>Bucket Cors - {{bucket}}</h4>
+
+<pre>{{json CORSRules 2}}</pre>
+
+
+<form method="post">
+    <input type="text" name="bucket" value="{{bucket}}" style="display: none;" />
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Update</button>
+</form>

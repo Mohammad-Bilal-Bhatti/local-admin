@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { Response } from "express";
 import { S3Service } from "./s3.service";
-import { CreateBucketInput, CreateWebsiteDto, PutBucketPolicyDto, PutBucketVersioningDto, UploadObjectInput } from "./s3.input.dto";
+import { CreateBucketInput, CreateWebsiteDto, PutBucketCorsPolicyDto, PutBucketPolicyDto, PutBucketVersioningDto, UploadObjectInput } from "./s3.input.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('s3')
@@ -41,7 +41,7 @@ export class S3Controller {
     ) {
 
       const bucket = input.bucket;
-      const key = input.key ?? file.originalname;
+      const key = input.key ? input.key : file.originalname;
       const contentLength = file.size;
       const contentType = file.mimetype;
       const body = file.buffer;
@@ -207,6 +207,19 @@ export class S3Controller {
     @Post('bucket-versioning')
     async putBucketVersioning(@Res() res: Response, @Body() input: PutBucketVersioningDto) {
       const result = await this.s3Service.putBucketVersioning(input.bucket, input.enableVersioning === 'true', input.enableMfaDelete === 'true');
+      return res.redirect(302, `/s3/details?name=${input.bucket}`);
+    }
+
+    @Get('bucket-cors')
+    @Render('s3-bucket-cors')
+    async getBucketCors(@Query('bucket') bucket: string) {
+      const { CORSRules } = await this.s3Service.getBucketCors(bucket);
+      return { bucket, CORSRules };
+    }
+
+    @Post('bucket-cors')
+    async updateBucketCors(@Res() res: Response, @Body() input: PutBucketCorsPolicyDto) {
+      const result = await this.s3Service.putBucketCors(input.bucket);
       return res.redirect(302, `/s3/details?name=${input.bucket}`);
     }
 
