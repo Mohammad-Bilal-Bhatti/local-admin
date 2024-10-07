@@ -27,4 +27,8 @@ export class PutBucketVersioningDto {
 
 export class PutBucketCorsPolicyDto {
     bucket: string;
+    AllowedHeaders: string | string[];
+    AllowedMethods: string | string[];
+    AllowedOrigins: string | string[];
+    ExposeHeaders: string | string[];
 }

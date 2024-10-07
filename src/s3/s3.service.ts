@@ -230,20 +230,22 @@ export class S3Service implements ConfigurableService {
         }
     }
 
-    async putBucketCors(bucket: string): Promise<PutBucketCorsCommandOutput> {
+    async putBucketCors(
+        bucket: string,
+        allowedHeaders: string | string[],
+        allowedMethods: string | string[],
+        allowedOrigins: string | string[],
+        exposeHeaders: string | string[],
+    ): Promise<PutBucketCorsCommandOutput> {
         const command = new PutBucketCorsCommand({
             Bucket: bucket,
             CORSConfiguration: {
                 CORSRules: [
                     {
-                        AllowedHeaders: ["*"],
-                        AllowedMethods: ["GET", "POST", "PUT", "HEAD", "DELETE"],
-                        AllowedOrigins: [
-                            "http://localhost:3000",
-                            "https://app.localstack.cloud",
-                            "http://app.localstack.cloud"                    
-                        ],
-                        ExposeHeaders: ["ETag"],
+                        AllowedHeaders: Array.isArray(allowedHeaders) ? allowedHeaders : [allowedHeaders],
+                        AllowedMethods: Array.isArray(allowedMethods) ? allowedMethods : [allowedMethods],
+                        AllowedOrigins: Array.isArray(allowedOrigins) ? allowedOrigins : [allowedOrigins],
+                        ExposeHeaders: Array.isArray(exposeHeaders) ? exposeHeaders : [exposeHeaders],
                     }
                 ]
             }

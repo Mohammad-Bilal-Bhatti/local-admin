@@ -1,13 +1,164 @@
 
 <h4>Bucket Cors - {{bucket}}</h4>
 
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'rules'}}active{{/ifEq}}" href="?tab=rules&bucket={{bucket}}">Rules</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'form'}}active{{/ifEq}}" href="?tab=form&bucket={{bucket}}">Form</a>
+  </li>
+</ul>
+
+
+{{#ifEq tab 'rules'}}
 <pre>{{json CORSRules 2}}</pre>
+{{/ifEq}}
 
-
+{{#ifEq tab 'form'}}
 <form method="post">
     <input type="text" name="bucket" value="{{bucket}}" style="display: none;" />
 
+    <div class="col-12">
+        <div id="AllowedHeadersContainer">
+        </div>
+        <button type="button" role="button" class="btn btn-outline-primary" onclick="addAllowedHeader()">
+            + Allowed Header
+        </button>
+    </div>
 
-    <button class="btn btn-outline-secondary" type="reset">Reset</button>
-    <button class="btn btn-outline-success" type="submit">Update</button>
+    <div class="col-12">
+        <div id="AllowedMethodsContainer">
+        </div>
+        <button type="button" role="button" class="btn btn-outline-primary" onclick="addAllowedMethods()">
+            + Allow Method
+        </button>
+    </div>
+
+    <div class="col-12">
+        <div id="AllowedOriginsContainer">
+        </div>
+        <button type="button" role="button" class="btn btn-outline-primary" onclick="addAllowedOrigins()">
+            + Allow Origin
+        </button>
+    </div>
+
+    <div class="col-12">
+        <div id="ExposeHeadersContainer">
+        </div>
+        <button type="button" role="button" class="btn btn-outline-primary" onclick="addExposeHeaders()">
+            + Expose Header
+        </button>
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-outline-secondary" type="reset">Reset</button>
+        <button class="btn btn-outline-success" type="submit">Update</button>
+    </div>
+
 </form>
+{{/ifEq}}
+
+<script type="text/javascript">
+
+    function removeTagElement(elementId) {
+        const element = document.getElementById(elementId);
+        element.remove();
+    }
+
+    function addAllowedHeader() {
+        const container = document.getElementById('AllowedHeadersContainer');
+        const index = container.children.length;
+
+        const template = () => (`
+            <div class="row" id="allowed-headers-${index}-item">
+                <div class="col-10">
+                    <div class="mb-3">
+                        <label for="AllowedHeaders-${index}" class="form-label">Allowed Headers</label>
+                        <input type="text" class="form-control" id="AllowedHeaders-${index}" name="AllowedHeaders">
+                    </div>
+                </div>
+                <div class="col-2 d-grid gap-2">
+                    <button onclick="removeTagElement('allowed-headers-${index}-item')" class="btn btn-outline-danger mt-4" role="button" type="button">Remove</button>
+                </div>
+            </div>
+        `);
+
+        const element = template(`allowed-header-${index}-item`);
+        container.insertAdjacentHTML('beforeend', element);
+    }
+
+    function addAllowedMethods() {
+        const container = document.getElementById('AllowedMethodsContainer');
+        const index = container.children.length;
+
+        const template = () => (`
+            <div class="row" id="allowed-methods-${index}-item">
+                <div class="col-10">
+                    <div class="mb-3">
+                        <label for="AllowedMethods-${index}" class="form-label">Allowed Methods</label>
+                        <input type="text" class="form-control" id="AllowedMethods-${index}" name="AllowedMethods">
+                    </div>
+                </div>
+                <div class="col-2 d-grid gap-2">
+                    <button onclick="removeTagElement('allowed-methods-${index}-item')" class="btn btn-outline-danger mt-4" role="button" type="button">Remove</button>
+                </div>
+            </div>
+        `);
+
+        const element = template();
+        container.insertAdjacentHTML('beforeend', element);
+    }
+
+    function addAllowedOrigins() {
+        const container = document.getElementById('AllowedOriginsContainer');
+        const index = container.children.length;
+
+        const template = () => (`
+            <div class="row" id="allowed-origins-${index}-item">
+                <div class="col-10">
+                    <div class="mb-3">
+                        <label for="AllowedOrigins-${index}" class="form-label">Allowed Origins</label>
+                        <input type="text" class="form-control" id="AllowedOrigins-${index}" name="AllowedOrigins">
+                    </div>
+                </div>
+                <div class="col-2 d-grid gap-2">
+                    <button onclick="removeTagElement('allowed-origins-${index}-item')" class="btn btn-outline-danger mt-4" role="button" type="button">Remove</button>
+                </div>
+            </div>
+        `);
+
+        const element = template();
+        container.insertAdjacentHTML('beforeend', element);
+    }
+
+    function addExposeHeaders() {
+        const container = document.getElementById('ExposeHeadersContainer');
+        const index = container.children.length;
+
+        const template = () => (`
+            <div class="row" id="exposed-header-${index}-item">
+                <div class="col-10">
+                    <div class="mb-3">
+                        <label for="ExposeHeaders-${index}" class="form-label">Expose Headers</label>
+                        <input type="text" class="form-control" id="ExposeHeaders-${index}" name="ExposeHeaders">
+                    </div>
+                </div>
+                <div class="col-2 d-grid gap-2">
+                    <button onclick="removeTagElement('exposed-header-${index}-item')" class="btn btn-outline-danger mt-4" role="button" type="button">Remove</button>
+                </div>
+            </div>
+        `);
+
+        const element = template();
+        container.insertAdjacentHTML('beforeend', element);
+    }
+
+    window.document.addEventListener('DOMContentLoaded', function() {
+        addAllowedHeader();
+        addAllowedMethods();
+        addAllowedOrigins();
+        addExposeHeaders();
+    })
+
+</script>

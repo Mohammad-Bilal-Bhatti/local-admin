@@ -212,14 +212,14 @@ export class S3Controller {
 
     @Get('bucket-cors')
     @Render('s3-bucket-cors')
-    async getBucketCors(@Query('bucket') bucket: string) {
+    async getBucketCors(@Query('bucket') bucket: string, @Query('tab') tab = 'rules') {
       const { CORSRules } = await this.s3Service.getBucketCors(bucket);
-      return { bucket, CORSRules };
+      return { bucket, CORSRules, tab };
     }
 
     @Post('bucket-cors')
     async updateBucketCors(@Res() res: Response, @Body() input: PutBucketCorsPolicyDto) {
-      const result = await this.s3Service.putBucketCors(input.bucket);
+      const result = await this.s3Service.putBucketCors(input.bucket, input.AllowedHeaders, input.AllowedMethods, input.AllowedOrigins, input.ExposeHeaders);
       return res.redirect(302, `/s3/details?name=${input.bucket}`);
     }
 
