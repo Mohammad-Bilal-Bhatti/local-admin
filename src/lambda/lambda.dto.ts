@@ -1,4 +1,4 @@
-import { Runtime } from "@aws-sdk/client-lambda";
+import { Runtime, FunctionUrlAuthType, InvokeMode } from "@aws-sdk/client-lambda";
 
 
 export class CreateLambdaDto {
@@ -28,5 +28,11 @@ export class UpdateFunctionCodeDto {
     s3Key: string;
 }
 
+export class CreateFunctionUrlDto {
+    functionName: string;
+    authType: FunctionUrlAuthType;
+    invokeMode: InvokeMode;
+}
 
-export { Runtime } from "@aws-sdk/client-lambda";
+export { Runtime, FunctionUrlAuthType, InvokeMode } from "@aws-sdk/client-lambda";
+

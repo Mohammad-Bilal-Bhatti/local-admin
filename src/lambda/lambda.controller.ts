@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { LambdaService } from "./lambda.service";
-import { CreateAliasDto, CreateLambdaDto, InvokeLambdaDto, Runtime, UpdateFunctionCodeDto } from "./lambda.dto";
+import { CreateAliasDto, CreateFunctionUrlDto, CreateLambdaDto, FunctionUrlAuthType, InvokeLambdaDto, InvokeMode, Runtime, UpdateFunctionCodeDto } from "./lambda.dto";
 
 @Controller('lambda')
 export class LambdaController {
@@ -42,6 +42,18 @@ export class LambdaController {
         const { $metadata, ...details } = await this.service.getLambdaFunction(name);
         const result = { tab, functionName: name, details };
         switch(tab) {
+            case 'function-urls': {
+                const { FunctionUrlConfigs } = await this.service.listFunctionUrls(name);
+                const authTypesOptions = Object.keys(FunctionUrlAuthType).map(key => ({ label: key, value: FunctionUrlAuthType[key] }));
+                const invokeModeOptions = Object.keys(InvokeMode).map(key => ({ label: key, value: FunctionUrlAuthType[key] }));
+                Object.assign(result, { FunctionUrlConfigs, authTypesOptions, invokeModeOptions });
+                break;
+            }
+            case 'event-source-mapping': {
+                const { EventSourceMappings } = await this.service.listEventSourceMapping(name);
+                Object.assign(result, { EventSourceMappings });
+                break;
+            }
             case 'update': {
                 break;
             }
@@ -94,6 +106,24 @@ export class LambdaController {
     async getPublishFunction(@Query('name') functionName: string) {
         const result = await this.service.publishVersion(functionName);
         return result;
+    }
+
+    @Post('create-function-url')
+    @Redirect('/lambda', 302)
+    async createFunction(@Body() input: CreateFunctionUrlDto) {
+        const result = await this.service.createFunctionUrl(
+            input.functionName,
+            input.authType,
+            input.invokeMode,
+        );
+        return result;
+    }
+
+    @Get('delete-function-url')
+    @Redirect('/lambda', 302)
+    async deleteFunctionUrl(@Query('functionName') functionName: string) {
+        const result = await this.service.deleteFunctionUrl(functionName);
+        return null;
     }
 
 }

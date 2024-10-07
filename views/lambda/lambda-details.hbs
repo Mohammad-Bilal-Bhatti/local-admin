@@ -1,5 +1,5 @@
 <h2>Details - {{functionName}} - <span
-        class="badge bg-{{#ifEq details.Configuration.State 'Active'}}success{{else}}danger{{/ifEq}}">{{details.Configuration.State}}</span>
+        class="badge rounded-pill bg-{{#ifEq details.Configuration.State 'Active'}}success{{else}}danger{{/ifEq}}">{{details.Configuration.State}}</span>
 </h2>
 
 
@@ -19,6 +19,12 @@
     </li>
     <li class="nav-item">
         <a class="nav-link {{#ifEq tab 'aliases'}}active{{/ifEq}}" href="?tab=aliases&name={{functionName}}">Aliases</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'event-source-mapping'}}active{{/ifEq}}" href="?tab=event-source-mapping&name={{functionName}}">Event Source Mapping</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'function-urls'}}active{{/ifEq}}" href="?tab=function-urls&name={{functionName}}">Function URLs</a>
     </li>
 </ul>
 
@@ -105,8 +111,72 @@
 {{/ifEq}}
 
 {{#ifEq tab 'details'}}
-<h4>Details:</h4>
+<h4 class="mt-2">Details:</h4>
 <div class="mt-2">
     <pre>{{json details 2}}</pre>
 </div>
+{{/ifEq}}
+
+
+{{#ifEq tab 'event-source-mapping'}}
+<h4 class="mt-2">Event Srouce Mapping</h4>
+<p>This feature is under construction</p>
+{{/ifEq}}
+
+{{#ifEq tab 'function-urls'}}
+<h4 class="mt-2">Function URLs</h4>
+<form method="post" action="/lambda/create-function-url">
+    <input type="text" value="{{functionName}}" name="functionName" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="authType" class="form-label">Auth Type</label>
+        <select class="form-select" id="authType" name="authType">
+            {{#each authTypesOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="InvokeMode" class="form-label">Invoke Mode</label>
+        <select class="form-select" id="InvokeMode" name="InvokeMode">
+            {{#each invokeModeOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Function Url</th>
+            <th scope="col">Function Arn</th>
+            <th scope="col">Creation Time</th>
+            <th scope="col">Last Modified Time</th>
+            <th scope="col">Auth Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each FunctionUrlConfigs}}
+        <tr>
+            <th>
+                <a href="/lambda/delete-function-url?functionName={{../functionName}}"
+                    class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th>{{FunctionUrl}}</th>
+            <td>{{FunctionArn}}</td>
+            <td>{{CreationTime}}</td>
+            <td>{{LastModifiedTime}}</td>
+            <td>{{AuthType}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
 {{/ifEq}}

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { 
+    Runtime,
     LambdaClient, 
     ListFunctionsCommand,
     ListFunctionsCommandOutput,
@@ -20,7 +21,22 @@ import {
     UpdateFunctionCodeCommandOutput,
     PublishVersionCommand,
     PublishVersionCommandOutput,
-    Runtime,
+    GetEventSourceMappingCommand,
+    GetEventSourceMappingCommandOutput,
+    CreateEventSourceMappingCommand,
+    CreateEventSourceMappingCommandOutput,
+    ListEventSourceMappingsCommand,
+    ListEventSourceMappingsCommandOutput,
+    DeleteEventSourceMappingCommand,
+    DeleteEventSourceMappingCommandOutput,
+    CreateFunctionUrlConfigCommand,
+    CreateFunctionUrlConfigCommandOutput,
+    ListFunctionUrlConfigsCommand,
+    ListFunctionUrlConfigsCommandOutput,
+    DeleteFunctionUrlConfigCommand,
+    DeleteFunctionUrlConfigCommandOutput,
+    FunctionUrlAuthType,
+    InvokeMode
 } from "@aws-sdk/client-lambda";
 import { ConfigService } from "@nestjs/config";
 import { ConfigurableService } from "src/shared/configurable.interface";
@@ -113,6 +129,59 @@ export class LambdaService implements ConfigurableService {
 
     async publishVersion(functionName: string): Promise<PublishVersionCommandOutput> {
         const command = new PublishVersionCommand({
+            FunctionName: functionName,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async createEventSourceMapping(functionName: string): Promise<CreateEventSourceMappingCommandOutput> {
+        const command = new CreateEventSourceMappingCommand({
+            FunctionName: functionName,
+
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async deleteEventSourceMapping(uuid: string): Promise<DeleteEventSourceMappingCommandOutput> {
+        const command = new DeleteEventSourceMappingCommand({ UUID: uuid });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async listEventSourceMapping(functionName?: string): Promise<ListEventSourceMappingsCommandOutput> {
+        const command = new ListEventSourceMappingsCommand({
+            FunctionName: functionName,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async getEventSourceMapping(uuid: string): Promise<GetEventSourceMappingCommandOutput> {
+        const command = new GetEventSourceMappingCommand({ UUID: uuid });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async createFunctionUrl(functionName: string, authType: FunctionUrlAuthType, invokeMode: InvokeMode): Promise<CreateFunctionUrlConfigCommandOutput> {
+        const command = new CreateFunctionUrlConfigCommand({ 
+            FunctionName: functionName,  
+            AuthType: authType,
+            InvokeMode: invokeMode,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async listFunctionUrls(functionName: string): Promise<ListFunctionUrlConfigsCommandOutput> { 
+        const command = new ListFunctionUrlConfigsCommand({FunctionName: functionName});
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async deleteFunctionUrl(functionName: string): Promise<DeleteFunctionUrlConfigCommandOutput> {
+        const command = new DeleteFunctionUrlConfigCommand({ 
             FunctionName: functionName,
         });
         const response = await this.client.send(command);
