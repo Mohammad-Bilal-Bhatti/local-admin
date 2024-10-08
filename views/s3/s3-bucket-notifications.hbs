@@ -1,0 +1,71 @@
+
+<h2>Bucket Notifications - {{bucket}}</h2>
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?tab=details&bucket={{bucket}}">Details</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'configure'}}active{{/ifEq}}" href="?tab=configure&bucket={{bucket}}">Configure</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'configure'}}
+<h4>Configure Notification</h4>
+<form method="post">
+
+    <input type="text" name="bucket" value="{{bucket}}" style="display: none;" />
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="target" id="sqs" value="sqs" checked>
+        <label class="form-check-label" for="sqs">
+            SQS
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="target" id="sns" value="sns" >
+        <label class="form-check-label" for="sns">
+            SNS
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="target" id="lambda" value="lambda" >
+        <label class="form-check-label" for="lambda">
+            Lambda 
+        </label>
+    </div>
+
+    <h5>Events</h5>
+    <button role="button" type="button" class="btn btn-outline-secondary mb-2" onclick="toggleChecks()">Toggle Checks</button>
+    <div class="row px-4">
+        {{#each s3EventOptions}}
+        <div class="col-3 form-check">
+        <input type="checkbox" class="form-check-input" id="events-{{label}}" name="events" value="{{value}}" checked>
+        <label class="form-check-label" for="events-{{label}}">{{value}}</label>
+        </div>
+        {{/each}}
+    </div>
+
+    <div class="mb-3">
+        <label for="targetArn" class="form-label">Target Arn</label>
+        <input type="text" class="form-control" id="targetArn" name="targetArn">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+{{/ifEq}}
+
+
+{{#ifEq tab 'details'}}
+<h4>Details</h4>
+<pre>{{json notifications 2}}</pre>
+{{/ifEq}}
+
+<script>
+    function toggleChecks() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = !checkbox.checked;
+        });
+    }
+</script>

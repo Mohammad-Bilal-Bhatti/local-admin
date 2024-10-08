@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { Response } from "express";
 import { S3Service } from "./s3.service";
-import { CreateBucketInput, CreateWebsiteDto, PutBucketCorsPolicyDto, PutBucketPolicyDto, PutBucketVersioningDto, UploadObjectInput } from "./s3.input.dto";
+import { CreateBucketInput, CreateBucketNoficationDto, CreateWebsiteDto, PutBucketCorsPolicyDto, PutBucketPolicyDto, PutBucketVersioningDto, UploadObjectInput, Event as S3Events } from "./s3.input.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('s3')
@@ -221,6 +221,20 @@ export class S3Controller {
     async updateBucketCors(@Res() res: Response, @Body() input: PutBucketCorsPolicyDto) {
       const result = await this.s3Service.putBucketCors(input.bucket, input.AllowedHeaders, input.AllowedMethods, input.AllowedOrigins, input.ExposeHeaders);
       return res.redirect(302, `/s3/details?name=${input.bucket}`);
+    }
+
+    @Get('bucket-notifications')
+    @Render('s3-bucket-notifications')
+    async getBucketNotifications(@Query('bucket') bucket: string, @Query('tab') tab = 'details') {
+      const { $metadata, ...notifications } = await this.s3Service.getBucketNotifications(bucket);
+      const s3EventOptions = Object.keys(S3Events).map(key => ({ label: key, value: S3Events[key] }));
+      return { tab, bucket, notifications, s3EventOptions };
+    }
+
+    @Post('bucket-notifications')
+    async createBucketNotification(@Res() res: Response, @Body() input: CreateBucketNoficationDto) {
+      const result = await this.s3Service.putBucketNotification(input.bucket, input.target, input.targetArn, input.events);
+      return res.redirect(302, `/s3/bucket-notifications?bucket=${input.bucket}`);
     }
 
 }

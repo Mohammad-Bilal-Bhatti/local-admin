@@ -32,6 +32,11 @@ import {
     GetBucketCorsCommandOutput,
     PutBucketCorsCommand,
     PutBucketCorsCommandOutput,
+    PutBucketNotificationConfigurationCommand,
+    PutBucketNotificationConfigurationCommandOutput,
+    GetBucketNotificationConfigurationCommand,
+    GetBucketNotificationConfigurationCommandOutput,
+    Event,
     CORSRule,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -252,6 +257,52 @@ export class S3Service implements ConfigurableService {
         });
         const response = await this.client.send(command);
         return response;
+    }
+
+    async putBucketNotification(bucket: string, target: 'sqs' | 'sns' | 'lambda', targetArn: string, event: Event | Event[]): Promise<PutBucketNotificationConfigurationCommandOutput> {
+
+
+        const command = new PutBucketNotificationConfigurationCommand({
+            Bucket: bucket,
+            NotificationConfiguration: {
+                EventBridgeConfiguration: {},
+                QueueConfigurations: target === 'sqs' ? [
+                    {
+                        QueueArn: targetArn,
+                        Events: Array.isArray(event) ? event: [event],                        
+                    }
+                ]: null,
+                TopicConfigurations: target === 'sns' ? [
+                    {
+                        TopicArn: targetArn,
+                        Events: Array.isArray(event) ? event: [event],
+                    }
+                ]: null,
+                LambdaFunctionConfigurations: target === 'lambda' ? [
+                    {
+                        LambdaFunctionArn: targetArn,
+                        Events: Array.isArray(event) ? event: [event],                        
+                    }
+                ]: null,
+            }
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+
+    async getBucketNotifications(bucket: string): Promise<GetBucketNotificationConfigurationCommandOutput> {
+        try {
+
+            const command = new GetBucketNotificationConfigurationCommand({
+                Bucket: bucket,
+            });
+            const response = await this.client.send(command);
+            return response;
+
+        } catch (error) {
+            return { $metadata: {},  };
+        }
     }
 
 }

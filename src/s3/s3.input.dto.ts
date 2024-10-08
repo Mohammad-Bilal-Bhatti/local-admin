@@ -1,4 +1,4 @@
-
+import { Event } from '@aws-sdk/client-s3'
 export class CreateBucketInput {
     name: string;
 }
@@ -32,3 +32,12 @@ export class PutBucketCorsPolicyDto {
     AllowedOrigins: string | string[];
     ExposeHeaders: string | string[];
 }
+
+export class CreateBucketNoficationDto {
+    bucket: string;
+    target: 'sqs' | 'sns' | 'lambda';
+    targetArn: string;
+    events: Event | Event[];
+}
+
+export { Event } from '@aws-sdk/client-s3';
