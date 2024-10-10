@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { Response } from "express";
 import { S3Service } from "./s3.service";
-import { CreateBucketInput, CreateBucketNoficationDto, CreateWebsiteDto, PutBucketCorsPolicyDto, PutBucketPolicyDto, PutBucketVersioningDto, UploadObjectInput, Event as S3Events } from "./s3.input.dto";
+import { CreateBucketInput, CreateBucketNoficationDto, CreateWebsiteDto, PutBucketCorsPolicyDto, PutBucketPolicyDto, PutBucketVersioningDto, UploadObjectInput, Event as S3Events, CreateBucketReplicationDto } from "./s3.input.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('s3')
@@ -235,6 +235,19 @@ export class S3Controller {
     async createBucketNotification(@Res() res: Response, @Body() input: CreateBucketNoficationDto) {
       const result = await this.s3Service.putBucketNotification(input.bucket, input.target, input.targetArn, input.events);
       return res.redirect(302, `/s3/bucket-notifications?bucket=${input.bucket}`);
+    }
+
+    @Get('bucket-replication')
+    @Render('s3-bucket-replication')
+    async getBucketReplication(@Query('bucket') bucket: string, @Query('tab') tab = 'details') {
+      const { ReplicationConfiguration } = await this.s3Service.getBucketReplication(bucket);
+      return { tab, bucket, ReplicationConfiguration };
+    }
+
+    @Post('bucket-replication')
+    async putBucketReplication(@Res() res: Response, @Body() input: CreateBucketReplicationDto) {
+      const result = await this.s3Service.putBucketReplication(input.bucket, input.role, input.destinationBucket, input.deleteMarkerReplication === 'true', input.existingObjectReplication === 'true');
+      return res.redirect(302, `/s3/bucket-replication?bucket=${input.bucket}`);
     }
 
 }

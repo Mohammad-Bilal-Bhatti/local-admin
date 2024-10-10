@@ -1,0 +1,43 @@
+
+<h2>Bucket Replication - {{bucket}}</h2>
+
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?tab=details&bucket={{bucket}}">Details</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'create'}}active{{/ifEq}}" href="?tab=create&bucket={{bucket}}">Create</a>
+  </li>
+</ul>
+{{#ifEq tab 'details'}}
+<pre>{{json ReplicationConfiguration 2}}</pre>
+{{/ifEq}}
+{{#ifEq tab 'create'}}
+<h4 class="mt-2">Create Bucket Replication Rule</h4>
+<form method="post">
+
+    <input type="text" name="bucket" value="{{bucket}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <input type="text" class="form-control" id="role" name="role" >
+    </div>
+    <div class="mb-3">
+        <label for="destinationBucket" class="form-label">Destination Bucket</label>
+        <input type="text" class="form-control" id="destinationBucket" name="destinationBucket">
+    </div>
+    <div class="col-3 form-check">
+        <input type="checkbox" class="form-check-input" id="deleteMarkerReplication" name="deleteMarkerReplication" value="true">
+        <label class="form-check-label" for="deleteMarkerReplication">Delete Marker Replication</label>
+    </div>
+    <div class="col-3 form-check">
+        <input type="checkbox" class="form-check-input" id="existingObjectReplication" name="existingObjectReplication" value="true">
+        <label class="form-check-label" for="existingObjectReplication">Existing Objects Replication</label>
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+{{/ifEq}}
+
+

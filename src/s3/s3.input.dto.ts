@@ -40,4 +40,12 @@ export class CreateBucketNoficationDto {
     events: Event | Event[];
 }
 
+export class CreateBucketReplicationDto {
+    bucket: string;
+    role: string;
+    destinationBucket: string;
+    deleteMarkerReplication: string;
+    existingObjectReplication: string;
+}
+
 export { Event } from '@aws-sdk/client-s3';

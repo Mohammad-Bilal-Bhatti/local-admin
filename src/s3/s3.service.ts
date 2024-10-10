@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { 
+    Event,
+    CORSRule,
     ListBucketsCommand, 
     S3Client,
     ListObjectsV2Command,
@@ -36,8 +38,10 @@ import {
     PutBucketNotificationConfigurationCommandOutput,
     GetBucketNotificationConfigurationCommand,
     GetBucketNotificationConfigurationCommandOutput,
-    Event,
-    CORSRule,
+    GetBucketReplicationCommand,
+    GetBucketReplicationCommandOutput,
+    PutBucketReplicationCommand,
+    PutBucketReplicationCommandOutput,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ConfigureInput } from "../app.dto";
@@ -301,8 +305,42 @@ export class S3Service implements ConfigurableService {
             return response;
 
         } catch (error) {
-            return { $metadata: {},  };
+            return { $metadata: {}, EventBridgeConfiguration: null, LambdaFunctionConfigurations: null, QueueConfigurations: null, TopicConfigurations: null };
         }
+    }
+
+    async getBucketReplication(bucket: string): Promise<GetBucketReplicationCommandOutput> {
+        try {
+
+            const command = new GetBucketReplicationCommand({
+                Bucket: bucket,
+            });
+            const response = await this.client.send(command);
+            return response;
+
+        } catch (error) {
+            return { $metadata: null, ReplicationConfiguration: null };
+        }
+
+    } 
+
+    async putBucketReplication(bucket: string, role: string, destinationBucket: string, deleteMarkerReplication: boolean, existingObjectReplication: boolean) {
+        const command = new PutBucketReplicationCommand({
+            Bucket: bucket,
+            ReplicationConfiguration: {
+                Role: role,
+                Rules: [
+                    {
+                        Destination: { Bucket: destinationBucket },
+                        Status: 'Enabled',
+                        DeleteMarkerReplication: { Status: deleteMarkerReplication ? 'Enabled' : 'Disabled' },
+                        ExistingObjectReplication: { Status: existingObjectReplication ? 'Enabled' : 'Disabled' },
+                    }
+                ],
+            }
+        });
+        const response = await this.client.send(command);
+        return response;
     }
 
 }
