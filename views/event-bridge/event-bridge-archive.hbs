@@ -1,0 +1,25 @@
+
+<h2>Create Event Archive</h2>
+
+<form method="post">
+    
+    <div class="mb-3">
+        <label for="archiveName" class="form-label">Name</label>
+        <input type="text" class="form-control" id="archiveName" name="archiveName">
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+    <div class="mb-3">
+        <label for="eventSourceArn" class="form-label">Event Source Arn</label>
+        <input type="text" class="form-control" id="eventSourceArn" name="eventSourceArn">
+    </div>
+    <div class="mb-3">
+        <label for="retentionDays" class="form-label">Retention Days</label>
+        <input type="number" class="form-control" id="retentionDays" name="retentionDays">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>

@@ -1,11 +1,12 @@
 
-<h2>Create Rule</h2>
+<h2>Create Rule - {{eventBusName}}</h2>
 
 <form method="post">
-    
+    <input type="text" name="eventBusname" value="{{eventBusName}}" style="display: none;" />
+
     <div class="mb-3">
         <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" name="name">
+        <input type="text" class="form-control" id="name" name="name" required>
     </div>
     <div class="mb-3">
         <label for="description" class="form-label">Description</label>
@@ -14,6 +15,11 @@
     <div class="mb-3">
         <label for="scheduleExpression" class="form-label">Schedule Expresstion</label>
         <input type="text" class="form-control" id="scheduleExpression" name="scheduleExpression" placeholder="rate(2 minutes)">
+    </div>
+
+    <div class="mb-3">
+        <label for="eventPattern" class="form-label">Event Pattern</label>
+        <textarea class="form-control" id="eventPattern" rows="3" name="eventPattern"></textarea>
     </div>
 
     <button class="btn btn-outline-secondary" type="reset">Reset</button>

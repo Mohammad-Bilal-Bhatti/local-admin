@@ -1,0 +1,30 @@
+
+<h2>Archive - {{archiveName}}</h2>
+
+<h4>Start Replay</h4>
+<form method="post" action="/event-bridge/start-replay">
+
+    <input type="text" name="archiveName" value="{{archiveName}}" style="display: none;" />
+
+    
+    <div class="mb-3">
+        <label for="replayName" class="form-label">Replay Name</label>
+        <input type="text" class="form-control" id="replayName" name="replayName">
+    </div>
+
+    <div class="mb-3">
+        <label for="sourceArn" class="form-label">Source ARN</label>
+        <input type="text" class="form-control" id="sourceArn" name="sourceArn" value="{{details.ArchiveArn}}">
+    </div>
+    <div class="mb-3">
+        <label for="destinationArn" class="form-label">Destination ARN</label>
+        <input type="text" class="form-control" id="destinationArn" name="destinationArn" value="{{details.EventSourceArn}}">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+
+
+<h4 class="mt-2">Details</h4>
+<pre>{{json details 2}}</pre>

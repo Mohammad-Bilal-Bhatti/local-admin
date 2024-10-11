@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 import { menuItems } from 'src/shared/constants';
-const { formatDistance } = require('date-fns');
+const { formatDistance, startOfDay, endOfDay } = require('date-fns');
 
 export function printName(name: string) {
   const output = `<div> ${name}</div>`;
@@ -58,4 +58,12 @@ export function olookup(object: any, accessor: string): string {
 export function MenuItems() {
   const itemsAsHtml = menuItems.map(item => `<li class="nav-item">` + `<a class="nav-link" href="${item.link}">` + item.title + `</a>` + `</li>`);
   return `<ul class="navbar-nav">\n` + itemsAsHtml.join("\n") + `\n</ul>`;
+}
+
+export function startOf(date: Date): Date {
+  return startOfDay(date);
+}
+
+export function endOf(date: Date): Date {
+  return endOfDay(date);
 }

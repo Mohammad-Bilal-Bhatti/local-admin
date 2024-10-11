@@ -1,35 +1,64 @@
 
 <h2>Event Bridge</h2>
 
-<a href="/event-bridge/create-rule" class="btn btn-outline-primary">Create Rule</a>
+<a href="/event-bridge/create-bus" class="btn btn-outline-primary">Create Bus</a>
+<a href="/event-bridge/archive" class="btn btn-outline-primary">Create Event Archive</a>
+<a href="/event-bridge/publish-event" class="btn btn-outline-primary">Publish Event</a>
 
-<h4>Rules:</h4>
+
+<h4>Busses:</h4>
 <table class="table">
     <thead>
         <tr>
             <th scope="col">Actions</th>
             <th scope="col">Name</th>
             <th scope="col">Arn</th>
-            <th scope="col">Description</th>
-            <th scope="col">State</th>
-            <th scope="col">Schedule Expression</th>
-            <th scope="col">Event Bus Name</th>
         </tr>
     </thead>
     <tbody>
-        {{#each Rules}}
+        {{#each EventBuses}}
         <tr>
             <th>
-                <a href="/event-bridge/delete-rule?name={{Name}}" class="btn btn-outline-danger" type="button">Delete</a>
+                <a href="/event-bridge/delete-bus?name={{Name}}" class="btn btn-outline-danger" type="button">Delete</a>
             </th>
             <th scope="row">
-                <a href="/event-bridge/rule-details?name={{Name}}">{{Name}}</a>
+                <a href="/event-bridge/bus-details?name={{Name}}">{{Name}}</a>
             </th>
             <td>{{Arn}}</td>
-            <td>{{Description}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4>Archives:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">ArchiveName</th>
+            <th scope="col">CreationTime</th>
+            <th scope="col">EventCount</th>
+            <th scope="col">EventSourceArn</th>
+            <th scope="col">RetentionDays</th>
+            <th scope="col">SizeBytes</th>
+            <th scope="col">State</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Archives}}
+        <tr>
+            <th>
+                <a href="/event-bridge/delete-archive?name={{ArchiveName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/event-bridge/archive-details?name={{ArchiveName}}">{{ArchiveName}}</a>
+            </th>
+            <td>{{CreationTime}}</td>
+            <td>{{EventCount}}</td>
+            <td>{{EventSourceArn}}</td>
+            <td>{{RetentionDays}}</td>
+            <td>{{SizeBytes}}</td>
             <td>{{State}}</td>
-            <td>{{ScheduleExpression}}</td>
-            <td>{{EventBusName}}</td>
         </tr>
         {{/each}}
     </tbody>

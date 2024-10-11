@@ -1,0 +1,36 @@
+
+
+<h2>Event Bus - {{name}}</h2>
+<a href="/event-bridge/create-rule?name={{name}}" class="btn btn-outline-primary">Create Rule</a>
+
+<h4>Rules:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">Arn</th>
+            <th scope="col">Description</th>
+            <th scope="col">State</th>
+            <th scope="col">Schedule Expression</th>
+            <th scope="col">Event Bus Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Rules}}
+        <tr>
+            <th>
+                <a href="/event-bridge/delete-rule?ruleName={{Name}}&eventBusName={{EventBusName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/event-bridge/rule-details?name={{Name}}&eventBusName={{EventBusName}}">{{Name}}</a>
+            </th>
+            <td>{{Arn}}</td>
+            <td>{{Description}}</td>
+            <td>{{State}}</td>
+            <td>{{ScheduleExpression}}</td>
+            <td>{{EventBusName}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

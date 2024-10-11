@@ -5,6 +5,7 @@
 <form class="mb-2" method="post" action="/event-bridge/create-target">
 
     <input type="text" name="rule" value="{{name}}" style="display: none;" />
+    <input type="text" name="eventBusName" value="{{eventBusName}}" style="display: none;" />
 
     <div class="mb-3">
         <label for="Id" class="form-label">Id</label>
@@ -35,7 +36,7 @@
         {{#each Targets}}
         <tr>
             <th>
-                <a href="/event-bridge/delete-target?id={{Id}}&rule={{../name}}" class="btn btn-outline-danger" type="button">Delete</a>
+                <a href="/event-bridge/delete-target?id={{Id}}&rule={{../name}}&eventBusName={{../eventBusName}}" class="btn btn-outline-danger" type="button">Delete</a>
             </th>
             <td>{{Id}}</td>
             <td>{{Arn}}</td>
