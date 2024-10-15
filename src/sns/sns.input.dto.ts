@@ -16,6 +16,7 @@ export class PublishMessageInput {
 
 export class SubscribeTopicInput {
     topicArn: string;
+    protocol: string;
     endpoint: string;
 }
 

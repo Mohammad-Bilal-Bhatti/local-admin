@@ -55,7 +55,7 @@ export class SnsController {
         @Res() res: Response, 
         @Body() input: SubscribeTopicInput
     ) {
-        const result = await this.snsService.subscribeTopic(input.topicArn, input.endpoint);
+        const result = await this.snsService.subscribeTopic(input.topicArn, input.protocol, input.endpoint);
         const token = await this.snsService.lookupSubscriptionToken(result.SubscriptionArn);
         return res.redirect(302, `/sns/details?arn=${input.topicArn}&subscribed=${result.SubscriptionArn}&token=${token}`);
     }
@@ -96,11 +96,11 @@ export class SnsController {
         @Query('published') published: string,
         @Query('subscribed') subscribed: string,
         @Query('token') token: string,
+        @Query('tab') tab = 'details'
     ) {
 
-        const sampleEndpoint = 'https://webhook.site/{{uuid}}';
         const result = await this.snsService.getTopicDetails(arn);
-        return { TopicArn: arn, Attributes: result.Attributes, token, published, subscribed, sampleEndpoint };
+        return { TopicArn: arn, Attributes: result.Attributes, token, published, subscribed, tab };
     }
 
 }

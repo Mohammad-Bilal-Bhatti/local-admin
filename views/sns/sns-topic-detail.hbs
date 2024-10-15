@@ -1,8 +1,21 @@
 
-<h2>Topic Details</h2>
+<h2>Topic Details - {{TopicArn}}</h2>
 
-<h3>{{TopicArn}}</h3>
 
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?tab=details&arn={{TopicArn}}">Details</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'subscribe'}}active{{/ifEq}}" href="?tab=subscribe&arn={{TopicArn}}">Subscribe</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'publish'}}active{{/ifEq}}" href="?tab=publish&arn={{TopicArn}}">Publish</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'publish'}}
+<h4 class="mt-2">Publish Message</h4>
 <form method="post" action="/sns/publish">
 
     <input name="topicArn" type="text" value="{{TopicArn}}" style="display: none;" />
@@ -13,32 +26,58 @@
     </div>
 
     <button class="btn btn-outline-secondary" type="reset">Reset</button>
-    <button class="btn btn-outline-success" type="submit">Send</button>
+    <button class="btn btn-outline-success" type="submit">Publish</button>
 </form>
+{{/ifEq}}
 
+
+{{#ifEq tab 'details'}}
+<h4 class="mt-2">Details:</h4>
+<pre>{{json Attributes 2}}</pre>
+{{/ifEq}}
+
+
+{{#ifEq tab 'subscribe'}}
+<h4 class="mt-2">Subscribe</h4>
+{{#unless token}}
+<form method="post" action="/sns/subscribe">
+    <input name="topicArn" type="text" value="{{TopicArn}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="protocol" class="form-label">Protocol</label>
+        <input type="text" class="form-control" id="protocol" name="protocol">
+    </div>
+
+    <div class="mb-3">
+        <label for="endpoint" class="form-label">Endpoint</label>
+        <input type="text" class="form-control" id="endpoint" name="endpoint">
+    </div>
+
+    <div>
+        <h5>Subscription Guide</h5>
+        <ul class="text-secondary">
+            <li>http - http://</li>
+            <li>https - https://</li>
+            <li>email - user@domain.com</li>
+            <li>email-json - user@domain.com</li>
+            <li>sms - +12015551234</li>
+            <li>sqs - arn:aws:sqs:[region]:[account-id]:[name]</li>
+            <li>application</li>
+            <li>lambda - arn:aws:lambda:[region]:[account-id]:function:[name]</li>
+            <li>firehose - arn:aws:firehose:[region]:[account-id]:firehose:[name]</li>
+        </ul>
+    </div>
+
+    <button class="btn btn-outline-success" type="submit">Subscribe</button>
+</form>
+{{/unless}}
+{{/ifEq}}
 
 {{#if published}}
 <div class="mt-2 alert alert-success">
   Message published with id: {{published}}
 </div>
 {{/if}}
-
-<h4 class="mt-2">Attributes:</h4>
-<pre>{{json Attributes 2}}</pre>
-
-<h4>Subscribe</h4>
-{{#unless token}}
-<form method="post" action="/sns/subscribe">
-    <input name="topicArn" type="text" value="{{TopicArn}}" style="display: none;" />
-
-    <div class="mb-3">
-        <label for="endpoint" class="form-label">Endpoint</label>
-        <input type="text" class="form-control" id="endpoint" name="endpoint" placeholder="{{sampleEndpoint}}">
-    </div>
-
-    <button class="btn btn-outline-success" type="submit">Subscribe</button>
-</form>
-{{/unless}}
 
 {{#if token}}
 <form method="post" action="/sns/confirm-subscription">

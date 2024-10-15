@@ -101,9 +101,7 @@ export class SnsService implements ConfigurableService {
         return response;
     }
 
-    async subscribeTopic(topicArn: string, endpoint: string): Promise<SubscribeCommandOutput> {
-        const index = endpoint.indexOf('://');
-        const protocol = endpoint.slice(0, index);
+    async subscribeTopic(topicArn: string, protocol: string, endpoint: string): Promise<SubscribeCommandOutput> {
 
         const command = new SubscribeCommand({
             TopicArn: topicArn,
