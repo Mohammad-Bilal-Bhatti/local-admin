@@ -1,0 +1,25 @@
+
+<h2>Usage Plan - {{usagePlanId}}</h2>
+
+<h4>Details:</h4>
+<pre>{{json details 2}}</pre>
+
+
+<h4>Create Api Key</h4>
+<form method="post" action="/gateway/create-usage-plan-key">
+
+    <input type="text" name="usagePlanId" value="{{usagePlanId}}" style="display: none;" />
+ 
+    <div class="mb-3">
+        <label for="keyId" class="form-label">Key Id</label>
+        <input type="text" class="form-control" id="keyId" name="keyId">
+    </div>
+    <div class="mb-3">
+        <label for="keyType" class="form-label">Key Type</label>
+        <input type="text" class="form-control" id="keyType" name="keyType">
+    </div>
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>

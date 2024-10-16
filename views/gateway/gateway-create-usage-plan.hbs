@@ -1,0 +1,34 @@
+
+<h4>Create Usage Plan</h4>
+
+<form method="post">
+    
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+
+
+    <div class="mb-3">
+        <label for="quota.period" class="form-label">Quota Period</label>
+        <select class="form-select" id="quota.period" name="quota[period]">
+            {{#each quotaPeriodOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="quota.limit" class="form-label">Quota Limit</label>
+        <input type="text" class="form-control" id="quota.limit" name="quota[limit]">
+    </div>
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+

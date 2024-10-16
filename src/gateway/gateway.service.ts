@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import {
+    QuotaPeriodType,
     APIGatewayClient,
     CreateRestApiCommand,
     CreateRestApiCommandOutput,
@@ -26,6 +27,20 @@ import {
     CreateStageCommandOutput,
     GetStagesCommand,
     GetStagesCommandOutput,
+    GetUsagePlanCommand,
+    GetUsagePlanCommandOutput,
+    CreateUsagePlanCommand,
+    CreateUsagePlanCommandOutput,
+    DeleteUsagePlanCommand,
+    DeleteUsagePlanCommandOutput,
+    GetUsagePlansCommand,
+    GetUsagePlansCommandOutput,
+    CreateUsagePlanKeyCommand,
+    CreateUsagePlanKeyCommandOutput,
+    DeleteUsagePlanKeyCommand,
+    DeleteUsagePlanKeyCommandOutput,
+    GetUsagePlanKeysCommand,
+    GetUsagePlanKeysCommandOutput,
 } from '@aws-sdk/client-api-gateway';
 import { IntegrationType } from './gateway.dto';
 import { ConfigurableService } from "src/shared/configurable.interface";
@@ -137,6 +152,64 @@ export class GatewayService implements ConfigurableService {
 
     async listDeployments(restApiId: string): Promise<GetDeploymentsCommandOutput> {
         const command = new GetDeploymentsCommand({ restApiId });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async getUsagePlans(): Promise<GetUsagePlansCommandOutput> {
+        const command = new GetUsagePlansCommand({});
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async createUsagePlan(name: string, description: string, quotaPeriod: QuotaPeriodType, quotaLimit: number): Promise<CreateUsagePlanCommandOutput> {
+        const command = new CreateUsagePlanCommand({
+            name: name,
+            description: description,
+            quota: {
+                period: quotaPeriod,
+                limit: quotaLimit,
+            },
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async deleteUsagePlan(usagePlanId: string): Promise<DeleteUsagePlanCommandOutput> {
+        const command = new DeleteUsagePlanCommand({ usagePlanId: usagePlanId });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async getUsagePlan(usagePlanId: string): Promise<GetUsagePlanCommandOutput> {
+        const command = new GetUsagePlanCommand({ usagePlanId });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async getUsagePlanKeys(usagePlanId: string): Promise<GetUsagePlanKeysCommandOutput> {
+        const command = new GetUsagePlanKeysCommand({
+            usagePlanId: usagePlanId,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async createUsagePlanKey(usagePlanId: string, keyId: string, keyType: string): Promise<CreateUsagePlanKeyCommandOutput> {
+        const command = new CreateUsagePlanKeyCommand({
+            usagePlanId: usagePlanId,
+            keyId: keyId,
+            keyType: keyType,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async deleteUsagePlanKey(usagePlanId: string, keyId: string): Promise<DeleteUsagePlanKeyCommandOutput> {
+        const command = new DeleteUsagePlanKeyCommand({
+            usagePlanId: usagePlanId,
+            keyId: keyId,
+        });
         const response = await this.client.send(command);
         return response;
     }

@@ -1,5 +1,5 @@
 
-import { IntegrationType } from '@aws-sdk/client-api-gateway';
+import { IntegrationType, QuotaPeriodType } from '@aws-sdk/client-api-gateway';
 export class CreateRestApiDto {
     name: string;
     description: string;
@@ -40,4 +40,19 @@ export class CreateIntegrationDto {
     passthroughBehavior: string;
 }
 
-export { IntegrationType } from '@aws-sdk/client-api-gateway';
+export class CreateUsagePlanDto {
+    name: string;
+    description: string;
+    quota: {
+        period: QuotaPeriodType;
+        limit: number;
+    };
+}
+
+export class CreateUsagePlanKeyDto {
+    usagePlanId: string;
+    keyId: string;
+    keyType: string;
+}
+
+export { IntegrationType, QuotaPeriodType } from '@aws-sdk/client-api-gateway';

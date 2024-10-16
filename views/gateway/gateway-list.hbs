@@ -2,6 +2,8 @@
 <h2>Api Gateway Service</h2>
 
 <a href="/gateway/create-api" role="button" class="btn btn-outline-primary">Create Api</a>
+<a href="/gateway/create-usage-plan" role="button" class="btn btn-outline-primary">Create Usage Plan</a>
+
 
 <h4 class="mt-2">Rest Apis:</h4>
 <table class="table">
@@ -10,13 +12,13 @@
             <th scope="col">Actions</th>
             <th scope="col">Name</th>
             <th scope="col">Description</th>
-            <th scope="col">rootResourceId</th>
-            <th scope="col">disableExecuteApiEndpoint</th>
-            <th scope="col">createdDate</th>
+            <th scope="col">Root Resource Id</th>
+            <th scope="col">Disable Execute Api Endpoint</th>
+            <th scope="col">Created Date</th>
         </tr>
     </thead>
     <tbody>
-        {{#each items}}
+        {{#each restApis}}
         <tr>
             <th>
                 <a href="/gateway/delete?id={{id}}" class="btn btn-outline-danger" type="button">Delete</a>
@@ -28,6 +30,34 @@
             <td>{{rootResourceId}}</td>
             <td>{{disableExecuteApiEndpoint}}</td>
             <td>{{createdDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h4 class="mt-2">Usage Plans:</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Quota</th>
+            <th scope="col">Api Stages</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each usagePlans}}
+        <tr>
+            <th>
+                <a href="/gateway/delete-usage-plan?id={{id}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/gateway/usage-plan-details?id={{id}}">{{name}}</a>
+            </th>
+            <td>{{description}}</td>
+            <td>{{json quota 2}}</td>
+            <td>{{apiStages}}</td>
         </tr>
         {{/each}}
     </tbody>

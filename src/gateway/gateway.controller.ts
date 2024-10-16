@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, Query, Redirect, Render, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { GatewayService } from "./gateway.service";
-import { CreateDeploymentDto, CreateIntegrationDto, CreateMethodDto, CreateResourceDto, CreateRestApiDto, CreateStageDto, IntegrationType } from "./gateway.dto";
+import { CreateDeploymentDto, CreateIntegrationDto, CreateMethodDto, CreateResourceDto, CreateRestApiDto, CreateStageDto, CreateUsagePlanDto, CreateUsagePlanKeyDto, IntegrationType, QuotaPeriodType } from "./gateway.dto";
 import { Response } from 'express';
 
 @Controller('gateway')
@@ -9,9 +9,10 @@ export class GatewayController {
 
     @Get()
     @Render('gateway-list')
-    async getList() {
-        const { items } = await this.service.getRestApis();
-        return { items };
+    async root() {
+        const { items: restApis } = await this.service.getRestApis();
+        const { items: usagePlans } = await this.service.getUsagePlans();
+        return { restApis, usagePlans };
     }
 
     @Get('create-api')
@@ -131,6 +132,54 @@ export class GatewayController {
         );
 
         return response.redirect(302, `/gateway/details?id=${input.restApiId}`);
+    }
+
+    @Get('create-usage-plan')
+    @Render('gateway-create-usage-plan')
+    async getCreateUsagePlan() {
+        const quotaPeriodOptions = Object.keys(QuotaPeriodType).map(key => ({ label: key, value: QuotaPeriodType[key] }));
+        return { quotaPeriodOptions };
+    }
+
+    @Post('create-usage-plan')
+    @Redirect('/gateway', 302)
+    async createUsagePlan(@Body() input: CreateUsagePlanDto) {
+        const result = await this.service.createUsagePlan(
+            input.name,
+            input.description,
+            input.quota.period, 
+            input.quota.limit,
+        );
+        return result;
+    }
+
+    @Get('delete-usage-plan')
+    @Redirect('/gateway', 302)
+    async deleteUsagePlan(@Query('id') usagePlanId: string) {
+        const result = await this.service.deleteUsagePlan(usagePlanId);
+        return result;
+    }
+
+    @Get('usage-plan-details')
+    @Render('gateway-usage-plan-details')
+    async getUsagePlanDetails(@Query('id') usagePlanId: string) {
+        const { $metadata, ...details } = await this.service.getUsagePlan(usagePlanId);
+        const { items: usagePlanKeys} = await this.service.getUsagePlanKeys(usagePlanId);
+        return { usagePlanId, usagePlanKeys, details };
+    }
+
+    @Post('create-usage-plan-key')
+    async createUsagePlanKey(
+        @Res() response: Response,
+        @Body() input: CreateUsagePlanKeyDto,
+    ) {
+
+        const result = await this.service.createUsagePlanKey(
+            input.usagePlanId,
+            input.keyId,
+            input.keyType,
+        );
+        return response.redirect(302, `/gateway/usage-plan-details?id=${input.usagePlanId}`);
     }
 
 }
