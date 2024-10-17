@@ -165,3 +165,4 @@ export class SnsService implements ConfigurableService {
     }
 
 }
+

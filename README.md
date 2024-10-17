@@ -6,6 +6,10 @@
 
 This is a hobby project to make localstack administration easy.
 
+A minimal localstack ui
+
+Inspired by official localstack pro ui and other open source projects like. aws-quick-ui, sqs-ui, s3-ui
+
 ## License
 
 MIT - No Warrenty - Distribute Copies free of charge.
@@ -33,8 +37,16 @@ Start localstack container
 Start development server
 `$ npm run start:dev`
 
+## Development Via Docker
+
+If you dont want to configure development environment yourself and try run the application then just use the following command.
+
+Will spin up locastack and application container
+`$ docker compose up -d`
 
 ## Configure
+
+> Following configuration is required if you are running this on your local host using npm. Alternatively you can use docker.
 
 Configure aws localstack profile
 `$ aws configure --profile localstack`
