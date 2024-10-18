@@ -67,3 +67,7 @@ export function startOf(date: Date): Date {
 export function endOf(date: Date): Date {
   return endOfDay(date);
 }
+
+export function createOptions(type: Record<string, string>) {
+  return Object.keys(type).map(key => ({ label: key, value: type[key] }));
+}

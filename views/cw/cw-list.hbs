@@ -19,10 +19,99 @@
 
 {{#ifEq tab 'metrics'}}
 <h4 class="mt-2">Mertics</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Namespace</th>
+            <th scope="col">MetricName</th>
+            <th scope="col">Dimensions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Metrics}}
+        <tr>
+            <th>
+                <a href="/cw/delete-metric?namespace={{Namespace}}&metricName={{MetricName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <td>
+                <a href="/cw/metric-details?namespace={{Namespace}}&metricName={{MetricName}}">{{Namespace}}</a>
+            </td>
+            <td>{{MetricName}}</td>
+            <td>{{json Dimensions 2}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
 {{/ifEq}}
 
 {{#ifEq tab 'alarms'}}
 <h4 class="mt-2">Alarms</h4>
+<div class="table-responsive">
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Alarm Name</th>
+            <th scope="col">State Value</th>
+            <th scope="col">State Reason</th>
+            <th scope="col">State Reason Data</th>
+            <th scope="col">State Updated Timestamp</th>
+            <th scope="col">Metric Name</th>
+            <th scope="col">Namespace</th>
+            <th scope="col">Alarm ARN</th>
+            <th scope="col">Alarm Description</th>
+            <th scope="col">Actions Enabled</th>
+            <th scope="col">OK Actions</th>
+            <th scope="col">Alarm Actions</th>
+            <th scope="col">Insufficient Data Actions</th>
+            <th scope="col">Statistic</th>
+            <th scope="col">Dimensions</th>
+            <th scope="col">Period</th>
+            <th scope="col">Evaluation Periods</th>
+            <th scope="col">Threshold</th>
+            <th scope="col">Comparison Operator</th>
+            <th scope="col">Treat Missing Data</th>
+            <th scope="col">Alarm Configuration Updated Timestamp</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {{#each MetricAlarms}}
+        <tr>
+            <th>
+                <a href="/cw/delete-alarm?alarmName={{AlarmName}}" class="btn btn-outline-danger mb-1 me-1" type="button">Delete</a>
+                <a href="/cw/set-alarm-state?alarmName={{AlarmName}}&value=OK&stateReason=ManualReset" class="btn btn-outline-success mb-1 me-1" type="button">Reset Alarm</a>
+                <a href="/cw/set-alarm-state?alarmName={{AlarmName}}&value=ALARM&stateReason=ManualTrigger" class="btn btn-outline-warning mb-1 me-1" type="button">Trigger Alarm</a>
+            </th>
+            <td>
+                <a href="/cw/alarm-details?alarmName={{AlarmName}}">{{AlarmName}}</a>
+            </td>
+            <td>{{StateValue}}</td>
+            <td>{{StateReason}}</td>
+            <td>{{StateReasonData}}</td>
+            <td>{{StateUpdatedTimestamp}}</td>
+            <td>{{MetricName}}</td>
+            <td>{{Namespace}}</td>
+            <td>{{AlarmArn}}</td>
+            <td>{{AlarmDescription}}</td>
+            <td>{{ActionsEnabled}}</td>
+            <td>{{OKActions}}</td>
+            <td>{{AlarmActions}}</td>
+            <td>{{InsufficientDataActions}}</td>
+            <td>{{Statistic}}</td>
+            <td>{{json Dimensions 1}}</td>
+            <td>{{Period}}</td>
+            <td>{{EvaluationPeriods}}</td>
+            <td>{{Threshold}}</td>
+            <td>{{ComparisonOperator}}</td>
+            <td>{{TreatMissingData}}</td>
+            <td>{{AlarmConfigurationUpdatedTimestamp}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+</div>
 {{/ifEq}}
 
 {{#ifEq tab 'groups'}}

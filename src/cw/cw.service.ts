@@ -5,13 +5,24 @@ import { ConfigService } from "@nestjs/config";
 import { 
     CloudWatchClient,
     ListMetricsCommand,
-    DescribeAlarmsCommand,
     ListMetricsCommandOutput,
+    GetMetricStatisticsCommand,
+    GetMetricStatisticsCommandOutput,
+    DescribeAlarmsCommand,
+    DescribeAlarmsForMetricCommand,
+    DescribeAlarmsForMetricCommandOutput,
     DescribeAlarmsCommandOutput,
     PutMetricAlarmCommand,
     PutMetricAlarmCommandOutput,
     PutMetricDataCommand,
     PutMetricDataCommandOutput,
+    ComparisonOperator,
+    Statistic,
+    DeleteAlarmsCommand,
+    DeleteAlarmsCommandOutput,
+    SetAlarmStateCommand,
+    SetAlarmStateCommandOutput,
+    StateValue,
 } from "@aws-sdk/client-cloudwatch";
 import { 
     CloudWatchLogsClient,
@@ -73,15 +84,47 @@ export class CWService implements ConfigurableService {
         return result;
     }
 
-    async createMetricAlarm(namespace: string, alarmName: string, metricName: string): Promise<PutMetricAlarmCommandOutput> {
+    async createMetricAlarm(
+        alarmName: string, 
+        description: string,
+        metricName: string, 
+        comparisonOperator: ComparisonOperator,
+        evaluationPeriod: number,
+        period: number,
+        threshold: number,
+        statistic: Statistic,
+        namespace: string,
+        alarmAction: string,
+        okAction: string,
+        insufficientDataAction: string,
+        dimension: { name: string, value: string },
+    ): Promise<PutMetricAlarmCommandOutput> {
         const command = new PutMetricAlarmCommand({
             AlarmName: alarmName,
+            AlarmDescription: description,
             MetricName: metricName,
-            ComparisonOperator: 'GreaterThanOrEqualToThreshold',
-            EvaluationPeriods: 1,
-            Period: 30,
-            Statistic: 'Minimum',
-            Namespace: namespace
+            Namespace: namespace,
+            Threshold: threshold,
+            ComparisonOperator: comparisonOperator,
+            EvaluationPeriods: evaluationPeriod,
+            Period: period,
+            Statistic: statistic,
+            TreatMissingData: 'notBreaching',
+            Dimensions: [
+                {
+                    Name: dimension.name,
+                    Value: dimension.value,
+                }
+            ],
+            AlarmActions: [
+                alarmAction,
+            ],
+            OKActions: [
+                okAction,
+            ],
+            InsufficientDataActions: [
+                insufficientDataAction
+            ]
         });
         const result = await this.client.send(command);
         return result;
@@ -164,5 +207,44 @@ export class CWService implements ConfigurableService {
         const result = await this.logClient.send(command);
         return result;
     }
+
+    async deleteAlarm(alarmName: string): Promise<DeleteAlarmsCommandOutput> {
+        const command = new DeleteAlarmsCommand({AlarmNames: [alarmName] });
+        const result = await this.client.send(command);
+        return result;
+    }
+
+    async setAlarmState(alarmName: string, stateReason: string, stateValue: StateValue): Promise<SetAlarmStateCommandOutput> {
+        const command = new SetAlarmStateCommand({
+            AlarmName: alarmName,
+            StateReason: stateReason,
+            StateValue: stateValue,            
+        });
+        const result = await this.client.send(command);
+        return result;
+    }
+
+    async getMetricStats(namespace: string, metricName: string, start: Date, end: Date, period: number): Promise<GetMetricStatisticsCommandOutput> {
+        const command = new GetMetricStatisticsCommand({
+            Namespace: namespace,
+            MetricName: metricName,
+            StartTime: start,
+            EndTime: end,
+            Period: period,
+            Statistics: ['Average', 'Maximum', 'Minimum', 'SampleCount', 'Sum'],
+        });
+        const result = await this.client.send(command);
+        return result;
+    }
+
+    async getMetricAlarms(metricName: string, namespace: string): Promise<DescribeAlarmsForMetricCommandOutput> {
+        const command = new DescribeAlarmsForMetricCommand({
+            MetricName: metricName,
+            Namespace: namespace,
+        });
+        const result = await this.client.send(command);
+        return result;
+    }
+
 
 }

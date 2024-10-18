@@ -1,0 +1,133 @@
+
+<h4>Metric Details</h4>
+
+<p>Namespace: {{namespace}}</p>
+<p>Metric Name: {{metricName}}</p>
+<p>Label: {{Label}}</p>
+
+<ul class="mt-2 nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'data-points'}}active{{/ifEq}}" href="?tab=data-points&metricName={{metricName}}&namespace={{namespace}}">Data Points</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'alarms'}}active{{/ifEq}}" href="?tab=alarms&metricName={{metricName}}&namespace={{namespace}}">Alarms</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'put-data'}}active{{/ifEq}}" href="?tab=put-data&metricName={{metricName}}&namespace={{namespace}}">Put Metric Data</a>
+    </li>
+</ul>
+
+{{#ifEq tab 'data-points'}}
+<h4 class="mt-2">Datapoints</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Timestamp</th>
+            <th scope="col">SampleCount</th>
+            <th scope="col">Average</th>
+            <th scope="col">Sum</th>
+            <th scope="col">Minimum</th>
+            <th scope="col">Maximum</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Datapoints}}
+        <tr>
+            <th>{{Timestamp}}</th>
+            <td>{{SampleCount}}</td>
+            <td>{{Average}}</td>
+            <td>{{Sum}}</td>
+            <td>{{Minimum}}</td>
+            <td>{{Maximum}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+{{#ifEq tab 'alarms'}}
+<h4 class="mt-2">Alarms</h4>
+<div class="table-responsive">
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Alarm Name</th>
+            <th scope="col">State Value</th>
+            <th scope="col">State Reason</th>
+            <th scope="col">State Reason Data</th>
+            <th scope="col">State Updated Timestamp</th>
+            <th scope="col">Metric Name</th>
+            <th scope="col">Namespace</th>
+            <th scope="col">Alarm ARN</th>
+            <th scope="col">Alarm Description</th>
+            <th scope="col">Actions Enabled</th>
+            <th scope="col">OK Actions</th>
+            <th scope="col">Alarm Actions</th>
+            <th scope="col">Insufficient Data Actions</th>
+            <th scope="col">Statistic</th>
+            <th scope="col">Dimensions</th>
+            <th scope="col">Period</th>
+            <th scope="col">Evaluation Periods</th>
+            <th scope="col">Threshold</th>
+            <th scope="col">Comparison Operator</th>
+            <th scope="col">Treat Missing Data</th>
+            <th scope="col">Alarm Configuration Updated Timestamp</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {{#each MetricAlarms}}
+        <tr>
+            <th>
+                <a href="/cw/delete-alarm?alarmName={{AlarmName}}" class="btn btn-outline-danger" type="button">Delete</a>
+                <a href="/cw/set-alarm-state?alarmName={{AlarmName}}&value=OK&stateReason=ManualReset" class="btn btn-outline-success" type="button">Reset Alarm</a>
+                <a href="/cw/set-alarm-state?alarmName={{AlarmName}}&value=ALARM&stateReason=ManualTrigger" class="btn btn-outline-warning" type="button">Trigger Alarm</a>
+
+            </th>
+            <td>
+                <a href="/cw/alarm-details?alarmName={{AlarmName}}">{{AlarmName}}</a>
+            </td>
+            <td>{{StateValue}}</td>
+            <td>{{StateReason}}</td>
+            <td>{{StateReasonData}}</td>
+            <td>{{StateUpdatedTimestamp}}</td>
+            <td>{{MetricName}}</td>
+            <td>{{Namespace}}</td>
+            <td>{{AlarmArn}}</td>
+            <td>{{AlarmDescription}}</td>
+            <td>{{ActionsEnabled}}</td>
+            <td>{{OKActions}}</td>
+            <td>{{AlarmActions}}</td>
+            <td>{{InsufficientDataActions}}</td>
+            <td>{{Statistic}}</td>
+            <td>{{json Dimensions 1}}</td>
+            <td>{{Period}}</td>
+            <td>{{EvaluationPeriods}}</td>
+            <td>{{Threshold}}</td>
+            <td>{{ComparisonOperator}}</td>
+            <td>{{TreatMissingData}}</td>
+            <td>{{AlarmConfigurationUpdatedTimestamp}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+</div>
+{{/ifEq}}
+
+{{#ifEq tab 'put-data'}}
+<h4 class="mt-4">Put Metric Data</h4>
+<form method="post" action="/cw/metric-data">
+
+    <input type="text" name="namespace" value="{{namespace}}" style="display: none;" />
+    <input type="text" name="metricName" value="{{metricName}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="value" class="form-label">Value</label>
+        <input type="number" class="form-control" id="value" name="value">
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+{{/ifEq}}

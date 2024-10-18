@@ -1,4 +1,78 @@
 
 <h2>Create Alarm</h2>
 
-<p>This page is under construction</p>
+<form method="post" class="row px-2">
+    <div class="col-6">
+        <label for="alarmName" class="form-label">Alarm Name</label>
+        <input type="text" class="form-control" id="alarmName" name="alarmName">
+    </div>
+        <div class="col-6">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+    <div class="col-6">
+        <label for="metricName" class="form-label">Metric Name</label>
+        <input type="text" class="form-control" id="metricName" name="metricName">
+    </div>
+    <div class="col-6">
+        <label for="namespace" class="form-label">Namespace</label>
+        <input type="text" class="form-control" id="namespace" name="namespace">
+    </div>
+    <div class="col-6">
+        <label for="alarmAction" class="form-label">Alarm Action</label>
+        <input type="text" class="form-control" id="alarmAction" name="alarmAction">
+    </div>
+    <div class="col-6">
+        <label for="okAction" class="form-label">Ok Action</label>
+        <input type="text" class="form-control" id="okAction" name="okAction">
+    </div>
+    <div class="col-6">
+        <label for="insufficientDataAction" class="form-label">Insufficient Data Action</label>
+        <input type="text" class="form-control" id="insufficientDataAction" name="insufficientDataAction">
+    </div>
+    <div class="col-6">
+        <label for="threshold" class="form-label">Threshold</label>
+        <input type="text" class="form-control" id="threshold" name="threshold">
+    </div>
+    <div class="col-6">
+        <label for="comparisonOperator" class="form-label">Comparison Operator</label>
+        <select class="form-select" id="comparisonOperator" name="comparisonOperator">
+            {{#each comparisonOperatorOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="col-6">
+        <label for="statistic" class="form-label">Statistics</label>
+        <select class="form-select" id="statistic" name="statistic">
+            {{#each statisticOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="col-6">
+        <label for="period" class="form-label">Period</label>
+        <input type="text" class="form-control" id="period" name="period">
+    </div>
+    <div class="col-6">
+        <label for="evaluationPeriod" class="form-label">Evaluation Period</label>
+        <input type="text" class="form-control" id="evaluationPeriod" name="evaluationPeriod">
+    </div>
+
+
+    <h5 class="mt-2">Dimensions</h5>
+    <div class="col-6">
+        <label for="dimensions.name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="dimensions.name" name="dimensions[name]">
+    </div>
+    <div class="col-6">
+        <label for="dimensions.value" class="form-label">Value</label>
+        <input type="text" class="form-control" id="dimensions.value" name="dimensions[value]">
+    </div>
+
+    <div class="mt-2 col-12">
+        <button class="btn btn-outline-secondary" type="reset">Reset</button>
+        <button class="btn btn-outline-success" type="submit">Create</button>
+    </div>
+
+</form>
