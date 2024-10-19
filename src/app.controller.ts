@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Post, Body, Session } from '@nestjs/common';
+import { Controller, Get, Res, Post, Body, Session, Render } from '@nestjs/common';
 import { Response } from 'express';
 import { SqsService } from './sqs/sqs.service';
 import { ConfigureInput } from './app.dto';
@@ -39,21 +39,33 @@ export class AppController {
     private readonly snsService: SnsService,
     private readonly sqsService: SqsService,
     private readonly ssmService: SsmService,
-  ) {}
+  ) { }
 
   @Get()
-  root(
+  @Render('root')
+  root() {
+    const hero = {
+      title: '👋 Localstack Admin',
+      details: 'Welcome to localstack admin. You can use this ui to easilly manage and sneek peek you localstack resources and can create new resources by simply button clicks.',
+    }
+
+    return { title: 'Home', cards, hero };
+  }
+
+  @Get('configure')
+  @Render('configure')
+  async getConfigure(
     @Session() session: Record<string, any>,
-    @Res() res: Response
   ) {
-    
+
     /* get the default configuration from environment */
-    const defaltConfiguration: ConfigureInput = { 
-      endpoint: this.config.get<string>('localstack.endpoint'), 
+    const defaltConfiguration: ConfigureInput = {
+      endpoint: this.config.get<string>('localstack.endpoint'),
       region: this.config.get<string>('localstack.region'),
     };
     const configuration = session['configuration'] ?? defaltConfiguration;
-    return res.render('root', { title: 'Home', message: 'Hello world!!', configuration, cards });
+
+    return { configuration };
   }
 
   @Post('configure')

@@ -1,0 +1,18 @@
+
+  <div class="mt-2">
+    <h4>Configure Local Stack</h4>
+    <form action="/configure" method="post">
+
+      <div class="mb-3">
+        <label for="endpoint" class="form-label">Endpoint</label>
+        <input type="text" class="form-control" id="endpoint" name="endpoint" value="{{configuration.endpoint}}">
+      </div>
+      <div class="mb-3">
+        <label for="region" class="form-label">Region</label>
+        <input type="text" class="form-control" id="region" name="region" value="{{configuration.region}}">
+      </div>
+
+      <button type="submit" class="btn btn-outline-primary">Update</button>
+
+    </form>
+  </div>
