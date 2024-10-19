@@ -6,7 +6,9 @@ export class TagInput {
 
 export class CreateTopicInput {
     name: string;
-    tags: TagInput[]
+    fifoTopic: string;
+    contentBasedDeduplication: string;
+    tags: TagInput[];
 }
 
 export class PublishMessageInput {

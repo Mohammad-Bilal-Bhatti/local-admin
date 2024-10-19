@@ -37,7 +37,7 @@ export class SnsController {
     @Post('create')
     @Redirect('/sns', 302)
     async createSnsTopic(@Body() input: CreateTopicInput) {  
-        const result = await this.snsService.createTopic(input.name, input.tags);
+        const result = await this.snsService.createTopic(input.name, input.fifoTopic, input.contentBasedDeduplication, input.tags);
         return null
     }
 

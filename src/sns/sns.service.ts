@@ -60,10 +60,14 @@ export class SnsService implements ConfigurableService {
         return response;
     }
 
-    async createTopic(name: string, tags: TagInput[]): Promise<CreateTopicCommandOutput> {
+    async createTopic(name: string, fifoTopic: string, contentBasedDeduplication: string, tags: TagInput[]): Promise<CreateTopicCommandOutput> {
         const command = new CreateTopicCommand({
             Name: name,
             Tags: tags,
+            Attributes: {
+                FifoTopic: fifoTopic,
+                ContentBasedDeduplication: contentBasedDeduplication
+            }
         });
 
         const response = await this.client.send(command);
