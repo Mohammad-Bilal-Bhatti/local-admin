@@ -21,6 +21,7 @@ import { Ec2Module } from './ec2/ec2.module';
 import { GatewayModule } from './gateway/gateway.module';
 import { CwModule } from './cw/cw.module';
 import { KinesisModule } from './kinesis/kinesis.module';
+import { InjectRequestContextInterceptor } from './shared/interceptors/inject-request-context.interceptor';
 
 @Module({
   imports: [
@@ -53,6 +54,10 @@ import { KinesisModule } from './kinesis/kinesis.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: InjectRequestContextInterceptor,
     },
     {
       provide: APP_FILTER,
