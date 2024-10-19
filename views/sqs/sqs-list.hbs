@@ -40,11 +40,6 @@
       </tr>
     </thead>
     <tbody>
-      {{#unless queues.length}}
-        <tr>
-          <td class="text-center" colspan="17">⚠️ No Records Found</td>
-        </tr>
-      {{/unless}}
       {{#each queues}}
         <tr>
           <th scope="row" name="queue-url" data="{{name}}">
