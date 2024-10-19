@@ -11,14 +11,15 @@ services:
       - LOCALSTACK_REGION=us-west-2
       - AWS_ACCESS_KEY_ID=localstack
       - AWS_SECRET_ACCESS_KEY=localstack
+    env_file:
+      - .env
     networks:
       - local-network
+    command: npm run start:dev
     depends_on:
       - localstack
     volumes:        
-      - "./src:/home/node/app/src:rw"
-      - "./views:/home/node/app/views:rw" 
-      - "./public:/home/node/app/public:rw"
+      - .:/home/node/app
 
   localstack:
     container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
