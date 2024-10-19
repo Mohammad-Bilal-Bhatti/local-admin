@@ -10,7 +10,7 @@ function renderBreadCrumb() {
     }
 
     const paths = pathname.split('/').map((path, i, all) => {
-        if (path === '') return { label: 'Dashboard', path: '/' };
+        if (path === '') return { label: 'Home', path: '/' };
 
         const base = all.slice(0, i).join('/');
         const label = path.split('-')

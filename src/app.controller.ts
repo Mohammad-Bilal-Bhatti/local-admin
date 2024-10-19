@@ -53,7 +53,7 @@ export class AppController {
       region: this.config.get<string>('localstack.region'),
     };
     const configuration = session['configuration'] ?? defaltConfiguration;
-    return res.render('root', { title: 'Dashboard', message: 'Hello world!!', configuration, cards });
+    return res.render('root', { title: 'Home', message: 'Hello world!!', configuration, cards });
   }
 
   @Post('configure')

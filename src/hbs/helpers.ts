@@ -60,6 +60,18 @@ export function MenuItems() {
   return `<ul class="navbar-nav">\n` + itemsAsHtml.join("\n") + `\n</ul>`;
 }
 
+export function SideMenuItems() {
+  const isActive = false;
+  const itemsAsHtml = menuItems.map(item => `
+    <li class="nav-item">
+        <a href="${item.link}" class="nav-link ${isActive ? 'active': 'link-dark'}">
+            ${item.title}
+        </a>
+    </li>  
+  `);
+  return itemsAsHtml.join('');
+}
+
 export function startOf(date: Date): Date {
   return startOfDay(date);
 }

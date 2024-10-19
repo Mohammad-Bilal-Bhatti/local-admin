@@ -11,10 +11,16 @@
     <title>{{#if title}}{{title}}{{else}}Local Admin{{/if}}</title>
   </head>
   <body>
-    {{>navbar}}
-    <div id="breadcrumb-container"></div>
-
-    {{{body}}}
+    <div class="row gx-2">
+        {{>navbar}}
+      <div class="col-2">
+        {{>sidebar}}
+      </div>
+      <div class="col-10">
+        <div id="breadcrumb-container" style="padding-top: 10px"></div>
+        {{{body}}}
+      </div>
+    </div>
 
     <!-- Optional JavaScript; choose one of the two! -->
 

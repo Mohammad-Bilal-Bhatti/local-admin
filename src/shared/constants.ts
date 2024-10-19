@@ -105,7 +105,7 @@ export const cards: CardItem[] = [
 ];
 
 export const menuItems: MenuItem[] = [
-    { title: 'Dashboard', link: '/' },
+    { title: 'Home', link: '/' },
     { title: 'ACM', link: '/acm' },
     { title: 'CW', link: '/cw' },
     { title: 'DDB', link: '/dynamodb' },
