@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Post, Query, Redirect, Render, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Redirect, Render, Res, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { Response } from "express";
 import { S3Service } from "./s3.service";
 import { CreateBucketInput, CreateBucketNoficationDto, CreateWebsiteDto, PutBucketCorsPolicyDto, PutBucketPolicyDto, PutBucketVersioningDto, UploadObjectInput, Event as S3Events, CreateBucketReplicationDto } from "./s3.input.dto";
-import { FileInterceptor } from "@nestjs/platform-express";
+import {  FilesInterceptor } from "@nestjs/platform-express";
 
 @Controller('s3')
 export class S3Controller {
@@ -33,26 +33,30 @@ export class S3Controller {
     }
 
     @Post('upload')
-    @UseInterceptors(FileInterceptor('file'))
+    @UseInterceptors(FilesInterceptor('files'))
     async uploadFile(
-      @UploadedFile() file: Express.Multer.File,
+      @UploadedFiles() files: Express.Multer.File[],
       @Body() input: UploadObjectInput,
       @Res() res: Response
     ) {
 
+      const isMultiple = files.length > 1;
       const bucket = input.bucket;
-      const key = input.key ? input.key : file.originalname;
-      const contentLength = file.size;
-      const contentType = file.mimetype;
-      const body = file.buffer;
+      for (const file of files) {
+        const key = isMultiple ? file.originalname : input.key ? input.key : file.originalname;
+        const contentLength = file.size;
+        const contentType = file.mimetype;
+        const body = file.buffer;
 
-      const response = await this.s3Service.uploadObject(
-        bucket,
-        key,
-        body,
-        contentType,
-        contentLength
-      );
+        const response = await this.s3Service.putObject(
+          bucket,
+          key,
+          body,
+          contentType,
+          contentLength
+        );        
+      }
+
       return res.redirect(302, `/s3/details?name=${bucket}`);
     }
 

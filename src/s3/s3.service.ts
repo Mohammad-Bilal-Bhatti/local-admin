@@ -103,7 +103,7 @@ export class S3Service implements ConfigurableService {
         return response;
     }
 
-    async uploadObject(
+    async putObject(
         bucket: string, 
         key: string,
         body: string | Buffer,

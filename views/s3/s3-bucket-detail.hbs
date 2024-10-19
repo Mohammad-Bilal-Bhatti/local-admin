@@ -23,6 +23,7 @@
   </form>
 </div>
 
+<h4 class="mt-2">Upload</h4>
 <form method="post" action="/s3/upload" enctype="multipart/form-data" >
     <input type="text" name="bucket" value="{{name}}" style="display: none;" />
 
@@ -33,7 +34,7 @@
 
     <div class="mb-3">
         <label for="formFile" class="form-label">Upload File</label>
-        <input class="form-control" type="file" id="formFile" name="file">
+        <input class="form-control" type="file" id="formFile" name="files" multiple>
     </div>
 
     <button class="btn btn-outline-success" type="submit">Upload</button>
