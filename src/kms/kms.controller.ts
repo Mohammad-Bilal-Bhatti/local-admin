@@ -104,10 +104,11 @@ export class KmsController {
     @Render('kms-key-detail')
     async getKeyDetails(
         @Query('keyId') keyId: string,
+        @Query('tab') tab = 'details',
     ) {
         const response = await this.kmsService.describeKey(keyId);
         const aliases = await this.kmsService.getAliases(keyId);
-        return { keyId, KeyMetadata: response.KeyMetadata, Aliases: aliases.Aliases };
+        return { tab, keyId, KeyMetadata: response.KeyMetadata, Aliases: aliases.Aliases };
     }
 
     @Get('create')

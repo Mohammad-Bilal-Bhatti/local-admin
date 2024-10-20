@@ -1,10 +1,10 @@
 
 <h2>Security Group Details - {{groupId}}</h2>
 
-<h4>Details</h4>
-<pre>{{json details 2}}</pre>
-
 <ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?groupId={{groupId}}&tab=details">Details</a>
+  </li>
   <li class="nav-item">
     <a class="nav-link {{#ifEq tab 'ingress'}}active{{/ifEq}}" href="?groupId={{groupId}}&tab=ingress">Ingress</a>
   </li>
@@ -12,6 +12,27 @@
     <a class="nav-link {{#ifEq tab 'egress'}}active{{/ifEq}}" href="?groupId={{groupId}}&tab=egress">Egress</a>
   </li>
 </ul>
+
+{{#ifEq tab 'details'}}
+<h4 class="mt-2">Details</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each details}}
+        <tr>
+            <th>{{@key}}</th>
+            <td>{{{printKeyValue this}}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
 
 {{#ifEq tab 'ingress'}}
 <h4 class="mt-2">Create Ingress Rule</h2>

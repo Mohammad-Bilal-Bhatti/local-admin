@@ -112,9 +112,22 @@
 
 {{#ifEq tab 'details'}}
 <h4 class="mt-2">Details:</h4>
-<div class="mt-2">
-    <pre>{{json details 2}}</pre>
-</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each details}}
+        <tr>
+            <th>{{@key}}</th>
+            <td>{{{printKeyValue this}}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
 {{/ifEq}}
 
 

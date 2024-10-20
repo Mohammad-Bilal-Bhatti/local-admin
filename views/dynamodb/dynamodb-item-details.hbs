@@ -2,4 +2,19 @@
 <h2>Item {{table}} - {{key}}</h2>
 
 <h4>Details:</h4>
-<pre>{{json details 2}}</pre>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each details}}
+        <tr>
+            <th>{{@key}}</th>
+            <td>{{{printKeyValue this}}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

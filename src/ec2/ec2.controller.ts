@@ -139,7 +139,7 @@ export class Ec2Controller {
     @Render('ec2-details-sg')
     async getSgDetails(
         @Query('groupId') groupId: string,
-        @Query('tab') tab = 'ingress',
+        @Query('tab') tab = 'details',
     ) {
 
         const securityGroup = await this.service.getSecurityGroup(groupId);

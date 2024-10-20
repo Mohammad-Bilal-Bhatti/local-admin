@@ -1,6 +1,42 @@
 
 <h2>Key Details - {{keyId}}</h2>
 
+<a role="button" href="/kms/encrypt-decrypt?keyId={{keyId}}" class="btn btn-outline-primary">Encrypt Decrypt</a>
+
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?tab=details&keyId={{keyId}}">Details</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'create-alias'}}active{{/ifEq}}" href="?tab=create-alias&keyId={{keyId}}">Create Alias</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'aliases'}}active{{/ifEq}}" href="?tab=aliases&keyId={{keyId}}">Aliases</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'details'}}
+<h4 class="mt-2">Details: </h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each KeyMetadata}}
+        <tr>
+            <th>{{@key}}</th>
+            <td>{{{printKeyValue this}}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+{{#ifEq tab 'create-alias'}}
+<h4 class="mt-2">Create Alias</h4>
 <form class="mb-2" method="post" action="/kms/create-alias">
 
     <input type="text" name="keyId" value="{{keyId}}" style="display: none;" />
@@ -16,12 +52,9 @@
     <button type="reset" class="btn btn-outline-secondary">Reset</button>
     <button type="submit" class="btn btn-outline-success">Create Alias</button>
 </form>
+{{/ifEq}}
 
-<a role="button" href="/kms/encrypt-decrypt?keyId={{keyId}}" class="btn btn-outline-primary">Encrypt Decrypt</a>
-
-<h4 class="mt-2">MetaData: </h4>
-<pre>{{json KeyMetadata 2}}</pre>
-
+{{#ifEq tab 'aliases'}}
 <h4 class="mt-2">Aliases:</h4>
 <table class="table">
         <thead>
@@ -49,3 +82,4 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}

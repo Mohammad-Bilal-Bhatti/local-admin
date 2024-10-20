@@ -1,7 +1,21 @@
 
 <h4>Stream Details</h4>
-
-<pre>{{json StreamDescription 2}}</pre>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each StreamDescription}}
+        <tr>
+            <th>{{@key}}</th>
+            <td>{{{printKeyValue this}}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
 
 <h4>Put Record</h4>
 <form method="post" action="put-record">
