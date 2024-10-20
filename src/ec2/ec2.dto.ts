@@ -6,6 +6,8 @@ export class LaunchInstanceDto {
     keyName: string;
     securityGroups: string;
     userData: string;
+    maxCount: string;
+    minCount: string;
 }
 
 export class CreateKeysDto {

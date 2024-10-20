@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render } from "@nestjs/common";
 import { Ec2Service } from "./ec2.service";
 import { LaunchInstanceDto, CreateKeysDto, _InstanceType, CreateSecuirtyGroupDto, AddIngressRuleDto, AddEgressRuleDto } from "./ec2.dto";
+import { InstanceStateName } from "@aws-sdk/client-ec2";
 
 @Controller('ec2')
 export class Ec2Controller {
@@ -42,8 +43,14 @@ export class Ec2Controller {
     @Get('launch')
     @Render('ec2-launch')
     async getLaunchInstance() {
-        const instanceTypes = Object.values(_InstanceType).map(item => ({ label: item, value: item }));
-        return { instanceTypes };
+        const { SecurityGroups } = await this.service.listSecurityGroups();
+        const { Images } = await this.service.listImages();
+        
+        const instanceTypesOptions = Object.values(_InstanceType).map(item => ({ label: item, value: item }));
+        const securityGroupOptions = SecurityGroups.map(sg => ({ label: sg.GroupName, value: sg.GroupId }));
+        const imageOptions = Images.map(image => ({ label: image.Name, value: image.ImageId }));
+
+        return { instanceTypesOptions, securityGroupOptions, imageOptions };
     }
 
     @Post('launch')
@@ -54,9 +61,11 @@ export class Ec2Controller {
             input.instanceType,
             input.keyName,
             input.securityGroups,
-            input.userData
+            input.userData,
+            parseInt(input.maxCount ?? '1', 10),
+            parseInt(input.minCount ?? '1', 10),
         );
-        return null;
+        return result;
     }
 
     @Get('create-keys')
@@ -101,11 +110,29 @@ export class Ec2Controller {
         return null;
     }
 
+    @Get('reboot-instance')
+    @Redirect('/ec2', 302)
+    async rebootInstance(@Query('instanceId') instanceId: string) {
+        const instances = [instanceId];
+        const result = await this.service.terminateInstances(instances);
+        return result;
+    }
+
     @Get('instance-details')
     @Render('ec2-instance-detail')
     async getInstanceDetails(@Query('instanceId') instanceId: string) {
         const instance = await this.service.getInstanceDetails(instanceId);
-        return { instance };
+
+        const instanceStateColorMapping = {
+            [InstanceStateName.pending]: 'info',
+            [InstanceStateName.running]: 'success',
+            [InstanceStateName.shutting_down]: 'warn',
+            [InstanceStateName.stopped]: 'danger',
+            [InstanceStateName.stopping]: 'warn',
+            [InstanceStateName.terminated]: 'danger',
+        }
+        
+        return { instanceId, instance, instanceStateColorMapping };
     }
 
     @Get('details-sg')
@@ -145,6 +172,12 @@ export class Ec2Controller {
     async addEgressRule(@Body() input: AddEgressRuleDto) {
         const response = await this.service.addEgressRule(input.groupId, input.cidrIp, input.fromPort, input.toPort, input.ipProtocol);
         return null;
+    }
+
+    @Get('create-volume')
+    @Render('ec2-create-volume')
+    async getVolume() {
+        return {};
     }
 
 }

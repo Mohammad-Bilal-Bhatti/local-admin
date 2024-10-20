@@ -96,3 +96,10 @@ export function endOf(date: Date): Date {
 export function createOptions(type: Record<string, string>) {
   return Object.keys(type).map(key => ({ label: key, value: type[key] }));
 }
+
+export function printKeyValue(value: any) {
+  const type = typeof value;
+  const isArray = Array.isArray(value);
+  if (type === 'object') return `<pre>${JSON.stringify(value, null, 2)}</pre>`;
+  return value;
+}

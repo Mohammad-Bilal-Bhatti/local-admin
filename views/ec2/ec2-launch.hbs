@@ -4,12 +4,16 @@
 <form method="post">
     <div class="mb-3">
         <label for="imageId" class="form-label">Image Id</label>
-        <input type="text" class="form-control" id="imageId" name="imageId">
+        <select class="form-select" id="imageId" name="imageId">
+            {{#each imageOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
     </div>
     <div class="mb-3">
         <label for="instanceType" class="form-label">Instance Type</label>
         <select class="form-select" id="instanceType" name="instanceType">
-            {{#each instanceTypes}}
+            {{#each instanceTypesOptions}}
                 <option value="{{value}}">{{label}}</option>
             {{/each}}
         </select>
@@ -21,8 +25,22 @@
     </div>
     <div class="mb-3">
         <label for="securityGroups" class="form-label">Security Groups</label>
-        <input type="text" class="form-control" id="securityGroups" name="securityGroups">
+        <select class="form-select" id="securityGroups" name="securityGroups">
+            {{#each securityGroupOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
     </div>
+
+    <div class="mb-3">
+        <label for="minCount" class="form-label">Min Count</label>
+        <input type="text" class="form-control" id="minCount" name="minCount">
+    </div>
+    <div class="mb-3">
+        <label for="maxCount" class="form-label">Max Count</label>
+        <input type="text" class="form-control" id="maxCount" name="maxCount">
+    </div>
+
     <div class="mb-3">
         <label for="userData" class="form-label">User Data</label>
         <textarea class="form-control" id="userData" rows="3" name="userData"></textarea>

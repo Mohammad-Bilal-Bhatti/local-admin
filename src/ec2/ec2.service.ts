@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { 
     _InstanceType,
     EC2Client,
+    VolumeType,
     RunInstancesCommand,
     RunInstancesCommandOutput,
     StartInstancesCommand,
@@ -29,6 +30,10 @@ import {
     AuthorizeSecurityGroupIngressCommandOutput,
     AuthorizeSecurityGroupEgressCommand,
     AuthorizeSecurityGroupEgressCommandOutput,
+    RebootInstancesCommand,
+    RebootInstancesCommandOutput,
+    CreateVolumeCommand,
+    CreateVolumeCommandOutput,
 } from "@aws-sdk/client-ec2";
 import { ConfigurableService } from "src/shared/configurable.interface";
 import { ConfigureInput } from "src/app.dto";
@@ -67,12 +72,14 @@ export class Ec2Service implements ConfigurableService {
         instanceType: _InstanceType, 
         keyName: string, 
         securityGroups: string, 
-        userData: string
+        userData: string,
+        maxCount: number,
+        minCount: number,
     ): Promise<RunInstancesCommandOutput> {
         const command = new RunInstancesCommand({
             ImageId: imageId,
-            MaxCount: 1,
-            MinCount: 1,
+            MaxCount: maxCount,
+            MinCount: minCount,
             InstanceType: instanceType,
             KeyName: keyName,
             SecurityGroupIds: [securityGroups],
@@ -96,6 +103,14 @@ export class Ec2Service implements ConfigurableService {
 
     async terminateInstances(instanceIds: string[]): Promise<TerminateInstancesCommandOutput> {
         const command = new TerminateInstancesCommand({ InstanceIds: instanceIds });
+        const response = this.client.send(command);
+        return response;
+    }
+
+    async rebootInstances(instanceIds: string[]): Promise<RebootInstancesCommandOutput> {
+        const command = new RebootInstancesCommand({
+            InstanceIds: instanceIds
+        });
         const response = this.client.send(command);
         return response;
     }
@@ -163,6 +178,20 @@ export class Ec2Service implements ConfigurableService {
             FromPort: fromPort,
             ToPort: toPort,
             IpProtocol: ipProtocol,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async createVolume(az: string, encrypted: boolean, iops: number, size: number, throughput: number, type: VolumeType, multiAttach: boolean): Promise<CreateVolumeCommandOutput> {
+        const command = new CreateVolumeCommand({
+            AvailabilityZone: az,
+            Encrypted: encrypted,
+            Iops: iops,
+            Size: size,
+            Throughput: throughput,
+            VolumeType: type,
+            MultiAttachEnabled: multiAttach,
         });
         const response = await this.client.send(command);
         return response;

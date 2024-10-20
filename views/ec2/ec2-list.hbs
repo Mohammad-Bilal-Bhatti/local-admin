@@ -4,6 +4,7 @@
 <a href="/ec2/launch" role="button" class="btn btn-outline-primary">Launch EC2</a>
 <a href="/ec2/create-keys" role="button" class="btn btn-outline-primary">Create Keys</a>
 <a href="/ec2/create-sg" role="button" class="btn btn-outline-primary">Create SG</a>
+<a href="/ec2/create-volume" role="button" class="btn btn-outline-primary">Create Volume</a>
 
 <ul class="mt-2 nav nav-tabs">
   <li class="nav-item">
@@ -22,6 +23,7 @@
 
 {{#ifEq tab 'keys'}}
 <h4 class="mt-2">Key Pairs</h4>
+<div class="table-responsive">
 <table class="table">
     <thead>
         <tr>
@@ -48,10 +50,12 @@
         {{/each}}
     </tbody>
 </table>
+</div>
 {{/ifEq}}
 
 {{#ifEq tab 'instances'}}
 <h4 class="mt-2">Instances</h4>
+<div class="table-responsive">
 <table class="table">
     <thead>
         <tr>
@@ -86,6 +90,7 @@
             <th>
                 <a href="/ec2/start-instance?instanceId={{InstanceId}}" class="btn btn-outline-primary" type="button">Start</a>
                 <a href="/ec2/stop-instance?instanceId={{InstanceId}}" class="btn btn-outline-warning" type="button">Stop</a>
+                <a href="/ec2/reboot-instance?instanceId={{InstanceId}}" class="btn btn-outline-warning" type="button">Reboot</a>
                 <a href="/ec2/terminate-instance?instanceId={{InstanceId}}" class="btn btn-outline-danger" type="button">Terminate</a>
             </th>
             <th scope="row">
@@ -116,10 +121,12 @@
         {{/each}}
     </tbody>
 </table>
+</div>
 {{/ifEq}}
 
 {{#ifEq tab 'images'}}
 <h4 class="mt-2">Images</h4>
+<div class="table-responsive">
 <table class="table">
     <thead>
         <tr>
@@ -167,10 +174,12 @@
         {{/each}}
     </tbody>
 </table>
+</div>
 {{/ifEq}}
 
 {{#ifEq tab 'sg'}}
 <h4 class="mt-2">Security Groups</h4>
+<div class="table-responsive">
 <table class="table">
     <thead>
         <tr>
@@ -197,5 +206,7 @@
         {{/each}}
     </tbody>
 </table>
+</div>
+
 {{/ifEq}}
 
