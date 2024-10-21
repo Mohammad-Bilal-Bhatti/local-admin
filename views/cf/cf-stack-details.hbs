@@ -1,0 +1,99 @@
+
+<h4>Stack Details - {{stackName}}</h4>
+
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?tab=details&stackName={{stackName}}">Details</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'resources'}}active{{/ifEq}}" href="?tab=resources&stackName={{stackName}}">Resources</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'events'}}active{{/ifEq}}" href="?tab=events&stackName={{stackName}}">Events</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'template'}}active{{/ifEq}}" href="?tab=template&stackName={{stackName}}">Template</a>
+  </li>
+</ul>
+{{#ifEq tab 'details'}}
+<h4 class="mt-2">Details</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each details}}
+        <tr>
+            <th>{{@key}}</th>
+            <td>{{{printKeyValue this}}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+
+{{#ifEq tab 'resources'}}
+<h4 class="mt-2">Resources</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Logical Resource Id</th>
+            <th scope="col">Physical Resource Id</th>
+            <th scope="col">Resource Type</th>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Resource Status</th>
+            <th scope="col">Drift Information</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each StackResources}}
+        <tr>
+            <td>{{LogicalResourceId}}</td>
+            <td>{{PhysicalResourceId}}</td>
+            <td>{{ResourceType}}</td>
+            <td>{{Timestamp}}</td>
+            <td>{{ResourceStatus}}</td>
+            <td>{{json DriftInformation 2}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+{{#ifEq tab 'events'}}
+<h4 class="mt-2">Events</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Event Id</th>
+            <th scope="col">Stack Name</th>
+            <th scope="col">Logical Resource Id</th>
+            <th scope="col">Physical ResourceId</th>
+            <th scope="col">Resource Type</th>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Resource Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each StackEvents}}
+        <tr>
+            <td>{{EventId}}</td>
+            <td>{{StackName}}</td>
+            <td>{{LogicalResourceId}}</td>
+            <td>{{PhysicalResourceId}}</td>
+            <td>{{ResourceType}}</td>
+            <td>{{Timestamp}}</td>
+            <td>{{ResourceStatus}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+{{#ifEq tab 'template'}}
+<pre>{{json TemplateBody 2}}</pre>
+{{/ifEq}}

@@ -1,3 +1,34 @@
 
 <h3>Cloud Formation</h3>
 
+<a href="/cf/create-stack" role="button" class="btn btn-outline-primary">Create Stack</a>
+
+<h4 class="mt-2">Stacks</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">CreationTime</th>
+            <th scope="col">LastUpdatedTime</th>
+            <th scope="col">StackStatus</th>
+            <th scope="col">DriftInformation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each StackSummaries}}
+        <tr>
+            <th>
+                <a href="/cf/delete-stack?stackName={{StackName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/cf/stack-details?stackName={{StackName}}">{{StackName}}</a>
+            </th>
+            <td>{{CreationTime}}</td>
+            <td>{{LastUpdatedTime}}</td>
+            <td>{{StackStatus}}</td>
+            <td>{{json DriftInformation 2}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
