@@ -22,6 +22,13 @@ export const cards: CardItem[] = [
         bicon: 'shield-lock'
     },
     {
+        title: 'CF',
+        subtitle: 'Cloud Formation',
+        description: 'CloudFormation is a service provided by Amazon Web Services (AWS) that allows you to define and provision infrastructure as code.',
+        link: '/cf',
+        bicon: 'layers',
+    },
+    {
         title: 'CW',
         subtitle: 'Cloud Watch',
         description: 'CloudWatch is a comprehensive monitoring and observability service that Amazon Web Services (AWS) provides',
@@ -124,6 +131,7 @@ export const cards: CardItem[] = [
 export const menuItems: MenuItem[] = [
     { title: 'Home', link: '/', bicon: 'house' },
     { title: 'ACM', link: '/acm', bicon: 'shield-lock' }, 
+    { title: 'CF', link: '/cf', bicon: 'layers' }, 
     { title: 'CW', link: '/cw', bicon: 'bar-chart' }, 
     { title: 'DDB', link: '/dynamodb', bicon: 'table' }, 
     { title: 'EC2', link: '/ec2', bicon: 'cpu' }, 

@@ -18,6 +18,7 @@ import { SnsService } from './sns/sns.service';
 import { SsmService } from './ssm/ssm.service';
 import { CWService } from './cw/cw.service';
 import { KinesisService } from './kinesis/kinesis.service';
+import { CFService } from './cf/cf.service';
 
 @Controller()
 export class AppController {
@@ -25,6 +26,7 @@ export class AppController {
   constructor(
     private readonly config: ConfigService,
     private readonly acmService: AcmService,
+    private readonly cfService: CFService,
     private readonly cwService: CWService,
     private readonly dynamoDbService: DynamoDbService,
     private readonly ec2Service: Ec2Service,
@@ -94,6 +96,7 @@ export class AppController {
     this.sqsService.configure(input);
     this.ssmService.configure(input);
     this.kinesisService.configure(input);
+    this.cfService.configure(input);
 
     return res.redirect(302, '/');
   }

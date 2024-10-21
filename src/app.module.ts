@@ -22,6 +22,7 @@ import { GatewayModule } from './gateway/gateway.module';
 import { CwModule } from './cw/cw.module';
 import { KinesisModule } from './kinesis/kinesis.module';
 import { InjectRequestContextInterceptor } from './shared/interceptors/inject-request-context.interceptor';
+import { CFModule } from './cf/cf.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { InjectRequestContextInterceptor } from './shared/interceptors/inject-re
       load: [configuration],
     }),
     AcmModule,
+    CFModule,
     CwModule,
     DynamoDbModule,
     Ec2Module,
