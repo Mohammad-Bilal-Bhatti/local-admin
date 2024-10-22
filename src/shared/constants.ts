@@ -99,6 +99,13 @@ export const cards: CardItem[] = [
         bicon: 'bucket-fill'
     },
     {
+        title: "R53",
+        subtitle: "Route53",
+        description: "Route 53 is a highly scalable and reliable domain name system (DNS) web service provided by Amazon Web Services.",
+        link: "/route53",
+        bicon: "globe"
+    },
+    {
         title: "SM",
         subtitle: "Secrets Manager",
         description: "Store your application secrets in secure vault that is highly available and support credentials rotation.",
@@ -141,6 +148,7 @@ export const menuItems: MenuItem[] = [
     { title: 'Kinesis', link: '/kinesis', bicon: 'shuffle' }, 
     { title: 'KMS', link: '/kms', bicon: 'key' }, 
     { title: 'Lambda', link: '/lambda', bicon: 'lightning-fill' }, 
+    { title: 'Route53', link: '/route53', bicon: 'map' }, 
     { title: 'S3', link: '/s3', bicon: 'bucket-fill' }, 
     { title: 'SM', link: '/secrets-manager', bicon: 'safe' }, 
     { title: 'SNS', link: '/sns', bicon: 'broadcast' }, 
