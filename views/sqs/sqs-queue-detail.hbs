@@ -1,6 +1,5 @@
 <h2> Queue Detail - {{name}} </h2>
 
-<h4>Operations:</h4>
 <a href="/sqs/delete-queue?queue={{name}}" type="button" class="btn btn-outline-danger">Delete</a>
 <a href="/sqs/purge-queue?queue={{name}}" type="button" class="btn btn-outline-warning">Purge</a>
 <a href="/sqs/send-message?queue={{name}}" type="button" class="btn btn-outline-success">Send Message</a>
@@ -8,33 +7,37 @@
 <a href="/sqs/start-redrive?queue={{name}}" type="button" class="btn btn-outline-secondary ms-1">Redrive</a>
 {{/if}}
 
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'messages'}}active{{/ifEq}}" href="?tab=messages&name={{name}}">Messages</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?tab=details&name={{name}}">Details</a>
+  </li>
+</ul>
 
-<div class="mt-2">
-    <h4>Attributes</h4>
-    <pre>{{{json attributes 2}}}</pre>
-</div>
-
+{{#ifEq tab 'messages'}}
 <div class="mt-2 table-responsive">
     <h4>Messages</h4>
     <table class="table table-striped">
         <thead class="">
             <tr>
-            <th scope="col">Actions</th>
-            <th scope="col">ID</th>
-            <th scope="col">HASH</th>
-            <th scope="col">Sender Id</th>
-            <th scope="col">Sent Timestamp</th>
-            <th scope="col">Approx Receive Count</th>
-            <th scope="col">Approx First Receive Timestamp</th>
+                <th scope="col">Actions</th>
+                <th scope="col">ID</th>
+                <th scope="col">HASH</th>
+                <th scope="col">Sender Id</th>
+                <th scope="col">Sent Timestamp</th>
+                <th scope="col">Approx Receive Count</th>
+                <th scope="col">Approx First Receive Timestamp</th>
 
-            {{#if isFifoQueue}}
-            <th scope="col">Group Id</th>
-            <th scope="col">Deduplication Id</th>
-            <th scope="col">Sequence Number</th>
-            {{/if}}
+                {{#if isFifoQueue}}
+                <th scope="col">Group Id</th>
+                <th scope="col">Deduplication Id</th>
+                <th scope="col">Sequence Number</th>
+                {{/if}}
 
-            <th scope="col">Body</th>
-            <th scope="col">Message Attributes</th>
+                <th scope="col">Body</th>
+                <th scope="col">Message Attributes</th>
 
             </tr>
         </thead>
@@ -42,10 +45,10 @@
             {{#each messages}}
             <tr>
                 <td>
-                    <form action="/sqs/delete-message", method="post">
-                      <input name="queueUrl" type="text" value="{{../name}}" style="display: none;" />
-                      <input name="receiptHandle" type="text" value="{{ReceiptHandle}}" style="display: none;" /> 
-                      <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    <form action="/sqs/delete-message" , method="post">
+                        <input name="queueUrl" type="text" value="{{../name}}" style="display: none;" />
+                        <input name="receiptHandle" type="text" value="{{ReceiptHandle}}" style="display: none;" />
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
                     </form>
                 </td>
                 <th scope="row">{{MessageId}}</th>
@@ -53,7 +56,8 @@
                 <td>{{Attributes.SenderId}}</td>
                 <td>{{epochToDate Attributes.SentTimestamp}} - {{fromNow Attributes.SentTimestamp}}</td>
                 <td>{{Attributes.ApproximateReceiveCount}}</td>
-                <td>{{epochToDate Attributes.ApproximateFirstReceiveTimestamp}} - {{fromNow Attributes.ApproximateFirstReceiveTimestamp}}</td>
+                <td>{{epochToDate Attributes.ApproximateFirstReceiveTimestamp}} - {{fromNow
+                    Attributes.ApproximateFirstReceiveTimestamp}}</td>
 
                 {{#if ../isFifoQueue}}
                 <td>{{Attributes.MessageGroupId}}</td>
@@ -61,13 +65,38 @@
                 <td>{{Attributes.SequenceNumber}}</td>
                 {{/if}}
 
-                <td><pre>{{Body}}</pre></td>
-                <td><pre>{{json MessageAttributes 1}}</pre></td>
+                <td>
+                    <pre>{{Body}}</pre>
+                </td>
+                <td>
+                    <pre>{{json MessageAttributes 1}}</pre>
+                </td>
 
             </tr>
             {{/each}}
         </tbody>
     </table>
-
-
 </div>
+{{/ifEq}}
+
+{{#ifEq tab 'details'}}
+<div class="mt-2">
+    <h4>Details</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Attribute</th>
+                <th scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each attributes}}
+            <tr>
+                <th>{{@key}}</th>
+                <td>{{{printKeyValue this}}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+{{/ifEq}}

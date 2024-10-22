@@ -78,15 +78,16 @@ export class SqsController {
     @Render('sqs-queue-detail')
     async queueDetail(
       @Query('name') name: string,
+      @Query('tab') tab = 'messages'
     ) {
-      const { $metadata, ...attributes } = await this.service.getQueueAttributes(name);
+      const { Attributes } = await this.service.getQueueAttributes(name);
       const result = await this.service.listMessages(name, 10);
       const isFifoQueue = name.endsWith('.fifo');
 
       const dlqRegex = /dlq/ig;
       const isDLQ = dlqRegex.test(name);
   
-      return { name, attributes, messages: result.Messages, isFifoQueue, isDLQ };
+      return { tab, name, attributes: Attributes, messages: result.Messages, isFifoQueue, isDLQ };
     }
   
     @Get('send-message')
