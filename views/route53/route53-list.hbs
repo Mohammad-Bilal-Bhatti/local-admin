@@ -1,2 +1,29 @@
 
 <h4>Route 53</h4>
+
+<a href="/route53/hosted-zone" role="button" class="btn btn-outline-primary">Create Hosted Zone</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">Config</th>
+            <th scope="col">ResourceRecordSetCount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each HostedZones}}
+        <tr>
+            <th>
+                <a href="/route53/delete-hosted-zone?id={{Id}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/route53/hosted-zone-details?id={{Id}}">{{Name}}</a>
+            </th>
+            <td><pre>{{json Config 2}}</pre></td>
+            <td>{{ResourceRecordSetCount}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

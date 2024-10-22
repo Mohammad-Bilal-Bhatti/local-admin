@@ -1,0 +1,76 @@
+
+<h2>Hosted Zone Details - {{id}}</h2>
+
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'entries'}}active{{/ifEq}}" href="?tab=entries&id={{id}}">DNS Entries</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'create-record'}}active{{/ifEq}}" href="?tab=create-record&id={{id}}">Create DNS Record</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'entries'}}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">TTL</th>
+            <th scope="col">Resource Records</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each ResourceRecordSets}}
+        <tr>
+            <td>{{Name}}</td>
+            <td>{{Type}}</td>
+            <td>{{TTL}}</td>
+            <td><pre>{{json ResourceRecords 2}}</pre></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+{{#ifEq tab 'create-record'}}
+<form method="post" action="/route53/change-record-set">
+    
+    <input type="text" name="hostedZoneId" value="{{id}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="action" class="form-label">Action</label>
+        <select class="form-select" id="action" name="action">
+            {{#each ChangeActionOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="recordName" class="form-label">Record Name</label>
+        <input type="text" class="form-control" id="recordName" name="recordName">
+    </div>
+    <div class="mb-3">
+        <label for="recordType" class="form-label">Record Type</label>
+        <select class="form-select" id="recordType" name="recordType">
+            {{#each RecordTypeOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="recordValue" class="form-label">Record Value</label>
+        <input type="text" class="form-control" id="recordValue" name="recordValue">
+    </div>
+
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+{{/ifEq}}
+
+
+
+
