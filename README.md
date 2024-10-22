@@ -70,6 +70,9 @@ Follow the instruction and provide dummy values as follows
 
 To configure localstack endpoint and region use following page to configure it http://localhost:8443/configure
 
+If you are using local.yml to spin up localstack container use following environment variable for
+`LOCALSTACK_ENDPOINT=http://host.docker.internal:4566` to bridge container and host network 
+
 ## Technologies used
 - Nodejs (Runtime)
 - Nestjs (Framework)
