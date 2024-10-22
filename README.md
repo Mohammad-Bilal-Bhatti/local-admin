@@ -25,26 +25,31 @@ MIT - No Warrenty - Distribute Copies free of charge.
 
 ## Development
 
-Create environment file
-`$ cp env.sample .env`
-
-Install dependencies
-`$ npm install`
-
-Start localstack container
-`$ docker compose up -d`
-
-Start development server
-`$ npm run start:dev`
+1. See configure AWS profile section.
+2. Create environment file `$ cp env.sample .env`
+3. Install dependencies `$ npm install`
+4. Start localstack container `$ docker compose up -d`
+5. Start development server `$ npm run start:dev`
 
 ## Development Via Docker
 
 If you dont want to configure development environment yourself and try run the application then just use the following command.
 
-Will spin up locastack and application container
+Spin up localstack container
+`$ docker compose -f local.yml up -d`
+
+Spin up application container if you have already localstack container up and running
 `$ docker compose up -d`
 
-## Configure
+Stop localstack container
+`$ docker compose -f local.yml down`
+
+Stop application container
+`$ docker compose down`
+
+> Note: In order to run via docker compose you still have to create .env file by `$ cp env.sample .env`
+
+## Configure AWS Profile
 
 > Following configuration is required if you are running this on your local host using npm. Alternatively you can use docker.
 
@@ -56,14 +61,26 @@ Configure aws default profile (required if not configure already) other wise you
 `$ aws configure` 
 
 Follow the instruction and provide dummy values as follows
+- AWS Access Key ID [None]: localstack
+- AWS Secret Access Key [None]: localstack
+- Default region name [None]: us-west-2
+- Default output format [None]: json
 
-> AWS Access Key ID [None]: localstack
-> AWS Secret Access Key [None]: localstack
-> Default region name [None]: us-west-2
-> Default output format [None]: json
+## Configuration Localstack Endpoint and Region
 
+To configure localstack endpoint and region use following page to configure it http://localhost:8443/configure
+
+## Technologies used
+- Nodejs (Runtime)
+- Nestjs (Framework)
+- Handlebars (Templating Engine)
+- Localstack (AWS Services Emulation)
+- Docker (Container Virtualization)
+- Bootstrap 5
+- Bootstrap 5 icons
 
 ## Debug
 
-List localstack services status
-`$ localstack status services`
+- List localstack services status `$ localstack status services`
+- Show application logs `$ docker compose logs -ft`
+- Show localstack logs running via docker compose `$ docker compose -f local.yml logs -ft`
