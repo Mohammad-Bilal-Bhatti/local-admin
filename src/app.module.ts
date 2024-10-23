@@ -24,6 +24,7 @@ import { KinesisModule } from './kinesis/kinesis.module';
 import { InjectRequestContextInterceptor } from './shared/interceptors/inject-request-context.interceptor';
 import { CFModule } from './cf/cf.module';
 import { Route53Module } from './route53/route53.module';
+import { SesModule } from './ses/ses.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { Route53Module } from './route53/route53.module';
     Route53Module,
     S3Module,
     SecretsManagerModule,
+    SesModule,
     SnsModule,
     SqsModule,
     SsmModule,

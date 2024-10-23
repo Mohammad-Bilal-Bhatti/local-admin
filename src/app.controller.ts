@@ -19,6 +19,7 @@ import { SsmService } from './ssm/ssm.service';
 import { CWService } from './cw/cw.service';
 import { KinesisService } from './kinesis/kinesis.service';
 import { CFService } from './cf/cf.service';
+import { SesService } from './ses/ses.service';
 
 @Controller()
 export class AppController {
@@ -41,6 +42,7 @@ export class AppController {
     private readonly snsService: SnsService,
     private readonly sqsService: SqsService,
     private readonly ssmService: SsmService,
+    private readonly sesService: SesService,
   ) { }
 
   @Get()
@@ -97,6 +99,7 @@ export class AppController {
     this.ssmService.configure(input);
     this.kinesisService.configure(input);
     this.cfService.configure(input);
+    this.sesService.configure(input);
 
     return res.redirect(302, '/');
   }

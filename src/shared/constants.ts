@@ -120,6 +120,13 @@ export const cards: CardItem[] = [
         bicon: 'broadcast'
     },
     {
+        title: "SES",
+        subtitle: "Simple Email Service",
+        description: "Simple Email Service (SES) is an emailing service that can be integrated with other cloud-based services. It provides API to facilitate email templating, sending bulk emails and more.",
+        link: "/ses",
+        bicon: 'envelope'
+    },
+    {
         title: "SQS",
         subtitle: "Simple Queue Service",
         description: "Simple queue service is one of the baisc aws services that store messages. Queues could either be standard queues and fifo queues.",
@@ -152,6 +159,7 @@ export const menuItems: MenuItem[] = [
     { title: 'S3', link: '/s3', bicon: 'bucket-fill' }, 
     { title: 'SM', link: '/secrets-manager', bicon: 'safe' }, 
     { title: 'SNS', link: '/sns', bicon: 'broadcast' }, 
+    { title: 'SES', link: '/ses', bicon: 'envelope' }, 
     { title: 'SQS', link: '/sqs', bicon: 'inbox' }, 
     { title: 'SSM', link: '/ssm', bicon: 'wrench' },
 ];
