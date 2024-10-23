@@ -1,4 +1,33 @@
 
 <h2>Simple Email Service</h2>
 
-<p>This page is under construction</p>
+<a href="/ses/verify-email" role="button" class="btn btn-outline-primary">Verify Email</a>
+<a href="/ses/verify-domain" role="button" class="btn btn-outline-primary">Verify Domain</a>
+<a href="/ses/send-email" role="button" class="btn btn-outline-primary">Send Email</a>
+
+{{#if messageId}}
+<div class="mt-2 alert alert-success alert-dismissible fade show" role="alert">
+    Email sent successfully with id <strong>{{messageId}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Email Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Identities}}
+        <tr>
+            <td>
+                <a href="/ses/delete-identity?identity={{this}}" role="button" class="btn btn-outline-danger">Delete</a>
+            </td>
+            <td>{{this}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
