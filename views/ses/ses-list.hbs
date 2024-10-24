@@ -4,6 +4,20 @@
 <a href="/ses/verify-email" role="button" class="btn btn-outline-primary">Verify Email</a>
 <a href="/ses/verify-domain" role="button" class="btn btn-outline-primary">Verify Domain</a>
 <a href="/ses/send-email" role="button" class="btn btn-outline-primary">Send Email</a>
+<a href="/ses/create-template" role="button" class="btn btn-outline-primary">Create Template</a>
+
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'identities'}}active{{/ifEq}}" href="?tab=identities">Identities</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'templates'}}active{{/ifEq}}" href="?tab=templates">Templates</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'statistics'}}active{{/ifEq}}" href="?tab=statistics">Statistics</a>
+  </li>
+</ul>
+
 
 {{#if messageId}}
 <div class="mt-2 alert alert-success alert-dismissible fade show" role="alert">
@@ -12,7 +26,8 @@
 </div>
 {{/if}}
 
-
+{{#ifEq tab 'identities'}}
+<h4 class="mt-2">Identities</h4>
 <table class="table">
     <thead>
         <tr>
@@ -31,3 +46,54 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
+
+{{#ifEq tab 'templates'}}
+<h4 class="mt-2">Templates</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">Created Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each TemplatesMetadata}}
+        <tr>
+            <td>
+                <a href="/ses/delete-template?templateName={{Name}}" role="button" class="btn btn-outline-danger">Delete</a>
+            </td>
+            <td>{{Name}}</td>
+            <td>{{CreatedTimestamp}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+{{#ifEq tab 'statistics'}}
+<h4 class="mt-2">Statistics</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Delivery Attempts</th>
+            <th scope="col">Bounces</th>
+            <th scope="col">Complaints</th>
+            <th scope="col">Rejects</th>
+            <th scope="col">Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each SendDataPoints}}
+        <tr>
+            <td>{{DeliveryAttempts}}</td>
+            <td>{{Bounces}}</td>
+            <td>{{Complaints}}</td>
+            <td>{{Rejects}}</td>
+            <td>{{Timestamp}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}

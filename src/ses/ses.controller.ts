@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { SesService } from "./ses.service";
-import { SendEmailDto, VerifyDomainDto, VerifyEmailDto } from "./ses.dto";
+import { CreateTemplateDto, SendEmailDto, VerifyDomainDto, VerifyEmailDto } from "./ses.dto";
 import { Response } from 'express';
 
 
@@ -10,9 +10,15 @@ export class SesController {
 
     @Get()
     @Render('ses-list')
-    async root(@Query('messageId') messageId: string) {
+    async root(
+        @Query('messageId') messageId: string, 
+        @Query('tab') tab = 'identities', 
+    ) {
         const { Identities } = await this.service.listIdentities();
-        return { Identities, messageId };
+        const { TemplatesMetadata } = await this.service.listTemplates();        
+        const { SendDataPoints } = await this.service.getStatistics();
+
+        return { tab, Identities, messageId, TemplatesMetadata, SendDataPoints };
     }
 
     @Get('verify-email')
@@ -63,6 +69,26 @@ export class SesController {
     @Redirect('/ses', 302)
     async verifyDomain(@Body() input: VerifyDomainDto) {
         const result = await this.service.verifyDomainIdentity(input.domain);
+    }
+
+    @Get('create-template')
+    @Render('ses-create-template')
+    async getCreateTemplate() {
+        return {};
+    }
+
+    @Post('create-template')
+    @Redirect('/ses', 302)
+    async createTemplate(@Body() input: CreateTemplateDto) {
+        const result = await this.service.createTemplate(input.templateName, input.subject, input.text, input.html);
+        return result;
+    }
+
+    @Get('delete-template')
+    @Redirect('/ses', 302)
+    async deleteTemplate(@Query('templateName') templateName: string) {
+        const result = await this.service.deleteTemplate(templateName);
+        return result;
     }
 
 }

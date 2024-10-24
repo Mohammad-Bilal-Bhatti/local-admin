@@ -14,3 +14,10 @@ export class SendEmailDto {
     subject: string;
     body: string;
 }
+
+export class CreateTemplateDto {
+    templateName: string;
+    subject: string;
+    text: string;
+    html: string;
+}
