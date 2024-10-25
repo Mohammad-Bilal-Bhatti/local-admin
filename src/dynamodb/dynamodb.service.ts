@@ -15,6 +15,10 @@ import {
     GetItemCommandOutput,
     CreateTableCommand,
     CreateTableCommandOutput,
+    UpdateItemCommand,
+    UpdateItemCommandOutput,
+    PutItemCommand,
+    PutItemCommandOutput,
 } from '@aws-sdk/client-dynamodb';
 import { ConfigService } from "@nestjs/config";
 import { ConfigurableService } from "src/shared/configurable.interface";
@@ -105,6 +109,38 @@ export class DynamoDbService implements ConfigurableService {
         const response = await this.client.send(command);
         return response;
 
+    }
+
+    async updateItem(tableName: string, key: any, item: any): Promise<UpdateItemCommandOutput> {
+
+        const updateAttributes = {};
+        for (const key in item) {
+            if (key === 'id') continue;
+
+            updateAttributes[key] = {
+                Value: item[key],
+                Action: 'PUT',
+            }
+        }
+
+        const command = new UpdateItemCommand({
+            TableName: tableName,
+            Key: {
+                'id': key
+            },
+            AttributeUpdates: updateAttributes,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async putTableItem(tableName: string, item: any): Promise<PutItemCommandOutput> {
+        const command = new PutItemCommand({
+            TableName: tableName,
+            Item: item,
+        });
+        const response = await this.client.send(command);
+        return response;
     }
 
 }

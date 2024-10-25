@@ -1,8 +1,7 @@
-<h2>Item {{table}} - {{key}}</h2>
 
-<a href="/dynamodb/delete-item?key={{key}}&table={{table}}" role="button" class="btn btn-outline-danger">Delete</a>
-<a onclick="updateItem('{{table}}', '{{key}}')" role="button" class="btn btn-outline-primary">Save</a>
+<h2>Create Table Item - {{tableName}} </h2>
 
+<a onclick="addTableItem('{{tableName}}')" role="button" class="btn btn-outline-primary">Save</a>
 <div id="jsoneditor" style="height: 80vh;" class="mt-2"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/jsoneditor@10.1.0/dist/jsoneditor.min.js"></script>
@@ -19,18 +18,17 @@
     var editor = new JSONEditor(container, options)
     editor.set({{{ stringItem }}});
 
-    function updateItem(tableName, key) {
+    function addTableItem(tableName) {
 
         /* create form element */
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '/dynamodb/update-item';
+        form.action = '/dynamodb/add-table-item';
 
         const json = editor.get();
 
         const params = {
             tableName: tableName,
-            key: key,
             item: JSON.stringify(json),
         };
 

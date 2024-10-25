@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { DynamoDbService } from "./dynamodb.service";
-import { CreateTableInput } from "./dynamodb.dto";
+import { CreateItemDto, CreateTableInput, UpdateItemDto } from "./dynamodb.dto";
 
 @Controller('dynamodb')
 export class DynamoDbController {
@@ -11,12 +11,12 @@ export class DynamoDbController {
     @Get()
     @Render('dynamodb-list-tables')
     async getTables() {
-        const result = await this.service.getTableList();
+        const { TableNames } = await this.service.getTableList();
 
         const tables = [];
-        for (const tableName of result.TableNames) {
-            const tableDescription = await this.service.describeTable(tableName);
-            tables.push({ name: tableName, details: tableDescription.Table });
+        for (const tableName of TableNames) {
+            const { Table } = await this.service.describeTable(tableName);
+            tables.push({ name: tableName, details: Table });
         }
 
         return { tables };
@@ -43,13 +43,16 @@ export class DynamoDbController {
 
     @Get('details')
     @Render('dynamodb-table-details')
-    async getTableDetails(@Query('table') table: string) {
+    async getTableDetails(
+        @Query('table') table: string,
+        @Query('tab') tab = 'items',
+    ) {
 
         const response = await this.service.describeTable(table);
         const items = await this.service.scanTable(table);
 
         const rows = items.Items;
-        const keys = Object.keys(rows[0]);
+        const keys = Object.keys(rows[0] || {});
 
         const columns = keys.map(key => {
             const value = rows[0][key];
@@ -57,19 +60,29 @@ export class DynamoDbController {
             return { title: key, accessor: `${key}.${firstsubkey}` };
         });
 
-        return { table, details: response.Table, columns, rows, items: items.Items };
+        return { tab, table, details: response.Table, columns, rows, items: items.Items };
     }
 
     @Get('view-item')
     @Render('dynamodb-item-details')
-    async viewItem(@Query('table') table: string, @Query('key') key: string) {
+    async viewItem(
+        @Query('table') table: string, 
+        @Query('key') key: string,
+    ) {
         const _key = JSON.parse(key.trim());
         const item = await this.service.getItem(table, { id: _key });
-        return { table, key, details: item.Item };
+
+        const stringItem = JSON.stringify(item.Item);
+
+        return { table, key, details: item.Item, stringItem };
     }
 
     @Get('delete-item')
-    async deleteItem(@Res() res: Response, @Query('table') table: string, @Query('key') key: string) {
+    async deleteItem(
+        @Res() res: Response, 
+        @Query('table') table: string, 
+        @Query('key') key: string
+    ) {
         const _key = JSON.parse(key.trim());
         const item = await this.service.deleteItem(table, { id: _key });
         return res.redirect(302, `/dynamodb/details?table=${table}`);
@@ -98,6 +111,37 @@ export class DynamoDbController {
             }    
         }
         return null;
+    }
+
+    @Post('update-item')
+    async updateItem(
+        @Res() res: Response, 
+        @Body() input: UpdateItemDto,
+    ) {
+
+        const key = JSON.parse(input.key);
+        const item = JSON.parse(input.item);
+
+        const result = await this.service.updateItem(input.tableName, key, item);
+        res.redirect(302, `/dynamodb/details?table=${input.tableName}`);
+    }
+
+    @Get('add-table-item')
+    @Render('dynamodb-add-table-item')
+    async getAddTableItem(@Query('tableName') tableName: string) {
+        return { tableName };
+    }
+
+    @Post('add-table-item')
+    async createTableItem(
+        @Res() res: Response,
+        @Body() input: CreateItemDto,
+    ) {
+
+        const item = JSON.parse(input.item);
+
+        const result = this.service.putTableItem(input.tableName, item);
+        res.redirect(302, `/dynamodb/details?table=${input.tableName}`);
     }
 
 }

@@ -1,26 +1,18 @@
 
 <h2>Table Details - {{table}}</h2>
 
-<h4>Details:</h4>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">Attribute</th>
-            <th scope="col">Value</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each details}}
-        <tr>
-            <th>{{@key}}</th>
-            <td>{{{printKeyValue this}}}</td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<a href="/dynamodb/add-table-item?tableName={{table}}" role="button" class="btn btn-outline-primary">Add Item</a>
 
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'items'}}active{{/ifEq}}" href="?tab=items&table={{table}}">Items</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?tab=details&table={{table}}">Details</a>
+  </li>
+</ul>
 
-<h4>Items:</h4>
+{{#ifEq tab 'items'}}
 <table class="table">
     <thead>
         <tr>
@@ -46,3 +38,23 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
+
+{{#ifEq tab 'details'}}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each details}}
+        <tr>
+            <th>{{@key}}</th>
+            <td>{{{printKeyValue this}}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
