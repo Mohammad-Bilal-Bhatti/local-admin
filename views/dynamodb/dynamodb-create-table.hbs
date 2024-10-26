@@ -29,6 +29,18 @@
         <label for="writeCapacityUnits" class="form-label">Write Capacity Units</label>
         <input type="number" class="form-control" id="writeCapacityUnits" name="writeCapacityUnits" placeholder="3">
     </div>
+    <div class="col-3 form-check ms-3">
+        <input type="checkbox" class="form-check-input" id="streamEnabled" name="streamEnabled" value="true">
+        <label class="form-check-label" for="streamEnabled">Stream Enabled</label>
+    </div>
+    <div class="mb-3">
+        <label for="streamViewType" class="form-label">Stream View Type</label>
+        <select class="form-select" id="streamViewType" name="streamViewType">
+            {{#each streamViewTypeOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
 
     <div class="col-12 mt-2 mb-2">
         <button class="btn btn-outline-secondary" type="reset">Reset</button>

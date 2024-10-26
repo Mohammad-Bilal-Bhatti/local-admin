@@ -19,6 +19,8 @@ import {
     UpdateItemCommandOutput,
     PutItemCommand,
     PutItemCommandOutput,
+    StreamViewType,
+    ScalarAttributeType,
 } from '@aws-sdk/client-dynamodb';
 import { ConfigService } from "@nestjs/config";
 import { ConfigurableService } from "src/shared/configurable.interface";
@@ -87,9 +89,11 @@ export class DynamoDbService implements ConfigurableService {
     async createTable(
         name: string, 
         hashAttributeName: string, 
-        hashAttributeType: 'B' | 'N' | 'S',
+        hashAttributeType: ScalarAttributeType,
         readCapacityUnits: number,
         writeCapacityUnits: number,
+        streamEnabled: boolean,
+        streamViewType: StreamViewType,
     ): Promise<CreateTableCommandOutput> {
 
         const command = new CreateTableCommand({
@@ -104,6 +108,10 @@ export class DynamoDbService implements ConfigurableService {
                 ReadCapacityUnits: isNaN(readCapacityUnits) ? 1 : readCapacityUnits,
                 WriteCapacityUnits: isNaN(writeCapacityUnits) ? 1 : writeCapacityUnits,
             },
+            StreamSpecification: streamEnabled ? {
+                StreamEnabled: streamEnabled,
+                StreamViewType: streamViewType
+            }: null
         });
 
         const response = await this.client.send(command);

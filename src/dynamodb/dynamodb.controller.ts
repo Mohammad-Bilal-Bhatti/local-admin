@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { DynamoDbService } from "./dynamodb.service";
-import { CreateItemDto, CreateTableInput, UpdateItemDto } from "./dynamodb.dto";
+import { CreateItemDto, CreateTableInput, StreamViewType, UpdateItemDto } from "./dynamodb.dto";
 
 @Controller('dynamodb')
 export class DynamoDbController {
@@ -25,7 +25,11 @@ export class DynamoDbController {
     @Get('create-table')
     @Render('dynamodb-create-table')
     async getCreateTable(@Res() res: Response) {
-        return null;
+
+        const streamViewTypeOptions = Object.keys(StreamViewType)
+            .map(key => ({ label: key, value: StreamViewType[key] }));
+
+        return { streamViewTypeOptions };
     }
 
     @Post('create-table')
@@ -35,8 +39,10 @@ export class DynamoDbController {
             input.name, 
             input.hashAttributeName, 
             input.hashAttributeType, 
-            parseInt(input.readCapacityUnits, 3),
-            parseInt(input.writeCapacityUnits, 3),
+            parseInt(input.readCapacityUnits, 10),
+            parseInt(input.writeCapacityUnits, 10),
+            input.streamEnabled === 'true',
+            input.streamViewType,
         );
         return null;
     }
