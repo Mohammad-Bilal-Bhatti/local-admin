@@ -25,6 +25,12 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { ConfigurableService } from "src/shared/configurable.interface";
 import { ConfigureInput } from "src/app.dto";
+import {
+    ListStreamsCommand,
+    ListStreamsCommandOutput,
+    DescribeStreamCommand,
+    DescribeStreamCommandOutput,
+} from "@aws-sdk/client-dynamodb-streams";
 
 @Injectable()
 export class DynamoDbService implements ConfigurableService {
@@ -146,6 +152,20 @@ export class DynamoDbService implements ConfigurableService {
         const command = new PutItemCommand({
             TableName: tableName,
             Item: item,
+        });
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async listStreams(): Promise<ListStreamsCommandOutput> {
+        const command = new ListStreamsCommand({});
+        const response = await this.client.send(command);
+        return response;
+    }
+
+    async describeStream(streamArn: string): Promise<DescribeStreamCommandOutput> {
+        const command = new DescribeStreamCommand({
+            StreamArn: streamArn,
         });
         const response = await this.client.send(command);
         return response;

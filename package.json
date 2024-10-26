@@ -28,6 +28,7 @@
     "@aws-sdk/client-cloudwatch": "^3.658.1",
     "@aws-sdk/client-cloudwatch-logs": "^3.658.1",
     "@aws-sdk/client-dynamodb": "^3.631.0",
+    "@aws-sdk/client-dynamodb-streams": "^3.679.0",
     "@aws-sdk/client-ec2": "^3.641.0",
     "@aws-sdk/client-eventbridge": "^3.633.0",
     "@aws-sdk/client-iam": "^3.637.0",

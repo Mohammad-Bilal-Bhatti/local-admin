@@ -24,6 +24,9 @@
         <a class="nav-link {{#ifEq tab 'event-source-mapping'}}active{{/ifEq}}" href="?tab=event-source-mapping&name={{functionName}}">Event Source Mapping</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link {{#ifEq tab 'create-event-source-mapping'}}active{{/ifEq}}" href="?tab=create-event-source-mapping&name={{functionName}}">Create Event Source Mapping</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {{#ifEq tab 'function-urls'}}active{{/ifEq}}" href="?tab=function-urls&name={{functionName}}">Function URLs</a>
     </li>
 </ul>
@@ -132,10 +135,90 @@
 
 
 {{#ifEq tab 'event-source-mapping'}}
-<h4 class="mt-2">Event Srouce Mapping</h4>
-<p>This feature is under construction</p>
-<p>Comming Soon...</p>
+<h4 class="mt-2">Event Source Mapping</h4>
+<div class="table-responsive">
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">UUID</th>
+            <th scope="col">Event Source Arn</th>
+            <th scope="col">Function Arn</th>
+            <th scope="col">State</th>
+            <th scope="col">State Transition Reason</th>
+            <th scope="col">Batch Size</th>
+            <th scope="col">Starting Position</th>
+            <th scope="col">Bisect Batch On Function Error</th>
+            <th scope="col">Last Processing Result</th>
+            <th scope="col">Maximum Batching Window In Seconds</th>
+            <th scope="col">Maximum Record Age In Seconds</th>
+            <th scope="col">Maximum Retry Attempts</th>
+            <th scope="col">Parallelization Factor</th>
+            <th scope="col">Tumbling Window In Seconds</th>
+            <th scope="col">FunctionResponse Types</th>
+            <th scope="col">Destination Config</th>
+            <th scope="col">Last Modified</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each EventSourceMappings}}
+        <tr>
+            <th>
+                <a href="/lambda/delete-event-source?uuid={{UUID}}&name={{../functionName}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th>{{UUID}}</th>
+            <td>{{EventSourceArn}}</td>
+            <td>{{FunctionArn}}</td>
+            <td>{{State}}</td>
+            <td>{{StateTransitionReason}}</td>
+            <td>{{BatchSize}}</td>
+            <td>{{StartingPosition}}</td>
+            <td>{{BisectBatchOnFunctionError}}</td>
+            <td>{{LastProcessingResult}}</td>
+            <td>{{MaximumBatchingWindowInSeconds}}</td>
+            <td>{{MaximumRecordAgeInSeconds}}</td>
+            <td>{{MaximumRetryAttempts}}</td>
+            <td>{{ParallelizationFactor}}</td>
+            <td>{{TumblingWindowInSeconds}}</td>
+            <td>{{FunctionResponseTypes}}</td>
+            <td>{{json DestinationConfig 2}}</td>
+            <td>{{LastModified}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+</div>
 {{/ifEq}}
+
+{{#ifEq tab 'create-event-source-mapping'}}
+<h4 class="mt-2">Create Event Source Mapping</h4>
+<form method="post" action="/lambda/create-event-source">
+    <input type="text" value="{{functionName}}" name="functionName" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="eventSourceArn" class="form-label">Event Source Arn</label>
+        <input type="text" class="form-control" id="eventSourceArn" name="eventSourceArn">
+    </div>
+
+    <div class="mb-3">
+        <label for="batchSize" class="form-label">Batch Size</label>
+        <input type="number" class="form-control" id="batchSize" name="batchSize" value="1">
+    </div>
+
+    <div class="mb-3">
+        <label for="startingPosition" class="form-label">Starting Position</label>
+        <select class="form-select" id="startingPosition" name="startingPosition">
+            {{#each startingPositionOptions}}
+                <option value="{{value}}">{{label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Create</button>
+</form>
+{{/ifEq}}
+
 
 {{#ifEq tab 'function-urls'}}
 <h4 class="mt-2">Function URLs</h4>

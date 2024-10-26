@@ -1,4 +1,4 @@
-import { Runtime, FunctionUrlAuthType, InvokeMode } from "@aws-sdk/client-lambda";
+import { Runtime, FunctionUrlAuthType, InvokeMode, EventSourcePosition } from "@aws-sdk/client-lambda";
 
 
 export class CreateLambdaDto {
@@ -34,5 +34,12 @@ export class CreateFunctionUrlDto {
     invokeMode: InvokeMode;
 }
 
-export { Runtime, FunctionUrlAuthType, InvokeMode } from "@aws-sdk/client-lambda";
+export class CreateEventSourceDto {
+    functionName: string;
+    batchSize: number
+    startingPosition: EventSourcePosition;
+    eventSourceArn: string
+}
+
+export { Runtime, FunctionUrlAuthType, InvokeMode, EventSourcePosition } from "@aws-sdk/client-lambda";
 

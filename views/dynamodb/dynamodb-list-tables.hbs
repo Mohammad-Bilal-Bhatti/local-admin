@@ -3,6 +3,16 @@
 
 <a href="/dynamodb/create-table" class="btn btn-outline-primary" role="button">Create Table</a>
 
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'tables'}}active{{/ifEq}}" href="?tab=tables">Tables</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'streams'}}active{{/ifEq}}" href="?tab=streams">Streams</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'tables'}}
 <table class="table">
     <thead>
         <tr>
@@ -32,3 +42,27 @@
         {{/each}}
     </tbody>
 </table>
+{{/ifEq}}
+
+{{#ifEq tab 'streams'}}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Stream Arn</th>
+            <th scope="col">Table Name</th>
+            <th scope="col">Stream Label</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each Streams}}
+        <tr>
+            <th>
+                <a href="/dynamodb/stream-details?streamArn={{StreamArn}}">{{StreamArn}}</a>
+            </th>
+            <td>{{TableName}}</td>
+            <td>{{StreamLabel}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}

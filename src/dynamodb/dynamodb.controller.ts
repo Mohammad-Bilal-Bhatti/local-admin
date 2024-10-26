@@ -10,7 +10,7 @@ export class DynamoDbController {
 
     @Get()
     @Render('dynamodb-list-tables')
-    async getTables() {
+    async getTables(@Query('tab') tab = 'tables') {
         const { TableNames } = await this.service.getTableList();
 
         const tables = [];
@@ -19,7 +19,8 @@ export class DynamoDbController {
             tables.push({ name: tableName, details: Table });
         }
 
-        return { tables };
+        const { Streams } = await this.service.listStreams();
+        return { tab, tables, Streams };
     }
 
     @Get('create-table')
@@ -148,6 +149,13 @@ export class DynamoDbController {
 
         const result = this.service.putTableItem(input.tableName, item);
         res.redirect(302, `/dynamodb/details?table=${input.tableName}`);
+    }
+
+    @Get('stream-details')
+    @Render('dynamodb-stream-details')
+    async getStreamDetails(@Query('streamArn') streamArn: string) {
+        const { StreamDescription } = await this.service.describeStream(streamArn);
+        return { streamArn, StreamDescription };
     }
 
 }

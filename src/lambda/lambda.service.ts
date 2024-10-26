@@ -36,7 +36,8 @@ import {
     DeleteFunctionUrlConfigCommand,
     DeleteFunctionUrlConfigCommandOutput,
     FunctionUrlAuthType,
-    InvokeMode
+    InvokeMode,
+    EventSourcePosition
 } from "@aws-sdk/client-lambda";
 import { ConfigService } from "@nestjs/config";
 import { ConfigurableService } from "src/shared/configurable.interface";
@@ -135,10 +136,17 @@ export class LambdaService implements ConfigurableService {
         return response;
     }
 
-    async createEventSourceMapping(functionName: string): Promise<CreateEventSourceMappingCommandOutput> {
+    async createEventSourceMapping(
+        functionName: string, 
+        eventSourceArn: string,
+        batchSize: number, 
+        startingPosition: EventSourcePosition, 
+    ): Promise<CreateEventSourceMappingCommandOutput> {
         const command = new CreateEventSourceMappingCommand({
             FunctionName: functionName,
-
+            BatchSize: batchSize,
+            StartingPosition: startingPosition,
+            EventSourceArn: eventSourceArn,
         });
         const response = await this.client.send(command);
         return response;

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Redirect, Render, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { LambdaService } from "./lambda.service";
-import { CreateAliasDto, CreateFunctionUrlDto, CreateLambdaDto, FunctionUrlAuthType, InvokeLambdaDto, InvokeMode, Runtime, UpdateFunctionCodeDto } from "./lambda.dto";
+import { CreateAliasDto, CreateEventSourceDto, CreateFunctionUrlDto, CreateLambdaDto, EventSourcePosition, FunctionUrlAuthType, InvokeLambdaDto, InvokeMode, Runtime, UpdateFunctionCodeDto } from "./lambda.dto";
 
 @Controller('lambda')
 export class LambdaController {
@@ -38,7 +38,10 @@ export class LambdaController {
 
     @Get('details')
     @Render('lambda-details')
-    async getLambdaDetails(@Query('name') name: string, @Query('tab') tab = 'details') {
+    async getLambdaDetails(
+        @Query('name') name: string, 
+        @Query('tab') tab = 'details'
+    ) {
         const { $metadata, ...details } = await this.service.getLambdaFunction(name);
         const result = { tab, functionName: name, details };
         switch(tab) {
@@ -52,6 +55,14 @@ export class LambdaController {
             case 'event-source-mapping': {
                 const { EventSourceMappings } = await this.service.listEventSourceMapping(name);
                 Object.assign(result, { EventSourceMappings });
+                break;
+            }
+            case 'create-event-source-mapping': {
+                const startingPositionOptions = 
+                Object.keys(EventSourcePosition)
+                    .map(key => ({ label: key, value: EventSourcePosition[key] }));
+
+                Object.assign(result, { startingPositionOptions });
                 break;
             }
             case 'update': {
@@ -124,6 +135,31 @@ export class LambdaController {
     async deleteFunctionUrl(@Query('functionName') functionName: string) {
         const result = await this.service.deleteFunctionUrl(functionName);
         return null;
+    }
+
+    @Post('create-event-source')
+    @Redirect('/lambda', 302)
+    async createEventSource(
+        @Res() response: Response,
+        @Body() input: CreateEventSourceDto
+    ) {
+        const result = await this.service.createEventSourceMapping(
+            input.functionName,
+            input.eventSourceArn,
+            input.batchSize,
+            input.startingPosition,
+        );
+        return response.redirect(302, `/lambda/details?name=${input.functionName}`);
+    }
+
+    @Get('delete-event-source')
+    async deleteEventSource(
+        @Res() response: Response,
+        @Query('uuid') uuid: string,
+        @Query('name') name: string,
+    ) {
+        const result = await this.service.deleteEventSourceMapping(uuid);
+        return response.redirect(302, `/lambda/details?name=${name}`);
     }
 
 }
