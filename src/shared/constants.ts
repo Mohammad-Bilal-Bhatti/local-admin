@@ -139,6 +139,13 @@ export const cards: CardItem[] = [
         description: "Gives you ability to store parameters that can be used by your apps.",
         link: "/ssm",
         bicon: 'wrench'
+    },    
+    {
+        title: "SFN",
+        subtitle: "Step Functions",
+        description: "Step Functions is a serverless workflow engine that enables the orchestrating of multiple AWS services.",
+        link: "/sfn",
+        bicon: 'diagram-3'
     },
 ];
 
@@ -162,4 +169,5 @@ export const menuItems: MenuItem[] = [
     { title: 'SES', link: '/ses', bicon: 'envelope' }, 
     { title: 'SQS', link: '/sqs', bicon: 'inbox' }, 
     { title: 'SSM', link: '/ssm', bicon: 'wrench' },
+    { title: 'SFN', link: '/sfn', bicon: 'diagram-3' },
 ];

@@ -25,6 +25,7 @@ import { InjectRequestContextInterceptor } from './shared/interceptors/inject-re
 import { CFModule } from './cf/cf.module';
 import { Route53Module } from './route53/route53.module';
 import { SesModule } from './ses/ses.module';
+import { SfnModule } from './sfn/sfn.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { SesModule } from './ses/ses.module';
     S3Module,
     SecretsManagerModule,
     SesModule,
+    SfnModule,
     SnsModule,
     SqsModule,
     SsmModule,

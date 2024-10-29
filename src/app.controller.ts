@@ -20,6 +20,7 @@ import { CWService } from './cw/cw.service';
 import { KinesisService } from './kinesis/kinesis.service';
 import { CFService } from './cf/cf.service';
 import { SesService } from './ses/ses.service';
+import { SfnService } from './sfn/sfn.service';
 
 @Controller()
 export class AppController {
@@ -43,6 +44,7 @@ export class AppController {
     private readonly sqsService: SqsService,
     private readonly ssmService: SsmService,
     private readonly sesService: SesService,
+    private readonly sfnService: SfnService,
   ) { }
 
   @Get()
@@ -100,6 +102,7 @@ export class AppController {
     this.kinesisService.configure(input);
     this.cfService.configure(input);
     this.sesService.configure(input);
+    this.sfnService.configure(input);
 
     return res.redirect(302, '/');
   }
