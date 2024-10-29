@@ -1,0 +1,74 @@
+
+<h2>State Machine Details</h2>
+
+<ul class="mt-2 nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'details'}}active{{/ifEq}}" href="?tab=details&arn={{stateMachineArn}}">Details</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'trigger'}}active{{/ifEq}}" href="?tab=trigger&arn={{stateMachineArn}}">Trigger</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{#ifEq tab 'history'}}active{{/ifEq}}" href="?tab=history&arn={{stateMachineArn}}">History</a>
+  </li>
+</ul>
+
+{{#ifEq tab 'details'}}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each details}}
+        <tr>
+            <th>{{@key}}</th>
+            <td>{{{printKeyValue this}}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+
+{{#ifEq tab 'trigger'}}
+<form method="post" action="/sfn/start-execution">
+    
+    <input type="text" name="stateMachineArn" value="{{stateMachineArn}}" style="display: none;" />
+
+    <div class="mb-3">
+        <label for="input" class="form-label">Input</label>
+        <textarea class="form-control" id="input" rows="3" name="input"></textarea>
+    </div>
+
+
+    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+    <button class="btn btn-outline-success" type="submit">Trigger</button>
+</form>
+{{/ifEq}}
+
+{{#ifEq tab 'history'}}
+<h4 class="mt-2">Execution History</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">Stop Date</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each executions}}
+        <tr>
+            <th>{{name}}</th>
+            <td>{{startDate}}</td>
+            <td>{{stopDate}}</td>
+            <td>{{status}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/ifEq}}
+

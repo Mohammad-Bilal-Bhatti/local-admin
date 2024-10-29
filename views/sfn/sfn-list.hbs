@@ -1,3 +1,29 @@
 
 <h2>Step Functions</h2>
 
+<a href="/sfn/create-state-machine" role="button" class="btn btn-outline-primary">Create State Machine</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">State Machine Arn</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each stateMachines}}
+        <tr>
+            <th>
+                <a href="/sfn/delete-state-machine?arn={{stateMachineArn}}" class="btn btn-outline-danger" type="button">Delete</a>
+            </th>
+            <th scope="row">
+                <a href="/sfn/state-machine-details?arn={{stateMachineArn}}">{{name}}</a>
+            </th>
+            <td>{{type}}</td>
+            <td>{{stateMachineArn}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
