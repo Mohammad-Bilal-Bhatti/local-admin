@@ -71,6 +71,18 @@ export class S3Controller {
       return { name, Contents: result.Contents };
     }
 
+    @Get('purge-bucket')
+    async purgeBucket(
+      @Res() res: Response,
+      @Query('bucket') bucket: string
+    ) {
+      const result = await this.s3Service.listObjects(bucket, null);
+      for (const object of result.Contents) {
+        await this.s3Service.deleteObject(bucket, object.Key);
+      }
+      res.redirect(302, `/s3/details?name=${bucket}`);
+    }
+
     @Get('remove')
     @Redirect('/s3', 302)
     async deleteBucket(@Query('bucket') bucket: string) {
