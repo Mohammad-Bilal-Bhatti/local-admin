@@ -44,17 +44,7 @@ export class S3Controller {
       const bucket = input.bucket;
       for (const file of files) {
         const key = isMultiple ? file.originalname : input.key ? input.key : file.originalname;
-        const contentLength = file.size;
-        const contentType = file.mimetype;
-        const body = file.buffer;
-
-        const response = await this.s3Service.putObject(
-          bucket,
-          key,
-          body,
-          contentType,
-          contentLength
-        );        
+        await this.s3Service.uploadStream(bucket, key, file);
       }
 
       return res.redirect(302, `/s3/details?name=${bucket}`);

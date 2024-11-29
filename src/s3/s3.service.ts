@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { 
+import {
     Event,
     CORSRule,
-    ListBucketsCommand, 
+    ListBucketsCommand,
     S3Client,
     ListObjectsV2Command,
     ListObjectsV2CommandOutput,
@@ -46,6 +46,10 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ConfigureInput } from "../app.dto";
 import { ConfigurableService } from "src/shared/configurable.interface";
+import { Upload } from "@aws-sdk/lib-storage";
+import { Readable } from 'node:stream';
+
+
 
 
 @Injectable()
@@ -90,7 +94,7 @@ export class S3Service implements ConfigurableService {
             Bucket: bucket,
             Key: key,
         });
-        const reponse = await this.client.send(command);            
+        const reponse = await this.client.send(command);
         return reponse;
     }
 
@@ -104,7 +108,7 @@ export class S3Service implements ConfigurableService {
     }
 
     async putObject(
-        bucket: string, 
+        bucket: string,
         key: string,
         body: string | Buffer,
         contentType: string,
@@ -121,7 +125,22 @@ export class S3Service implements ConfigurableService {
         const response = await this.client.send(command);
         return response;
     }
-    
+
+    async uploadStream(bucket: string, key: string, file: Express.Multer.File) {
+        const uploadToS3 = new Upload({
+            client: this.client,
+            leavePartsOnError: false, // optional manually handle dropped parts
+            params: {
+                Bucket: bucket,
+                Key: key,
+                Body: file.buffer,
+                ContentType: file.mimetype,
+            },
+        });
+
+        return await uploadToS3.done();
+    }
+
     async deleteObject(bucket: string, key: string, versionId?: string): Promise<DeleteObjectCommandOutput> {
         const command = new DeleteObjectCommand({
             Bucket: bucket,
@@ -155,8 +174,8 @@ export class S3Service implements ConfigurableService {
     }
 
     async putBucketWebsite(bucket: string, root: string, error: string): Promise<PutBucketWebsiteCommandOutput> {
-        const command = new PutBucketWebsiteCommand({ 
-            Bucket: bucket, 
+        const command = new PutBucketWebsiteCommand({
+            Bucket: bucket,
             WebsiteConfiguration: {
                 IndexDocument: {
                     Suffix: root
@@ -182,12 +201,12 @@ export class S3Service implements ConfigurableService {
     async getBucketPolicy(bucket: string): Promise<GetBucketPolicyCommandOutput> {
         try {
             const command = new GetBucketPolicyCommand({
-                Bucket: bucket,            
-            });    
+                Bucket: bucket,
+            });
             const response = await this.client.send(command);
 
             return response;
-    
+
         } catch (err) {
             return { Policy: "{}", $metadata: {} };
         }
@@ -273,21 +292,21 @@ export class S3Service implements ConfigurableService {
                 QueueConfigurations: target === 'sqs' ? [
                     {
                         QueueArn: targetArn,
-                        Events: Array.isArray(event) ? event: [event],                        
+                        Events: Array.isArray(event) ? event : [event],
                     }
-                ]: null,
+                ] : null,
                 TopicConfigurations: target === 'sns' ? [
                     {
                         TopicArn: targetArn,
-                        Events: Array.isArray(event) ? event: [event],
+                        Events: Array.isArray(event) ? event : [event],
                     }
-                ]: null,
+                ] : null,
                 LambdaFunctionConfigurations: target === 'lambda' ? [
                     {
                         LambdaFunctionArn: targetArn,
-                        Events: Array.isArray(event) ? event: [event],                        
+                        Events: Array.isArray(event) ? event : [event],
                     }
-                ]: null,
+                ] : null,
             }
         });
         const response = await this.client.send(command);
@@ -322,7 +341,7 @@ export class S3Service implements ConfigurableService {
             return { $metadata: null, ReplicationConfiguration: null };
         }
 
-    } 
+    }
 
     async putBucketReplication(bucket: string, role: string, destinationBucket: string, deleteMarkerReplication: boolean, existingObjectReplication: boolean) {
         const command = new PutBucketReplicationCommand({
