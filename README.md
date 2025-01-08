@@ -49,6 +49,8 @@ Stop application container
 
 > Note: In order to run via docker compose you still have to create .env file by `$ cp env.sample .env`
 
+> Note: If you see `Error: connect ECONNREFUSED ::1:4566` change the environment variable configuration from `localhost:4566` to `127.0.0.1:4566`
+
 ## Configure AWS Profile
 
 > Following configuration is required if you are running this on your local host using npm. Alternatively you can use docker.
