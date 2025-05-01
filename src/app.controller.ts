@@ -51,8 +51,8 @@ export class AppController {
   @Render('root')
   root() {
     const hero = {
-      title: '👋 Localstack Admin',
-      details: 'Welcome to localstack admin. You can use this ui to easilly manage and sneek peek you localstack resources and can create new resources by simply button clicks.',
+      title: 'Localstack Admin 🚀',
+      details: '👋 Welcome to localstack admin. You can use this ui to easilly manage and sneek peek you localstack resources and can create new resources on button clicks.',
     }
 
     return { title: 'Home', cards, hero };
