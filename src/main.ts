@@ -5,9 +5,14 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
 import * as helpers from './hbs/helpers';
+import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  const config = app.get(ConfigService);
+  const logger = new Logger(bootstrap.name);
 
   /* express monitor middleware */
   app.use(require('express-status-monitor')());
@@ -57,7 +62,10 @@ async function bootstrap() {
 
   app.setViewEngine('hbs');
 
-  const port = 8443;
-  await app.listen(port);
+  const port = config.get<number>('port');
+
+  await app.listen(port, () => {
+    logger.log(`Application started on port: ${port}`);
+  });
 }
 bootstrap();

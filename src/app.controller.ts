@@ -55,7 +55,7 @@ export class AppController {
       details: '👋 Welcome to localstack admin. You can use this ui to easilly manage and sneek peek you localstack resources and can create new resources on button clicks.',
     }
 
-    return { title: 'Home', cards, hero };
+    return { title: 'Home', cards, hero, configureLink: '/configure' };
   }
 
   @Get('configure')
